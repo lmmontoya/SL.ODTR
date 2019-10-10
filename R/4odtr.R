@@ -51,7 +51,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
                 moMain_model = NULL, moCont_model = NULL, g1W = NULL, family = NULL){
 
   n = length(A)
-  if (is.null(family) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
+  if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
   if (is.null(ab)) { ab = range(Y) }
 
   # E[Y|A,W]
