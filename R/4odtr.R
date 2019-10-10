@@ -71,7 +71,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     SL.fit = SL.vote(V = V, W = W, W_for_g, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library, dopt.SL.library = dopt.SL.library,
                      gAW = gAW, risk.type = risk.type, grid.size = grid.size,
-                     VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model, newV = newV)
+                     VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model, newV = newV, family = family)
     # get estimate of txt under optimal rule
     dopt = SL.fit$SL.predict
   } else if (SL.type == "blip") {
@@ -79,7 +79,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     SL.fit = SL.blip(V = V, W = W, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library,
                      gAW = gAW, risk.type = risk.type,
-                     grid.size = grid.size, VFolds = VFolds, newV = newV)
+                     grid.size = grid.size, VFolds = VFolds, newV = newV, family = family)
     # get estimate of optimal rule based on blip estimate
     blip = SL.fit$SL.predict
     # get dopt
