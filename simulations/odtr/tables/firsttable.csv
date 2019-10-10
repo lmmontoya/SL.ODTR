@@ -1,0 +1,4 @@
+﻿Choice 1: Library,Blip only,,,,Full,,,
+Choice 2: Metalearner,Blip-based,,Vote-based,,Blip-based,,Vote-based,
+Choice 3: Risk,MSE,Eyd,MSE,Eyd,MSE,Eyd,MSE,Eyd
+,\cmark,\cmark,\xmark,\cmark,\xmark,\xmark,\xmark,\cmark

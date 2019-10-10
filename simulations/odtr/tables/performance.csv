@@ -1,0 +1,11 @@
+,,,Bias,Variance,MSE
+DGP 1,GLM,N/A,-0.0094,0.0034,0.0035
+,"d^*_n,B",MSE,-0.0738,0.0144,0.0199
+,,TMLE,-0.0642,0.0076,0.0117
+,"d^*_n,d - blip only",TMLE,-0.0625,0.0085,0.0124
+,"d^*_n,d - full",TMLE,-0.0402,0.0063,0.0079
+DGP 2,GLM,N/A,,,
+,"d^*_n,B",MSE,,,
+,,TMLE,,,
+,"d^*_n,d - blip only",TMLE,,,
+,"d^*_n,d - full",TMLE,,,

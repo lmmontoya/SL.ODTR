@@ -1,0 +1,233 @@
+\documentclass[11pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+%\usepackage[showframe]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{lscape,verbatim,mathrsfs}
+\usepackage{graphics,amsmath,pstricks}
+\usepackage{amssymb,enumerate}
+\usepackage{amsbsy,amsmath,amsthm,amsfonts, amssymb}
+\usepackage{graphicx, rotate, array}
+\usepackage{geometry,multirow}
+\usepackage{color,soul}
+\usepackage{float}
+%\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+%\renewcommand{\baselinestretch}{1.9}
+\usepackage{tcolorbox}
+\renewcommand{\familydefault}{cmss}
+\textwidth=6.65in \textheight=9.7in
+\parskip=.025in
+\parindent=0in
+\oddsidemargin=-0.1in \evensidemargin=-.1in \headheight=-.6in
+\footskip=0.5in \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\part*{Simulation Results - AL binary}
+
+Vote library = "OWL", "EARL", "optclass", "RWL", "Qlearn", "DonV", "treatall", "treatnone"
+
+
+
+
+\section{Step 1}
+
+\begin{itemize}
+\item blip (a) and majority vote (b) SuperLearner
+\item Blip and QAW library = c("SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet")
+\end{itemize}
+
+
+
+
+\subsection{Blip-based SL (a)}
+
+\includegraphics[width=\maxwidth]{figure/ODTR_DGP_AL_bin_step1a-1} 
+% latex table generated in R 3.5.1 by xtable 1.8-4 package
+% Sat Sep  7 11:00:43 2019
+\begin{table}[ht]
+\centering
+\scalebox{0.8}{
+\begin{tabular}{rrr}
+  \hline
+ & MSE & TMLE \\ 
+  \hline
+Bias & -0.02533 & -0.02683 \\ 
+  Variance & 0.00015 & 0.00016 \\ 
+  MSE & 0.00080 & 0.00088 \\ 
+  coef.SL.glm & 0.05282 & 0.09355 \\ 
+  coef.SL.mean & 0.13224 & 0.11436 \\ 
+  coef.SL.glm.interaction & 0.03420 & 0.07687 \\ 
+  coef.SL.earth & 0.27292 & 0.26934 \\ 
+  coef.SL.nnet & 0.10743 & 0.09954 \\ 
+  coef.SL.svm & 0.19965 & 0.17341 \\ 
+  coef.SL.rpart & 0.20075 & 0.17293 \\ 
+   \hline
+\end{tabular}
+}
+\caption{cont - step1a} 
+\end{table}
+
+
+\subsection{vote-based SL (b)}
+
+\includegraphics[width=\maxwidth]{figure/ODTR_DGP_AL_bin_step1b-1} 
+% latex table generated in R 3.5.1 by xtable 1.8-4 package
+% Sat Sep  7 11:00:43 2019
+\begin{table}[ht]
+\centering
+\scalebox{0.7}{
+\begin{tabular}{rr}
+  \hline
+ & TMLE \\ 
+  \hline
+Bias & -0.03020 \\ 
+  Variance & 0.00022 \\ 
+  MSE & 0.00114 \\ 
+  coef.DonV.DonV.SL.glm\_All & 0.02351 \\ 
+  coef.DonV.DonV.SL.mean\_All & 0.02603 \\ 
+  coef.DonV.DonV.SL.glm.interaction\_All & 0.02531 \\ 
+  coef.DonV.DonV.SL.earth\_All & 0.21928 \\ 
+  coef.DonV.DonV.SL.nnet\_All & 0.04365 \\ 
+  coef.DonV.DonV.SL.svm\_All & 0.08185 \\ 
+  coef.DonV.DonV.SL.rpart\_All & 0.12803 \\ 
+  coef.Qlearn.Qlearn.SL.glm\_All & 0.02665 \\ 
+  coef.Qlearn.Qlearn.SL.mean\_All & 0.03123 \\ 
+  coef.Qlearn.Qlearn.SL.glm.interaction\_All & 0.02698 \\ 
+  coef.Qlearn.Qlearn.SL.earth\_All & 0.03139 \\ 
+  coef.Qlearn.Qlearn.SL.nnet\_All & 0.02880 \\ 
+  coef.Qlearn.Qlearn.SL.svm\_All & 0.03210 \\ 
+  coef.Qlearn.Qlearn.SL.rpart\_All & 0.03286 \\ 
+  coef.OWL & 0.04742 \\ 
+  coef.EARL & 0.02632 \\ 
+  coef.optclass & 0.06627 \\ 
+  coef.RWL & 0.02285 \\ 
+  coef.treatall & 0.04735 \\ 
+  coef.treatnone & 0.03212 \\ 
+   \hline
+\end{tabular}
+}
+\caption{cont - step1b} 
+\end{table}
+
+
+
+
+
+
+
+
+\section{Step 5}
+
+\begin{itemize}
+\item blip (a) and majority vote (b) SuperLearner
+\item incorrect glm QAV, incorrect glm QAW
+\end{itemize}
+
+
+
+\subsection{Blip-based SL (a)}
+
+\includegraphics[width=\maxwidth]{figure/ODTR_DGP_AL_bin_step5a-1} 
+% latex table generated in R 3.5.1 by xtable 1.8-4 package
+% Sat Sep  7 11:00:44 2019
+\begin{table}[ht]
+\centering
+\scalebox{0.7}{
+\begin{tabular}{rrr}
+  \hline
+ & MSE & TMLE \\ 
+  \hline
+Bias & -0.07652 & -0.07652 \\ 
+  Variance & 0.00027 & 0.00027 \\ 
+  MSE & 0.00613 & 0.00613 \\ 
+  estimates..1.....grep.colnames.estimates..1.....pattern....coef... & 1.00000 & 1.00000 \\ 
+   \hline
+\end{tabular}
+}
+\caption{bin - step5a} 
+\end{table}
+
+
+\subsection{vote-based SL (b)}
+
+\includegraphics[width=\maxwidth]{figure/ODTR_DGP_AL_bin_step5b-1} 
+% latex table generated in R 3.5.1 by xtable 1.8-4 package
+% Sat Sep  7 11:00:44 2019
+\begin{table}[ht]
+\centering
+\scalebox{0.7}{
+\begin{tabular}{rr}
+  \hline
+ & TMLE \\ 
+  \hline
+Bias & -0.04764 \\ 
+  Variance & 0.00033 \\ 
+  MSE & 0.00260 \\ 
+  coef.DonV.SL.glm\_All & 0.04386 \\ 
+  coef.Qlearn.SL.QAW.incorrect\_All & 0.04459 \\ 
+  coef.OWL & 0.05664 \\ 
+  coef.EARL & 0.03052 \\ 
+  coef.optclass & 0.69974 \\ 
+  coef.RWL & 0.02855 \\ 
+  coef.treatall & 0.03438 \\ 
+  coef.treatnone & 0.06172 \\ 
+   \hline
+\end{tabular}
+}
+\caption{bin - step5a} 
+\end{table}
+
+
+\end{document}

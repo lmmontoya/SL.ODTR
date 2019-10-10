@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+%\usepackage[showframe]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{lscape,verbatim,mathrsfs}
+\usepackage{graphics,amsmath,pstricks}
+\usepackage{amssymb,enumerate}
+\usepackage{amsbsy,amsmath,amsthm,amsfonts, amssymb}
+\usepackage{graphicx, rotate, array}
+\usepackage{geometry,multirow}
+\usepackage{color,soul}
+\usepackage{float}
+%\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+%\renewcommand{\baselinestretch}{1.9}
+\usepackage{tcolorbox}
+\renewcommand{\familydefault}{cmss}
+\textwidth=6.65in \textheight=9.7in
+\parskip=.025in
+\parindent=0in
+\oddsidemargin=-0.1in \evensidemargin=-.1in \headheight=-.6in
+\footskip=0.5in \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\begin{document}
+
+\part*{Simulation Results - AL binary}
+
+Vote library = "OWL", "EARL", "optclass", "RWL", "Qlearn", "DonV", "treatall", "treatnone"
+
+<<libs_and_funs, echo = F, message = F,warning = F>>=
+library(dplyr)
+library(ggplot2)
+library(xtable)
+source("/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/R/7showResults.R")
+source('/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/R/1DGPfunctions.R')
+@
+
+
+\section{Step 1}
+
+\begin{itemize}
+\item blip (a) and majority vote (b) SuperLearner
+\item Blip and QAW library = c("SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet")
+\end{itemize}
+
+
+<<DGP_AL_bin, echo = F>>=
+# load DGP_bin stuff
+load(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_AL_bin_true_values.RData")
+@
+
+\subsection{Blip-based SL (a)}
+<<ODTR_DGP_AL_bin_step1a, echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+ODTR_step1a_bin = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/results/ODTR_step1a_bin.RData")
+#ODTR_step1a_bin$ODTR_IPCW_step1a_bin = ODTR_step1a_bin$ODTR_TMLE_step1a_bin
+makeplot_ODTR(ODTR_step1a_bin, truevalues = DGP_AL_bin_true_values, title = "bin - step1a")
+maketable_ODTR(ODTR_step1a_bin, truevalues = DGP_AL_bin_true_values, caption = "cont - step1a", scalebox = .8)
+@
+
+\subsection{vote-based SL (b)}
+<<ODTR_DGP_AL_bin_step1b, echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+ODTR_step1b_bin = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/results/ODTR_step1b_bin.RData")
+#ODTR_step1b_bin$ODTR_IPCW_step1b_bin = ODTR_step1b_bin$ODTR_TMLE_step1b_bin
+makeplot_ODTR(ODTR_step1b_bin, truevalues = DGP_AL_bin_true_values, title = "bin - step1b")
+maketable_ODTR(ODTR_step1b_bin, truevalues = DGP_AL_bin_true_values, caption = "cont - step1b", scalebox = .7)
+@
+
+
+
+
+
+
+
+\section{Step 5}
+
+\begin{itemize}
+\item blip (a) and majority vote (b) SuperLearner
+\item incorrect glm QAV, incorrect glm QAW
+\end{itemize}
+
+
+
+\subsection{Blip-based SL (a)}
+<<ODTR_DGP_AL_bin_step5a, echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+ODTR_step5a_bin = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/results/ODTR_step5a_bin.RData")
+#ODTR_step5a_bin$ODTR_IPCW_step5a_bin = ODTR_step5a_bin$ODTR_TMLE_step5a_bin
+makeplot_ODTR(ODTR_step5a_bin, truevalues = DGP_AL_bin_true_values, title = "bin - step5a")
+maketable_ODTR(ODTR_step5a_bin, truevalues = DGP_AL_bin_true_values, caption = "bin - step5a")
+
+@
+
+\subsection{vote-based SL (b)}
+<<ODTR_DGP_AL_bin_step5b, echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+ODTR_step5b_bin = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/results/ODTR_step5b_bin.RData")
+#ODTR_step5b_bin$ODTR_IPCW_step5b_bin = ODTR_step5b_bin$ODTR_TMLE_step5b_bin
+makeplot_ODTR(ODTR_step5b_bin, truevalues = DGP_AL_bin_true_values, title = "bin - step5b")
+maketable_ODTR(ODTR_step5b_bin, truevalues = DGP_AL_bin_true_values, caption = "bin - step5a")
+@
+
+\end{document}
