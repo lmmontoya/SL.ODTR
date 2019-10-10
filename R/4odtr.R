@@ -20,6 +20,7 @@
 #' @param moMain_model for DynTxRegime modeling outcome regression
 #' @param moCont_model for DynTxRegime modeling contrast
 #' @param g1W user-supplied vector of g1W
+#' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
 #'
 #' @return
 #'
@@ -47,10 +48,10 @@
 odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
                 QAW.SL.library, risk.type, grid.size = 100,
                 SL.type, kappa = NULL, QAW = NULL, VFolds = 10,
-                moMain_model = NULL, moCont_model = NULL, g1W = NULL){
+                moMain_model = NULL, moCont_model = NULL, g1W = NULL, family = NULL){
 
   n = length(A)
-  family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
+  if (is.null(family) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
   if (is.null(ab)) { ab = range(Y) }
 
   # E[Y|A,W]
