@@ -5,7 +5,7 @@
 \title{Blip-based SL}
 \usage{
 SL.blip(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library, risk.type,
-  grid.size, newV = NULL, VFolds)
+  grid.size, newV = NULL, VFolds, family)
 }
 \arguments{
 \item{V}{subset covariates for designing ODTR}
@@ -27,6 +27,8 @@ SL.blip(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library, risk.type,
 \item{risk.type}{risk type}
 
 \item{VFolds}{number of folds}
+
+\item{family}{family for outcome}
 
 \item{grid}{size}
 

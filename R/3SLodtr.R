@@ -15,6 +15,7 @@
 #' @param grid size
 #' @param new V
 #' @param VFolds number of folds
+#' @param family family for outcome
 #'
 #' @return
 #'
@@ -29,10 +30,9 @@
 
 SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
                    risk.type, grid.size,
-                   newV = NULL, VFolds){
+                   newV = NULL, VFolds, family){
 
   n = length(A)
-  family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
 
   libraryNames = c(blip.SL.library) # will be trouble if screeners are used?
   numalgs = length(libraryNames)
@@ -119,6 +119,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 #' @param newY new Y
 #' @param moMain_model for DynTxRegime
 #' @param moCont_model for DynTxRegime
+#' @param family family for outcome
 #'
 #' @return
 #'
@@ -130,7 +131,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 # 1. txt under optimal rule (convex combination) => SL.predict
 # 2. txt under optimal rule for each algorithm  => library.predict
 # 3. coefficients on each of the candidate rules => coef
-SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library, dopt.SL.library, risk.type, grid.size, newW = NULL, newV = NULL, newA = NULL, newY = NULL, VFolds, moMain_model = NULL, moCont_model = NULL){
+SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library, dopt.SL.library, risk.type, grid.size, newW = NULL, newV = NULL, newA = NULL, newY = NULL, VFolds, moMain_model = NULL, moCont_model = NULL, family){
 
   n = length(A)
   family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
