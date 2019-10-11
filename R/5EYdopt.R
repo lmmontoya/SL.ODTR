@@ -23,6 +23,7 @@
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
 #' @param g1W user-supplied vector of g1W
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
+#' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
 #'
 #' @importFrom stats predict var qnorm
 #' @import SuperLearner
@@ -64,16 +65,16 @@
 EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                   QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type,
                   moMain_model = NULL, moCont_model = NULL,
-                  grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL){
+                  grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL, family = NULL){
 
   n = length(Y)
-  family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
+  if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
   ab = range(Y)
 
   SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                  dopt.SL.library = dopt.SL.library, SL.type = SL.type,
                  risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
-                 moMain_model = moMain_model, moCont_model = moCont_model, W_for_g = W_for_g, kappa = kappa, g1W = g1W)
+                 moMain_model = moMain_model, moCont_model = moCont_model, W_for_g = W_for_g, kappa = kappa, g1W = g1W, family = family)
 
   QAW.reg = SL.odtr$QAW.reg
 
