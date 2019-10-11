@@ -105,7 +105,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                              risk.type = risk.type, W_for_g = W_for_g,
                              grid.size = grid.size,
                              newA = A[folds==i], newW = W[folds==i,], newV = V[folds==i,], newY = Y[folds==i],
-                             VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model)
+                             VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model, family = family)
       dopt.test = SL.fit.train$SL.predict
     } else if (SL.type == "blip") {
       SL.fit.train = SL.blip(V = V[folds!=i,], W = W[folds!=i,],
@@ -114,7 +114,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                              QAW.reg = QAW.reg.train, gAW = gAW[folds!=i],
                              risk.type = risk.type,
                              grid.size = grid.size, newV = V[folds==i,],
-                             VFolds = VFolds)
+                             VFolds = VFolds, family = family)
       blip.test = SL.fit.train$SL.predict
       dopt.test = dopt.fun(blip.test, kappa)
     }
