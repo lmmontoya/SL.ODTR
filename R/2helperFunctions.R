@@ -348,7 +348,7 @@ tmle.fun = function(A, Y, d, Qd, gAW, ab){
 
   Psi_TMLE = mean(Qdopt.star)
   IC = H*(Y - Qdopt.star) + Qdopt.star - Psi_TMLE
-  return(list(psi = Psi_TMLE, IC = IC))
+  return(list(psi = Psi_TMLE, IC = IC, Qdopt.star = Qdopt.star))
 
 }
 
