@@ -428,9 +428,8 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 
   # Unadj
   Psi_unadj = mean(Y[A==dopt])
-  se_unadj = sqrt(var(Y[A==1])/sum(A==1) +
-                    var(Y[A==0])/sum(A==1))
-  CI_unadj = Psi_unadj + c(-1, 1) * qnorm(0.975) * se_unadj
+  var_unadj = var(Y[A==d])/sum(A==d)
+  CI_unadj = Psi_unadj + c(-1, 1) * qnorm(0.975) * sqrt(var_unadj)
 
   # g-comp
   Psi_gcomp = mean(Qdopt)

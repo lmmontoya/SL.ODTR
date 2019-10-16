@@ -32,7 +32,7 @@ library(ggplot2)
 library(xtable)
 require(gridExtra)
 library('latex2exp')
-source("/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/R/7showResults.R")
+source("/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/showResults.R")
 #source('/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/R/1DGPfunctions.R')
 @
 
