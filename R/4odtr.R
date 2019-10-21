@@ -155,6 +155,7 @@ predict_odtr = function(odtr_obj, newV) {
   SL.out = list()
   SL.out$libraryBlipPredict = pred_blip
   SL.out$SL.predict = SL.out$libraryBlipPredict%*%odtr_obj$SL.fit$coef
+  SL.out$SL.dopt.predict = as.numeric(SL.out$SL.predict > 0)
 
   return(SL.out)
 
