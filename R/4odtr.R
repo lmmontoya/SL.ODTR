@@ -142,8 +142,8 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
 predict_odtr = function(odtr_obj, newV) {
 
   # predict on new data
-  pred_blip = matrix(NA, nrow = nrow(newV), ncol = length(blip.SL.library))
-  colnames(pred_blip) = c(blip.SL.library)
+  pred_blip = matrix(NA, nrow = nrow(newV), ncol = length(odtr_obj$SL.fit$libraryNames))
+  colnames(pred_blip) = c(odtr_obj$SL.fit$libraryNames)
   SL.fit = odtr_obj$SL.fit
 
   for (mm in seq(length(blip.SL.library))) {
