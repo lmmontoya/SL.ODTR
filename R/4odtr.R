@@ -146,7 +146,7 @@ predict_odtr = function(odtr_obj, newV) {
   colnames(pred_blip) = c(odtr_obj$SL.fit$libraryNames)
   SL.fit = odtr_obj$SL.fit
 
-  for (mm in seq(length(blip.SL.library))) {
+  for (mm in seq(length(odtr_obj$SL.fit$libraryNames))) {
     pred_blip[, mm] = do.call('predict', list(object = SL.fit$fitBlipLibrary[[mm]],
                                               newdata = newV,
                                               family = SL.fit$blipFamily))
