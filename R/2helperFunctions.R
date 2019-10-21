@@ -343,12 +343,12 @@ tmle.fun = function(A, Y, d, Qd, gAW, ab){
   logit.Qd01 = qlogis(Qd01)
   update = glm(Y01~offset(logit.Qd01), weights = H, family="quasibinomial")
 
-  Qdopt.star = predict(update, type = "response")*diff(ab)+min(ab)
+  Qd.star = predict(update, type = "response")*diff(ab)+min(ab)
   Y = Y01*diff(ab)+min(ab)
 
-  Psi_TMLE = mean(Qdopt.star)
-  IC = H*(Y - Qdopt.star) + Qdopt.star - Psi_TMLE
-  return(list(psi = Psi_TMLE, IC = IC, Qdopt.star = Qdopt.star))
+  Psi_TMLE = mean(Qd.star)
+  IC = H*(Y - Qd.star) + Qd.star - Psi_TMLE
+  return(list(psi = Psi_TMLE, IC = IC, Qd.star = Qd.star))
 
 }
 
@@ -428,7 +428,7 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 
   # Unadj
   Psi_unadj = mean(Y[A==dopt])
-  var_unadj = var(Y[A==d])/sum(A==d)
+  var_unadj = var(Y[A==dopt])/sum(A==dopt)
   CI_unadj = Psi_unadj + c(-1, 1) * qnorm(0.975) * sqrt(var_unadj)
 
   # g-comp

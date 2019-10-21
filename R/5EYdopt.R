@@ -182,7 +182,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
   } else {
 
     Qdopt = predict(QAW.reg, newdata = data.frame(W, A = dopt), type = "response")$pred
-    Qdopt.star = tmle.fun(A = A, d = dopt, Y = Y, Qd = Qdopt, gAW = gAW, ab = ab)$Qdopt.star
+    Qdopt.star = tmle.fun(A = A, d = dopt, Y = Y, Qd = Qdopt, gAW = gAW, ab = ab)$Qd.star
 
     toreturn = list(EYdopt_estimates = toreturn_dopt,
                     Qdopt.star = Qdopt.star,
