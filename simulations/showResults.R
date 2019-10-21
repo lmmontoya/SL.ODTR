@@ -458,12 +458,13 @@ maketable_results = function(results, truevalues, caption, scalebox = .7, rc){
 plot_ODTR_results = function(results, risk, EY, EY1, CI_EY1, EY0, CI_EY0, title) {
 
   estimates = results$EYdopt_estimates
+  estimates = estimates[-grep("LTMLE", names(estimates))]
   est = estimates[grep(names(estimates), pattern = "Psi_")]
   odtr = data.frame(Risk = risk,
                   EYdn = factor(names(est), levels = names(est)),
                   Estimates = est,
-                  lowerCI = c(estimates["CI_unadj1"], EY , estimates["CI_IPTW1"], estimates["CI_IPTW_DR1"], estimates["CI_TMLE1"], estimates["CI_LTMLE1"], estimates["CI_CV.TMLE1"]),
-                  upperCI = c(estimates["CI_unadj2"], EY , estimates["CI_IPTW2"], estimates["CI_IPTW_DR2"], estimates["CI_TMLE2"], estimates["CI_LTMLE2"], estimates["CI_CV.TMLE2"]),
+                  lowerCI = c(estimates["CI_unadj1"], EY , estimates["CI_IPTW1"], estimates["CI_IPTW_DR1"], estimates["CI_TMLE1"], estimates["CI_CV.TMLE1"]), #estimates["CI_LTMLE1"],
+                  upperCI = c(estimates["CI_unadj2"], EY , estimates["CI_IPTW2"], estimates["CI_IPTW_DR2"], estimates["CI_TMLE2"], estimates["CI_CV.TMLE2"]), #estimates["CI_LTMLE2"],
                   prop_dopt = mean(results$SL.odtr$dopt))
 
   pd <- position_dodge(width = 0.7)
