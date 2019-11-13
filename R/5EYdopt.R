@@ -15,7 +15,7 @@
 #' @param blip.SL.library SuperLearner library for estimating the blip
 #' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}.
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
-#' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE" and for (2) E[Ydopt] risk use "CV IPCWDR" (for E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for E[Ydopt] estimates using TMLE)
+#' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
 #' @param moMain_model for DynTxRegime outcome regression
 #' @param moCont_model for DynTxRegime contrast function
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
@@ -95,7 +95,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                                              QAW.SL.library = QAW.SL.library, ab = ab)
   ### CV-TMLE ###
   folds = sample(1:VFolds, size = n, replace = T)
-  CV.TMLE = function(i){
+  CV.TMLE_fun = function(i){
     QAW.reg.train = SuperLearner(Y = Y[folds!=i],
                                  X = data.frame(A = A[folds!=i], W[folds!=i,]),
                                  SL.library = QAW.SL.library, family = family)
@@ -138,7 +138,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
     }
     return(toreturn)
   }
-  CV.TMLE.est = lapply(1:VFolds, CV.TMLE)
+  CV.TMLE.est = lapply(1:VFolds, CV.TMLE_fun)
   Psi_CV.TMLE = mean(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$Psi_TMLE.test))
   var_CV.TMLE = mean(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$var_IC.test))/n
   CI_CV.TMLE = Psi_CV.TMLE + c(-1,1)*qnorm(0.975)*sqrt(var_CV.TMLE)
@@ -153,7 +153,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                                                 QAW.SL.library = QAW.SL.library, ab = ab)
     ### CV-TMLE ###
     folds = sample(1:VFolds, size = n, replace = T)
-    CV.TMLE = function(i){
+    CV.TMLE_fun = function(i){
       QAW.reg.train = SuperLearner(Y = Y[folds!=i],
                                    X = data.frame(A = A[folds!=i], W[folds!=i,]),
                                    SL.library = QAW.SL.library, family = family)
@@ -168,7 +168,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
       var_IC.test = var(tmle_objects.dopt.test$IC)
       return(list(Psi_TMLE.test = Psi_TMLE.test, var_IC.test = var_IC.test))
     }
-    CV.TMLE.est0 = lapply(1:VFolds, CV.TMLE)
+    CV.TMLE.est0 = lapply(1:VFolds, CV.TMLE_fun)
     Psi_CV.TMLE0 = mean(sapply(1:VFolds, function(i) CV.TMLE.est0[[i]]$Psi_TMLE.test))
     var_CV.TMLE0 = mean(sapply(1:VFolds, function(i) CV.TMLE.est0[[i]]$var_IC.test))/n
     CI_CV.TMLE0 = Psi_CV.TMLE0 + c(-1,1)*qnorm(0.975)*sqrt(var_CV.TMLE0)

@@ -49,7 +49,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   SL.out = list()
 
   folds = sample(1:VFolds, size = n, replace = T)
-  risk.combos_fun = function(i) {
+  CV.risk_fun = function(i) {
     train_ind = folds != i
     test_ind = folds == i
     QAW.reg.train = SuperLearner(Y = Y[train_ind],
@@ -68,17 +68,35 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
     if (risk.type == "CV IPCWDR") {
       risk.combos.test = sapply(1:nrow(simplex.grid), function(x) -mean(((A[test_ind]==dopt.combos.test[,x])/gAW[test_ind] *(Y[test_ind]-QAW.pred[test_ind])+Qdopt.combos.test[,x])))
-    } else if (risk.type == "CV TMLE") {
-      risk.combos.test = sapply(1:nrow(simplex.grid), function(x) -tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW[test_ind], ab = ab)$psi)
+      toreturn = list(risk.combos.test = risk.combos.test)
+    } else if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
+      tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW[test_ind], ab = ab))
+      #toreturn = sapply(1:nrow(simplex.grid), function(x) -tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW[test_ind], ab = ab)$psi)
+      risk.combos.test = -unlist(lapply(tmle.obj.test, function(x) x$psi))
+      risk.var.combos.test = unlist(lapply(tmle.obj.test, function(x) var(x$IC)))
+      toreturn = list(risk.combos.test = risk.combos.test, risk.var.combos.test = risk.var.combos.test)
     } else if (risk.type == "CV MSE") {
       risk.combos.test = sapply(1:nrow(simplex.grid), function(x) mean((D[test_ind] - candidates.blipsXalpha.test[,x])^2))
+      toreturn = list(risk.combos.test = risk.combos.test)
     }
-    return(risk.combos.test)
+    return(toreturn)
   }
 
-  risk.combos = colMeans(t(sapply(1:VFolds, risk.combos_fun)))
-  SL.out$coef = simplex.grid[which.min(risk.combos),]
+  CV.risk.obj = lapply(1:VFolds, CV.risk_fun)
+  CV.risk = colMeans(t(sapply(1:VFolds, function(i) CV.risk.obj[[i]]$risk.combos.test)))
+  if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
+    var_CV.TMLE = colMeans(t(sapply(1:VFolds, function(i) CV.risk.obj[[i]]$risk.var.combos.test)))/n
+    CI_CV.TMLE_upper = CV.risk + qnorm(0.975)*sqrt(var_CV.TMLE)
+    CI_CV.TMLE_lower = CV.risk - qnorm(0.975)*sqrt(var_CV.TMLE)
+  }
 
+  if (risk.type == "CV TMLE CI") {
+    SL.out$CV.risk_min = list(est = min(CI_CV.TMLE_upper))
+    SL.out$coef = simplex.grid[which.min(CI_CV.TMLE_upper),]
+  } else {
+    SL.out$CV.risk_min = list(est = min(CV.risk))
+    SL.out$coef = simplex.grid[which.min(CV.risk),]
+  }
 
   QAW.pred = predict(QAW.reg, newdata = data.frame(W, A = A), type = "response")$pred
   Q1W.pred = predict(QAW.reg, newdata = data.frame(W, A = 1), type = "response")$pred
@@ -93,6 +111,14 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   SL.out$blipFamily = SL.init$family
   SL.out$libraryBlipPredict = SL.init$library.predict
   SL.out$SL.predict = SL.out$libraryBlipPredict%*%SL.out$coef
+  if (risk.type == "CV TMLE") {
+    SL.out$CV.risk_min$CI = c(lowerCI = CI_CV.TMLE_lower[which.min(CV.risk)],
+                          upperCI = CI_CV.TMLE_upper[which.min(CV.risk)])
+  }
+  if (risk.type == "CV TMLE CI") {
+    SL.out$CV.risk_min$CI = c(lowerCI = CI_CV.TMLE_lower[which.min(CI_CV.TMLE_upper)],
+                          upperCI = CI_CV.TMLE_upper[which.min(CI_CV.TMLE_upper)])
+  }
 
   return(SL.out)
 
@@ -161,7 +187,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   SL.out = list()
 
   folds = sample(1:VFolds, size = n, replace = T)
-  risk.combos_fun = function(i){
+  CV.risk_fun = function(i){
     train_ind = folds != i
     test_ind = folds == i
     QAW.reg.train = SuperLearner(Y = Y[train_ind], X = data.frame(A, W)[train_ind,], SL.library = QAW.reg$SL.library$library$predAlgorithm, family = family)
@@ -173,15 +199,32 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     dopt.combos.test = apply(candidates.doptsXalpha.test > .5, 2, as.numeric)
     Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
     if (risk.type == "CV IPCWDR") {
-      QAW.pred = predict(QAW.reg.train, newdata = data.frame(W, A = A), type = "response")$pred
       risk.combos.test = sapply(1:nrow(simplex.grid), function(x) -mean(((A[test_ind]==dopt.combos.test[,x])/gAW[test_ind] *(Y[test_ind]-QAW.pred[test_ind])+Qdopt.combos.test[,x])))
-    } else if (risk.type == "CV TMLE") {
-      risk.combos.test = sapply(1:nrow(simplex.grid), function(x) -tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW[test_ind], ab = ab)$psi)
+      toreturn = list(risk.combos.test = risk.combos.test)
+    } else if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
+      tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW[test_ind], ab = ab))
+      #toreturn = sapply(1:nrow(simplex.grid), function(x) -tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW[test_ind], ab = ab)$psi)
+      risk.combos.test = -unlist(lapply(tmle.obj.test, function(x) x$psi))
+      risk.var.combos.test = unlist(lapply(tmle.obj.test, function(x) var(x$IC)))
+      toreturn = list(risk.combos.test = risk.combos.test, risk.var.combos.test = risk.var.combos.test)
     }
-    return(risk.combos.test)
+    return(toreturn)
   }
-  risk.combos = colMeans(t(sapply(1:VFolds, risk.combos_fun)))
-  SL.out$coef = simplex.grid[which.min(risk.combos),]
+  CV.risk.obj = lapply(1:VFolds, CV.risk_fun)
+  CV.risk = colMeans(t(sapply(1:VFolds, function(i) CV.risk.obj[[i]]$risk.combos.test)))
+  if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
+    var_CV.TMLE = colMeans(t(sapply(1:VFolds, function(i) CV.risk.obj[[i]]$risk.var.combos.test)))/n
+    CI_CV.TMLE_upper = CV.risk + qnorm(0.975)*sqrt(var_CV.TMLE)
+    CI_CV.TMLE_lower = CV.risk - qnorm(0.975)*sqrt(var_CV.TMLE)
+  }
+
+  if (risk.type == "CV TMLE CI") {
+    SL.out$CV.risk_min = list(est = min(CI_CV.TMLE_upper))
+    SL.out$coef = simplex.grid[which.min(CI_CV.TMLE_upper),]
+  } else {
+    SL.out$CV.risk_min = list(est = min(CV.risk))
+    SL.out$coef = simplex.grid[which.min(CV.risk),]
+  }
 
   if (is.null(newV)) {
     # predict on original data
@@ -203,6 +246,14 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   }
 
   SL.out$libraryNames = names(SL.out$coef) = names(SL.out$librarydoptPredict)
+  if (risk.type == "CV TMLE") {
+    SL.out$CV.risk_min$CI = c(lowerCI = CI_CV.TMLE_lower[which.min(CV.risk)],
+                              upperCI = CI_CV.TMLE_upper[which.min(CV.risk)])
+  }
+  if (risk.type == "CV TMLE CI") {
+    SL.out$CV.risk_min$CI = c(lowerCI = CI_CV.TMLE_lower[which.min(CI_CV.TMLE_upper)],
+                              upperCI = CI_CV.TMLE_upper[which.min(CI_CV.TMLE_upper)])
+  }
 
   return(SL.out)
 

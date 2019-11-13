@@ -11,7 +11,7 @@
 #' @param V Data frame of observed baseline covariates (subset of W) used to design the ODTR
 #' @param blip.SL.library SuperLearner library for estimating blip
 #' @param QAW.SL.library SuperLearner library for estimating the outcome regression
-#' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE" and for (2) E[Ydopt] risk use "CV IPCWDR" (for E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for E[Ydopt] estimates using TMLE)
+#' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
 #' @param SL.type Blip-based ("blip") or vote-based SuperLearner ("vote"). Note that if SL.type is "vote" then cannot put in kappa.
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
@@ -68,7 +68,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
   gAW = ifelse(A == 1, g1W, 1-g1W)
 
   if (SL.type == "vote") {
-    # get estimate of txt under rule based on risk type (IPCWDR, TMLE, CV TMLE, CV IPCWDR)
+    # get estimate of txt under rule based on risk type (CV TMLE, CV IPCWDR, CV TMLE CI)
     SL.fit = SL.vote(V = V, W = W, W_for_g, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library, dopt.SL.library = dopt.SL.library,
                      gAW = gAW, risk.type = risk.type, grid.size = grid.size,
@@ -77,7 +77,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     # get estimate of txt under optimal rule
     dopt = SL.fit$SL.predict
   } else if (SL.type == "blip") {
-    # get estimate of blip based on risk type (IPCWDR, TMLE, CV TMLE, CV IPCWDR, MSE)
+    # get estimate of blip based on risk type (CV TMLE, CV IPCWDR, MSE, CV TMLE CI)
     SL.fit = SL.blip(V = V, W = W, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library,
                      gAW = gAW, risk.type = risk.type,
@@ -100,11 +100,19 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     # Does estimated optimal rule using estimated QAW match true optimal rule?
     match_dopt_QAWHat = mean(true_dopt == dopt)
 
+    if(risk.type %in% c("CV TMLE", "CV TMLE CI")) {
+      CV.risk_minCI = as.numeric(SL.fit$CV.risk_min$CI)
+    } else {
+      CV.risk_minCI = NA
+    }
+
     toreturn = c(EYdn_QAWHat = EYdn_QAWHat,
                  match_dopt_QAWHat = match_dopt_QAWHat,
                 mean_dopt = mean(dopt),
                 mean_dopt0 = mean(true_dopt),
-                coef = SL.fit$coef)
+                coef = SL.fit$coef,
+                CV.risk_min = SL.fit$CV.risk_min$est,
+                CV.risk_minCI = CV.risk_minCI)
   } else {
     toreturn = list(dopt = dopt,
                     QAW.reg = QAW.reg,
