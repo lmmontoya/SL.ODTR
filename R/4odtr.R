@@ -21,6 +21,7 @@
 #' @param moCont_model for DynTxRegime modeling contrast
 #' @param g1W user-supplied vector of g1W
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
+#' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms). Default is false (discrete SL).
 #'
 #' @return
 #'
@@ -48,7 +49,7 @@
 odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
                 QAW.SL.library, risk.type, grid.size = 100,
                 SL.type, kappa = NULL, QAW = NULL, VFolds = 10,
-                moMain_model = NULL, moCont_model = NULL, g1W = NULL, family = NULL){
+                moMain_model = NULL, moCont_model = NULL, g1W = NULL, family = NULL, discrete.SL = F){
 
   n = length(A)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
@@ -71,7 +72,8 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     SL.fit = SL.vote(V = V, W = W, W_for_g, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library, dopt.SL.library = dopt.SL.library,
                      gAW = gAW, risk.type = risk.type, grid.size = grid.size,
-                     VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model, newV = newV, family = family)
+                     VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model,
+                     newV = newV, family = family, discrete.SL = discrete.SL)
     # get estimate of txt under optimal rule
     dopt = SL.fit$SL.predict
   } else if (SL.type == "blip") {
@@ -79,7 +81,8 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     SL.fit = SL.blip(V = V, W = W, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library,
                      gAW = gAW, risk.type = risk.type,
-                     grid.size = grid.size, VFolds = VFolds, newV = newV, family = family)
+                     grid.size = grid.size, VFolds = VFolds, newV = newV, family = family,
+                     discrete.SL = discrete.SL)
     # get estimate of optimal rule based on blip estimate
     blip = SL.fit$SL.predict
     # get dopt

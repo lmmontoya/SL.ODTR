@@ -7,7 +7,7 @@
 SL.vote(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   dopt.SL.library, risk.type, grid.size, newW = NULL, newV = NULL,
   newA = NULL, newY = NULL, VFolds, moMain_model = NULL,
-  moCont_model = NULL, family)
+  moCont_model = NULL, family, discrete.SL)
 }
 \arguments{
 \item{V}{subset covariates for designing ODTR}
@@ -45,6 +45,8 @@ SL.vote(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 \item{moCont_model}{for DynTxRegime}
 
 \item{family}{family for outcome}
+
+\item{discrete.SL}{whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)}
 
 \item{grid}{size}
 

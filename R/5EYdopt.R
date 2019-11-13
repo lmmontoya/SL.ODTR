@@ -24,6 +24,7 @@
 #' @param g1W user-supplied vector of g1W
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
+#' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms). Default is false (discrete SL).
 #'
 #' @importFrom stats predict var qnorm
 #' @import SuperLearner
@@ -65,7 +66,8 @@
 EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                   QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type,
                   moMain_model = NULL, moCont_model = NULL,
-                  grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL, family = NULL){
+                  grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
+                  family = NULL, discrete.SL = F){
 
   n = length(Y)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
@@ -74,7 +76,8 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
   SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                  dopt.SL.library = dopt.SL.library, SL.type = SL.type,
                  risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
-                 moMain_model = moMain_model, moCont_model = moCont_model, W_for_g = W_for_g, kappa = kappa, g1W = g1W, family = family)
+                 moMain_model = moMain_model, moCont_model = moCont_model, W_for_g = W_for_g,
+                 kappa = kappa, g1W = g1W, family = family, discrete.SL = discrete.SL)
 
   QAW.reg = SL.odtr$QAW.reg
 
@@ -105,7 +108,8 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                              risk.type = risk.type, W_for_g = W_for_g,
                              grid.size = grid.size,
                              newA = A[folds==i], newW = W[folds==i,], newV = V[folds==i,], newY = Y[folds==i],
-                             VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model, family = family)
+                             VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model,
+                             family = family, discrete.SL = discrete.SL)
       dopt.test = SL.fit.train$SL.predict
     } else if (SL.type == "blip") {
       SL.fit.train = SL.blip(V = V[folds!=i,], W = W[folds!=i,],
@@ -114,7 +118,8 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                              QAW.reg = QAW.reg.train, gAW = gAW[folds!=i],
                              risk.type = risk.type,
                              grid.size = grid.size, newV = V[folds==i,],
-                             VFolds = VFolds, family = family)
+                             VFolds = VFolds, family = family,
+                             discrete.SL = discrete.SL)
       blip.test = SL.fit.train$SL.predict
       dopt.test = dopt.fun(blip.test, kappa)
     }

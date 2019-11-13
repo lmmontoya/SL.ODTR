@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  14 SEP 2019 17:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  23 OCT 2019 08:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -755,35 +755,44 @@ Package caption Info: End \AtBeginDocument code.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 ABD: EveryShipout initializing macros
-<figure/ODTR_DGP_cont_step1a-1.pdf, id=4, 867.24pt x 397.485pt>
-File: figure/ODTR_DGP_cont_step1a-1.pdf Graphic file (type pdf)
-
-<use figure/ODTR_DGP_cont_step1a-1.pdf>
-Package pdftex.def Info: figure/ODTR_DGP_cont_step1a-1.pdf used on input line 8
-8.
-(pdftex.def)             Requested size: 480.59505pt x 220.2732pt.
-LaTeX Font Info:    Try loading font information for U+rsfs on input line 112.
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 114.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 112.
+LaTeX Font Info:    Try loading font information for U+msa on input line 114.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 112.
+LaTeX Font Info:    Try loading font information for U+msb on input line 114.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<figure/ODTR_DGP_bin_step1a-1.pdf, id=5, 867.24pt x 397.485pt>
-File: figure/ODTR_DGP_bin_step1a-1.pdf Graphic file (type pdf)
 
-<use figure/ODTR_DGP_bin_step1a-1.pdf>
-Package pdftex.def Info: figure/ODTR_DGP_bin_step1a-1.pdf used on input line 23
-9.
+Package xcolor Warning: Incompatible color definition on input line 212.
+
+
+Package xcolor Warning: Incompatible color definition on input line 215.
+
+
+Package xcolor Warning: Incompatible color definition on input line 215.
+
+
+Package xcolor Warning: Incompatible color definition on input line 215.
+
+<figure/ODTR_DGP_smooth2_step1a-1.pdf, id=4, 867.24pt x 397.485pt>
+File: figure/ODTR_DGP_smooth2_step1a-1.pdf Graphic file (type pdf)
+
+<use figure/ODTR_DGP_smooth2_step1a-1.pdf>
+Package pdftex.def Info: figure/ODTR_DGP_smooth2_step1a-1.pdf used on input lin
+e 216.
 (pdftex.def)             Requested size: 480.59505pt x 220.2732pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 219.
+
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
@@ -798,42 +807,84 @@ Non-PDF special ignored!
 Non-PDF special ignored!
 Non-PDF special ignored!
 Non-PDF special ignored!{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/upd
-map/pdftex.map} <./figure/ODTR_DGP_cont_step1a-1.pdf>]
-<figure/ODTR_DGP_smooth_step1a-1.pdf, id=18, 867.24pt x 397.485pt>
-File: figure/ODTR_DGP_smooth_step1a-1.pdf Graphic file (type pdf)
+map/pdftex.map}]
 
-<use figure/ODTR_DGP_smooth_step1a-1.pdf>
-Package pdftex.def Info: figure/ODTR_DGP_smooth_step1a-1.pdf used on input line
- 359.
-(pdftex.def)             Requested size: 480.59505pt x 220.2732pt.
+Package xcolor Warning: Incompatible color definition on input line 222.
+
+
+Overfull \hbox (123.01717pt too wide) in paragraph at lines 222--223
+[]\OT1/cmtt/m/n/10.95 ## Warning in file(file, ifelse(append, "a", "w")): canno
+t open file 'simulations/odtr/tables/DGP2.csv':
+ []
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 224.
+
+Package xcolor Warning: Incompatible color definition on input line 224.
+
+
+Package xcolor Warning: Incompatible color definition on input line 226.
+
+
+Overfull \hbox (123.01717pt too wide) in paragraph at lines 226--227
+[]\OT1/cmtt/m/n/10.95 ## Warning in file(file, ifelse(append, "a", "w")): canno
+t open file 'simulations/odtr/tables/DGP3.csv':
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 228.
+
+
+Package xcolor Warning: Incompatible color definition on input line 230.
+
+
+Overfull \hbox (151.7606pt too wide) in paragraph at lines 230--231
+[]\OT1/cmtt/m/n/10.95 ## Warning in file(file, ifelse(append, "a", "w")): canno
+t open file 'simulations/odtr/tables/coefsDGP2.csv':
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 232.
+
+
+Package xcolor Warning: Incompatible color definition on input line 234.
+
+
+Overfull \hbox (151.7606pt too wide) in paragraph at lines 234--235
+[]\OT1/cmtt/m/n/10.95 ## Warning in file(file, ifelse(append, "a", "w")): canno
+t open file 'simulations/odtr/tables/coefsDGP3.csv':
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 236.
+
+
+Package xcolor Warning: Incompatible color definition on input line 236.
+
+
+Package xcolor Warning: Incompatible color definition on input line 236.
+
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[2 <./figure/ODTR_DGP_bin_step1a-1.pdf> <./figure/ODTR_DGP_smooth_step1a-1.pdf>
-]
-Overfull \vbox (43.36243pt too high) has occurred while \output is active []
-
-
-[3]
-Overfull \vbox (43.36243pt too high) has occurred while \output is active []
-
-
-[4] (./forpaper.aux) ) 
+[2 <./figure/ODTR_DGP_smooth2_step1a-1.pdf>] (./forpaper.aux) ) 
 Here is how much of TeX's memory you used:
- 15755 strings out of 493089
- 291380 string characters out of 6134842
- 382035 words of memory out of 5000000
- 18906 multiletter control sequences out of 15000+600000
- 9400 words of font info for 37 fonts, out of 8000000 for 9000
+ 15750 strings out of 493089
+ 291105 string characters out of 6134842
+ 369035 words of memory out of 5000000
+ 18901 multiletter control sequences out of 15000+600000
+ 9736 words of font info for 39 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  53i,11n,75p,846b,355s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2015/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmss10.pfb>
-Output written on forpaper.pdf (4 pages, 33497 bytes).
+</usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texli
+ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on forpaper.pdf (2 pages, 44009 bytes).
 PDF statistics:
- 45 PDF objects out of 1000 (max. 8388607)
- 31 compressed objects within 1 object stream
+ 33 PDF objects out of 1000 (max. 8388607)
+ 23 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 28 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

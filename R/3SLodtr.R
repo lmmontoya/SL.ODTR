@@ -16,6 +16,7 @@
 #' @param new V
 #' @param VFolds number of folds
 #' @param family family for outcome
+#' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
 #'
 #' @return
 #'
@@ -30,13 +31,19 @@
 
 SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
                    risk.type, grid.size,
-                   newV = NULL, VFolds, family){
+                   newV = NULL, VFolds, family, discrete.SL){
 
   n = length(A)
 
   libraryNames = c(blip.SL.library) # will be trouble if screeners are used?
   numalgs = length(libraryNames)
-  simplex.grid = rbind(diag(numalgs), simplex.sample(n = numalgs, N = grid.size)$samples)
+
+  if (discrete.SL) {
+    simplex.grid = diag(numalgs)
+  } else {
+    simplex.grid = rbind(diag(numalgs), simplex.sample(n = numalgs, N = grid.size)$samples)
+  }
+
   colnames(simplex.grid) = libraryNames
 
   SL.out = list()
@@ -120,6 +127,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 #' @param moMain_model for DynTxRegime
 #' @param moCont_model for DynTxRegime
 #' @param family family for outcome
+#' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
 #'
 #' @return
 #'
@@ -131,14 +139,24 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 # 1. txt under optimal rule (convex combination) => SL.predict
 # 2. txt under optimal rule for each algorithm  => library.predict
 # 3. coefficients on each of the candidate rules => coef
-SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library, dopt.SL.library, risk.type, grid.size, newW = NULL, newV = NULL, newA = NULL, newY = NULL, VFolds, moMain_model = NULL, moCont_model = NULL, family){
+SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
+                   dopt.SL.library,
+                   risk.type,
+                   grid.size,
+                   newW = NULL, newV = NULL, newA = NULL, newY = NULL,
+                   VFolds, moMain_model = NULL, moCont_model = NULL, family, discrete.SL){
 
   n = length(A)
   family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
 
   if (sum(dopt.SL.library == "all")>0) { dopt.SL.library = c("DonV", "Qlearn", "OWL", "EARL", "optclass", "RWL", "treatall", "treatnone")}
   numalgs = length(dopt.SL.library)-1 + length(blip.SL.library) #must have DonV
-  simplex.grid = rbind(diag(numalgs), simplex.sample(n = numalgs, N = grid.size)$samples)
+
+  if (discrete.SL) {
+    simplex.grid = diag(numalgs)
+  } else {
+    simplex.grid = rbind(diag(numalgs), simplex.sample(n = numalgs, N = grid.size)$samples)
+  }
 
   SL.out = list()
 
