@@ -4,9 +4,9 @@
 \alias{candidate_dopts}
 \title{Candidate dopt for direct search algorithms}
 \usage{
-candidate_dopts(dopt.SL.library, W, W_for_g, V, A, Y, newW, newV, newA,
-  newY, QAW.reg, gAW, moMain_model = NULL, moCont_model = NULL,
-  family = family)
+candidate_dopts(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V,
+  A, Y, newW, newV, newA, newY, QAW.reg, gAW, moMain_model = NULL,
+  moCont_model = NULL, family = family)
 }
 \arguments{
 \item{dopt.SL.library}{dopt library}

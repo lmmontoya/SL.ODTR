@@ -4,10 +4,11 @@
 \alias{EYdopt}
 \title{Estimation of E[Ydopt]}
 \usage{
-EYdopt(W, W_for_g = 1, V, A, Y, SL.type, QAW.SL.library, blip.SL.library,
-  dopt.SL.library = NULL, risk.type, moMain_model = NULL,
-  moCont_model = NULL, grid.size = 100, VFolds = 10, kappa = NULL,
-  QAW = NULL, g1W = NULL, family = NULL, discrete.SL = F)
+EYdopt(W, W_for_g = 1, V, A, Y, metalearner, QAW.SL.library,
+  blip.SL.library, dopt.SL.library = NULL, risk.type,
+  moMain_model = NULL, moCont_model = NULL, grid.size = 100,
+  VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
+  family = NULL, discrete.SL = F)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
@@ -20,7 +21,7 @@ EYdopt(W, W_for_g = 1, V, A, Y, SL.type, QAW.SL.library, blip.SL.library,
 
 \item{Y}{Vector of outcome (continuous or binary)}
 
-\item{SL.type}{Blip-based ("blip") or vote-based SuperLearner ("vote"). Note that if SL.type is "vote" then cannot put in kappa.}
+\item{metalearner}{Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.}
 
 \item{QAW.SL.library}{SuperLearner library for estimating outcome regression}
 
@@ -45,8 +46,6 @@ EYdopt(W, W_for_g = 1, V, A, Y, SL.type, QAW.SL.library, blip.SL.library,
 \item{g1W}{user-supplied vector of g1W}
 
 \item{family}{either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
-
-\item{discrete.SL}{whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms). Default is false (discrete SL).}
 
 \item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
 }
@@ -73,7 +72,7 @@ A = ObsData$A
 Y = ObsData$Y
 
 # E[Ydopt] using blip-based estimate of ODTR with risk function CV-TMLE
-EYdopt(W = W, A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", SL.type = 'blip')
+EYdopt(W = W, A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
 }
 \references{
 van der Laan, Mark J., and Alexander R. Luedtke. "Targeted learning of the mean outcome under an optimal dynamic treatment rule." \emph{Journal of causal inference} 3.1 (2015): 61-95.

@@ -5,8 +5,8 @@
 \title{Performance ODTR}
 \usage{
 performance_ODTR(x, n, risk.type, DGP_fun, QAW, QAW.SL.library,
-  blip.SL.library, dopt.SL.library, SL.type, moMain_model, moCont_model,
-  grid.size)
+  blip.SL.library, dopt.SL.library, metalearner, moMain_model,
+  moCont_model, grid.size)
 }
 \arguments{
 \item{x}{dummy}
@@ -25,7 +25,7 @@ performance_ODTR(x, n, risk.type, DGP_fun, QAW, QAW.SL.library,
 
 \item{dopt.SL.library}{library for dopt}
 
-\item{SL.type}{SL type}
+\item{metalearner}{SL type}
 
 \item{moMain_model}{moMain_model}
 

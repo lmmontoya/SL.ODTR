@@ -6,9 +6,9 @@
 \usage{
 odtr(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL,
   blip.SL.library, dopt.SL.library = NULL, QAW.SL.library, risk.type,
-  grid.size = 100, SL.type, kappa = NULL, QAW = NULL, VFolds = 10,
-  moMain_model = NULL, moCont_model = NULL, g1W = NULL,
-  family = NULL, discrete.SL = F)
+  grid.size = 100, metalearner, kappa = NULL, QAW = NULL,
+  VFolds = 10, moMain_model = NULL, moCont_model = NULL,
+  g1W = NULL, family = NULL)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
@@ -29,7 +29,7 @@ odtr(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL,
 
 \item{grid.size}{Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients}
 
-\item{SL.type}{Blip-based ("blip") or vote-based SuperLearner ("vote"). Note that if SL.type is "vote" then cannot put in kappa.}
+\item{metalearner}{Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.}
 
 \item{kappa}{For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.}
 
@@ -44,8 +44,6 @@ odtr(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL,
 \item{g1W}{user-supplied vector of g1W}
 
 \item{family}{either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
-
-\item{discrete.SL}{whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms). Default is false (discrete SL).}
 }
 \value{
 
@@ -64,7 +62,7 @@ A = ObsData$A
 Y = ObsData$Y
 
 # blip-based estimate of ODTR with risk function CV-TMLE
-odtr(W = W, W_for_g = subset(W, select = c(W1, W2)), A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", SL.type = 'blip')
+odtr(W = W, W_for_g = subset(W, select = c(W1, W2)), A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
 
 
 }

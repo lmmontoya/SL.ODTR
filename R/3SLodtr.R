@@ -191,7 +191,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     train_ind = folds != i
     test_ind = folds == i
     QAW.reg.train = SuperLearner(Y = Y[train_ind], X = data.frame(A, W)[train_ind,], SL.library = QAW.reg$SL.library$library$predAlgorithm, family = family)
-    candidate.dopts.test = candidate_dopts(dopt.SL.library = dopt.SL.library, W_for_g = W_for_g,
+    candidate.dopts.test = candidate_dopts(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
                                            W = W[train_ind,], V = V[train_ind,], A = A[train_ind], Y = Y[train_ind],
                                            newW = W[test_ind,], newV = V[test_ind,], newA = A[test_ind], newY = Y[test_ind],
                                            QAW.reg = QAW.reg.train, gAW = gAW[train_ind], moMain_model = moMain_model, moCont_model = moCont_model, family = family)
@@ -228,7 +228,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 
   if (is.null(newV)) {
     # predict on original data
-    SL.out$librarydoptPredict = candidate_dopts(dopt.SL.library = dopt.SL.library, W_for_g = W_for_g,
+    SL.out$librarydoptPredict = candidate_dopts(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
                                                 W = W, V = V, A = A, Y = Y,
                                                 newW = W, newV = V, newA = A, newY = Y,
                                                 QAW.reg = QAW.reg, gAW = gAW,
@@ -236,7 +236,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     SL.out$SL.predict = as.numeric(as.matrix(SL.out$librarydoptPredict)%*%SL.out$coef > .5)
   } else {
     # predict on new data
-    SL.out$librarydoptPredict = candidate_dopts(dopt.SL.library = dopt.SL.library, W_for_g = W_for_g,
+    SL.out$librarydoptPredict = candidate_dopts(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
                                                 W = W, V = V, A = A, Y = Y,
                                                 newW = newW, newV = newV, newA = newA, newY = newY,
                                                 QAW.reg = QAW.reg, gAW = gAW,

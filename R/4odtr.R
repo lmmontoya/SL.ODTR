@@ -13,7 +13,7 @@
 #' @param QAW.SL.library SuperLearner library for estimating the outcome regression
 #' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
-#' @param SL.type Blip-based ("blip") or vote-based SuperLearner ("vote"). Note that if SL.type is "vote" then cannot put in kappa.
+#' @param metalearner Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
@@ -21,7 +21,6 @@
 #' @param moCont_model for DynTxRegime modeling contrast
 #' @param g1W user-supplied vector of g1W
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
-#' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms). Default is false (discrete SL).
 #'
 #' @return
 #'
@@ -43,13 +42,13 @@
 #' Y = ObsData$Y
 #'
 #' # blip-based estimate of ODTR with risk function CV-TMLE
-#' odtr(W = W, W_for_g = subset(W, select = c(W1, W2)), A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", SL.type = 'blip')
+#' odtr(W = W, W_for_g = subset(W, select = c(W1, W2)), A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
 #'
 #'
 odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
                 QAW.SL.library, risk.type, grid.size = 100,
-                SL.type, kappa = NULL, QAW = NULL, VFolds = 10,
-                moMain_model = NULL, moCont_model = NULL, g1W = NULL, family = NULL, discrete.SL = F){
+                metalearner, kappa = NULL, QAW = NULL, VFolds = 10,
+                moMain_model = NULL, moCont_model = NULL, g1W = NULL, family = NULL){
 
   n = length(A)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
@@ -66,6 +65,14 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     g.reg = NULL
   }
   gAW = ifelse(A == 1, g1W, 1-g1W)
+
+  if (metalearner == "discrete") {
+    SL.type = "vote"
+    discrete.SL = T
+  } else {
+    SL.type = metalearner
+    discrete.SL = F
+  }
 
   if (SL.type == "vote") {
     # get estimate of txt under rule based on risk type (CV TMLE, CV IPCWDR, CV TMLE CI)

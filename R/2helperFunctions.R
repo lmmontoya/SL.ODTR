@@ -508,7 +508,7 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 #' @export
 #'
 # function that has library of dopt algorithms
-candidate_dopts = function(dopt.SL.library, W, W_for_g, V, A, Y, newW, newV, newA, newY, QAW.reg, gAW, moMain_model = NULL, moCont_model = NULL, family = family) {
+candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V, A, Y, newW, newV, newA, newY, QAW.reg, gAW, moMain_model = NULL, moCont_model = NULL, family = family) {
 
   if (any(dopt.SL.library %in% c("OWL", "EARL", "optclass", "RWL", "Qlearn"))) {
 

@@ -10,7 +10,7 @@
 #' @param V Data frame of observed baseline covariates (subset of W) used to design the ODTR
 #' @param A Vector of treatment
 #' @param Y Vector of outcome (continuous or binary)
-#' @param SL.type Blip-based ("blip") or vote-based SuperLearner ("vote"). Note that if SL.type is "vote" then cannot put in kappa.
+#' @param metalearner Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.
 #' @param QAW.SL.library SuperLearner library for estimating outcome regression
 #' @param blip.SL.library SuperLearner library for estimating the blip
 #' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}.
@@ -24,7 +24,6 @@
 #' @param g1W user-supplied vector of g1W
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
-#' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms). Default is false (discrete SL).
 #'
 #' @importFrom stats predict var qnorm
 #' @import SuperLearner
@@ -59,11 +58,11 @@
 #' Y = ObsData$Y
 #'
 #' # E[Ydopt] using blip-based estimate of ODTR with risk function CV-TMLE
-#' EYdopt(W = W, A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", SL.type = 'blip')
+#' EYdopt(W = W, A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
 
 
 
-EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
+EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
                   QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type,
                   moMain_model = NULL, moCont_model = NULL,
                   grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
@@ -74,7 +73,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
   ab = range(Y)
 
   SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
-                 dopt.SL.library = dopt.SL.library, SL.type = SL.type,
+                 dopt.SL.library = dopt.SL.library, metalearner = metalearner,
                  risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
                  moMain_model = moMain_model, moCont_model = moCont_model, W_for_g = W_for_g,
                  kappa = kappa, g1W = g1W, family = family, discrete.SL = discrete.SL)
@@ -95,7 +94,14 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, SL.type,
                                              QAW.SL.library = QAW.SL.library, ab = ab)
   ### CV-TMLE ###
   folds = sample(1:VFolds, size = n, replace = T)
-  CV.TMLE_fun = function(i){
+  CV.TMLE_fun = function(i){ #TODO: change this to, instead of being SL.vote or SL.blip, be odtr...and allow for discrete SL
+    if (metalearner == "discrete") {
+      SL.type = "vote"
+      discrete.SL = T
+    } else {
+      SL.type = metalearner
+      discrete.SL = F
+    }
     QAW.reg.train = SuperLearner(Y = Y[folds!=i],
                                  X = data.frame(A = A[folds!=i], W[folds!=i,]),
                                  SL.library = QAW.SL.library, family = family)
