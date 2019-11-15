@@ -101,7 +101,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
                          moMain_model = moMain_model, moCont_model = moCont_model,
                          W_for_g = W_for_g, kappa = kappa, g1W = g1W[folds!=i], family = family, ab = ab)
     QAW.reg.train = SL.odtr.train$QAW.reg
-    dopt.test = SL.odtr.train$SL.fit$SL.predict
+    dopt.test = SL.odtr.train$dopt
     Qdopt.test = predict(QAW.reg.train, newdata = data.frame(W[folds == i,], A = dopt.test), type = "response")$pred
     gAW.test = gAW[folds==i]
     tmle_objects.dopt.test = tmle.fun(A = A[folds == i], Y = Y[folds==i],
