@@ -37,8 +37,7 @@ ODTR_bliponly_discrete_CVMSE = do.call("rbind", mclapply(1:r, function(x) perfor
                                                                                       blip.SL.library = SL.full.library,
                                                                                       dopt.SL.library = NULL,
                                                                                       metalearner = "blip",
-                                                                                      moMain_model = NULL, moCont_model = NULL,
-                                                                                      discrete.SL = T), mc.cores = cores))
+                                                                                      moMain_model = NULL, moCont_model = NULL), mc.cores = cores))
 ODTR_bliponly_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                            risk.type = "CV TMLE",
                                                                                            DGP_fun = DGP_fun,
@@ -47,8 +46,7 @@ ODTR_bliponly_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) perfo
                                                                                            blip.SL.library = SL.full.library,
                                                                                            dopt.SL.library = NULL,
                                                                                            metalearner = "blip",
-                                                                                           moMain_model = NULL, moCont_model = NULL,
-                                                                                           discrete.SL = T), mc.cores = cores))
+                                                                                           moMain_model = NULL, moCont_model = NULL), mc.cores = cores))
 ODTR_bliponly_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                             risk.type = "CV TMLE CI",
                                                                                             DGP_fun = DGP_fun,
@@ -57,8 +55,7 @@ ODTR_bliponly_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) per
                                                                                             blip.SL.library = SL.full.library,
                                                                                             dopt.SL.library = NULL,
                                                                                             metalearner = "blip",
-                                                                                            moMain_model = NULL, moCont_model = NULL,
-                                                                                            discrete.SL = T), mc.cores = cores))
+                                                                                            moMain_model = NULL, moCont_model = NULL), mc.cores = cores))
 
 
 ODTR_bliponly_blipmeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,

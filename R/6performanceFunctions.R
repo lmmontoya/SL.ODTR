@@ -37,7 +37,7 @@ performance_ODTR = function(x, n, risk.type, DGP_fun, QAW, QAW.SL.library, blip.
   results = odtr(V=V, W=W, A=A, Y=Y, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                  dopt.SL.library = dopt.SL.library, metalearner = metalearner,
                  risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW,
-                 moMain_model = moMain_model, moCont_model = moCont_model, metalearner = metalearner)
+                 moMain_model = moMain_model, moCont_model = moCont_model)
 
   return(results)
 }
