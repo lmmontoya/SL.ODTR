@@ -335,7 +335,7 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
   varIC_TMLE = var(tmle_objects.dopt$IC)/n
   CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE)
 
-  if (any(QAW.SL.library == "SL.QAW.correct_cont" | QAW.SL.library == "SL.QAW.incorrect" | QAW.SL.library == "SL.QAW.correct_smooth")) {
+  if (length(grep("SL.QAW", QAW.SL.library)) != 0) {
     ltmle_objects.dopt = NA
     Psi_LTMLE = NA
     CI_LTMLE = c(NA,NA)
