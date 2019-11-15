@@ -66,7 +66,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
                   QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type,
                   moMain_model = NULL, moCont_model = NULL,
                   grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
-                  family = NULL, discrete.SL = F){
+                  family = NULL){
 
   n = length(Y)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
@@ -74,9 +74,9 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
 
   SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                  dopt.SL.library = dopt.SL.library, metalearner = metalearner,
-                 risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
+                 risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL, newV = NULL,
                  moMain_model = moMain_model, moCont_model = moCont_model, W_for_g = W_for_g,
-                 kappa = kappa, g1W = g1W, family = family, discrete.SL = discrete.SL)
+                 kappa = kappa, g1W = g1W, family = family)
 
   QAW.reg = SL.odtr$QAW.reg
 
@@ -94,41 +94,14 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
                                              QAW.SL.library = QAW.SL.library, ab = ab)
   ### CV-TMLE ###
   folds = sample(1:VFolds, size = n, replace = T)
-  CV.TMLE_fun = function(i){ #TODO: change this to, instead of being SL.vote or SL.blip, be odtr...and allow for discrete SL
-    if (metalearner == "discrete") {
-      SL.type = "vote"
-      discrete.SL = T
-    } else {
-      SL.type = metalearner
-      discrete.SL = F
-    }
-    QAW.reg.train = SuperLearner(Y = Y[folds!=i],
-                                 X = data.frame(A = A[folds!=i], W[folds!=i,]),
-                                 SL.library = QAW.SL.library, family = family)
-    if (SL.type == "vote") {
-      SL.fit.train = SL.vote(V = V[folds!=i,], W = W[folds!=i,],
-                             A = A[folds!=i], Y = Y[folds!=i], ab = ab,
-                             blip.SL.library=blip.SL.library,
-                             dopt.SL.library = dopt.SL.library,
-                             QAW.reg = QAW.reg.train, gAW = gAW[folds!=i],
-                             risk.type = risk.type, W_for_g = W_for_g,
-                             grid.size = grid.size,
-                             newA = A[folds==i], newW = W[folds==i,], newV = V[folds==i,], newY = Y[folds==i],
-                             VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model,
-                             family = family, discrete.SL = discrete.SL)
-      dopt.test = SL.fit.train$SL.predict
-    } else if (SL.type == "blip") {
-      SL.fit.train = SL.blip(V = V[folds!=i,], W = W[folds!=i,],
-                             A = A[folds!=i], Y = Y[folds!=i], ab = ab,
-                             blip.SL.library=blip.SL.library,
-                             QAW.reg = QAW.reg.train, gAW = gAW[folds!=i],
-                             risk.type = risk.type,
-                             grid.size = grid.size, newV = V[folds==i,],
-                             VFolds = VFolds, family = family,
-                             discrete.SL = discrete.SL)
-      blip.test = SL.fit.train$SL.predict
-      dopt.test = dopt.fun(blip.test, kappa)
-    }
+  CV.TMLE_fun = function(i){
+    SL.odtr.train = odtr(V = V[folds!=i,], W = W[folds!=i,], A = A[folds!=i], Y = Y[folds!=i], newV = V[folds==i,],
+                         QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library, dopt.SL.library = dopt.SL.library,
+                         metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
+                         moMain_model = moMain_model, moCont_model = moCont_model,
+                         W_for_g = W_for_g, kappa = kappa, g1W = g1W[folds!=i], family = family, ab = ab)
+    QAW.reg.train = SL.odtr.train$QAW.reg
+    dopt.test = SL.odtr.train$SL.fit$SL.predict
     Qdopt.test = predict(QAW.reg.train, newdata = data.frame(W[folds == i,], A = dopt.test), type = "response")$pred
     gAW.test = gAW[folds==i]
     tmle_objects.dopt.test = tmle.fun(A = A[folds == i], Y = Y[folds==i],

@@ -26,6 +26,8 @@ SL.blip(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library, risk.type,
 
 \item{risk.type}{risk type}
 
+\item{newV}{new V}
+
 \item{VFolds}{number of folds}
 
 \item{family}{family for outcome}
@@ -33,8 +35,6 @@ SL.blip(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library, risk.type,
 \item{discrete.SL}{whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)}
 
 \item{grid}{size}
-
-\item{new}{V}
 }
 \value{
 

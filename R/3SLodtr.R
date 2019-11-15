@@ -13,7 +13,7 @@
 #' @param blip.SL.library blip SL library
 #' @param risk.type risk type
 #' @param grid size
-#' @param new V
+#' @param newV new V
 #' @param VFolds number of folds
 #' @param family family for outcome
 #' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
@@ -59,7 +59,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     Q1W.pred = predict(QAW.reg.train, newdata = data.frame(W, A = 1), type = "response")$pred
     Q0W.pred = predict(QAW.reg.train, newdata = data.frame(W, A = 0), type = "response")$pred
     D = (2*A-1)/gAW * (Y-QAW.pred) + Q1W.pred - Q0W.pred
-    SL.init.train = getpreds.fun(Y = D[train_ind], X = V[train_ind,],
+    SL.init.train = getpreds.blip.fun(Y = D[train_ind], X = V[train_ind,],
                                  SL.library = blip.SL.library,
                                  newX = V[test_ind,], family = 'gaussian')
     candidate.blips.test = SL.init.train$library.predict
@@ -103,7 +103,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   Q0W.pred = predict(QAW.reg, newdata = data.frame(W, A = 0), type = "response")$pred
   D = (2*A-1)/gAW * (Y-QAW.pred) + Q1W.pred - Q0W.pred # this is same thing as D1 - D0 (weighted Y1 - Y0)
 
-  SL.init = getpreds.fun(Y = D, X = V, SL.library = blip.SL.library, newX = newV, family = "gaussian")
+  SL.init = getpreds.blip.fun(Y = D, X = V, SL.library = blip.SL.library, newX = newV, family = "gaussian")
 
   # applying chosen coefficients
   SL.out$libraryNames = names(SL.out$coef) = libraryNames
@@ -144,12 +144,9 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 #' @param blip.SL.library blip SL library
 #' @param risk.type risk type
 #' @param grid size
-#' @param new V
+#' @param newV newV
 #' @param VFolds number of folds
 #' @param dopt.SL.library dopt SL library
-#' @param newW new W
-#' @param newA new A
-#' @param newY new Y
 #' @param moMain_model for DynTxRegime
 #' @param moCont_model for DynTxRegime
 #' @param family family for outcome
@@ -169,7 +166,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
                    dopt.SL.library,
                    risk.type,
                    grid.size,
-                   newW = NULL, newV = NULL, newA = NULL, newY = NULL,
+                   newV = NULL,
                    VFolds, moMain_model = NULL, moCont_model = NULL, family, discrete.SL){
 
   n = length(A)
@@ -191,11 +188,11 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     train_ind = folds != i
     test_ind = folds == i
     QAW.reg.train = SuperLearner(Y = Y[train_ind], X = data.frame(A, W)[train_ind,], SL.library = QAW.reg$SL.library$library$predAlgorithm, family = family)
-    candidate.dopts.test = candidate_dopts(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
+    candidate.dopts.test = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
                                            W = W[train_ind,], V = V[train_ind,], A = A[train_ind], Y = Y[train_ind],
-                                           newW = W[test_ind,], newV = V[test_ind,], newA = A[test_ind], newY = Y[test_ind],
-                                           QAW.reg = QAW.reg.train, gAW = gAW[train_ind], moMain_model = moMain_model, moCont_model = moCont_model, family = family)
-    candidates.doptsXalpha.test = as.matrix(candidate.dopts.test)%*%t(simplex.grid)
+                                           newV = V[test_ind,], QAW.reg = QAW.reg.train, gAW = gAW[train_ind],
+                                           moMain_model = moMain_model, moCont_model = moCont_model, family = family)
+    candidates.doptsXalpha.test = as.matrix(candidate.dopts.test$library.predict)%*%t(simplex.grid)
     dopt.combos.test = apply(candidates.doptsXalpha.test > .5, 2, as.numeric)
     Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
     if (risk.type == "CV IPCWDR") {
@@ -226,26 +223,18 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     SL.out$coef = simplex.grid[which.min(CV.risk),]
   }
 
-  if (is.null(newV)) {
-    # predict on original data
-    SL.out$librarydoptPredict = candidate_dopts(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
-                                                W = W, V = V, A = A, Y = Y,
-                                                newW = W, newV = V, newA = A, newY = Y,
+
+  # predict on new data
+  SL.init = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
+                                                W = W, V = V, A = A, Y = Y, newV = newV,
                                                 QAW.reg = QAW.reg, gAW = gAW,
                                                 moMain_model = moMain_model, moCont_model = moCont_model, family = family)
-    SL.out$SL.predict = as.numeric(as.matrix(SL.out$librarydoptPredict)%*%SL.out$coef > .5)
-  } else {
-    # predict on new data
-    SL.out$librarydoptPredict = candidate_dopts(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
-                                                W = W, V = V, A = A, Y = Y,
-                                                newW = newW, newV = newV, newA = newA, newY = newY,
-                                                QAW.reg = QAW.reg, gAW = gAW,
-                                                moMain_model = moMain_model, moCont_model = moCont_model, family = family)
-    SL.out$SL.predict = as.numeric(as.matrix(SL.out$librarydoptPredict)%*%SL.out$coef > .5)
-
-  }
-
+  SL.out$librarydoptPredict = SL.init$library.predict
+  SL.out$SL.predict = as.numeric(as.matrix(SL.out$librarydoptPredict)%*%SL.out$coef > .5)
   SL.out$libraryNames = names(SL.out$coef) = names(SL.out$librarydoptPredict)
+  SL.out$fitdoptLibrary = SL.init$fitLibrary
+  SL.out$doptFamily = family
+
   if (risk.type == "CV TMLE") {
     SL.out$CV.risk_min$CI = c(lowerCI = CI_CV.TMLE_lower[which.min(CV.risk)],
                               upperCI = CI_CV.TMLE_upper[which.min(CV.risk)])

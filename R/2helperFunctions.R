@@ -1,7 +1,7 @@
-#' @name getpreds.fun
-#' @aliases getpreds.fun
+#' @name getpreds.blip.fun
+#' @aliases getpreds.blip.fun
 #' @title Predictions
-#' @description Get library predictions (what would be library.predict). Code mostly from SuperLearner.
+#' @description Get library predictions (what would be library.predict) for blip. Code mostly from SuperLearner.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -23,7 +23,7 @@
 # get what would've been library.predict
 # code mostly from SuperLearner
 
-getpreds.fun <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
+getpreds.blip.fun <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
                          id = NULL, verbose = FALSE, control = list(),
                          obsWeights = NULL, env = parent.frame()) {
 
@@ -365,8 +365,8 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 
 
 
-#' @name candidate_dopts
-#' @aliases candidate_dopts
+#' @name getpreds.dopt.fun
+#' @aliases getpreds.dopt.fun
 #' @title Candidate dopt for direct search algorithms
 #' @description Candidate dopt predictionsfor direct search algorithms
 #'
@@ -376,10 +376,7 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 #' @param V subset of covariates for designing ODTR
 #' @param A txt
 #' @param Y outcome
-#' @param newW new W
 #' @param newV new V
-#' @param newA new A
-#' @param new Y
 #' @param QAW.reg regression object for QAW
 #' @param gAW P(A|W)
 #' @param moMain_model for DynTxRegime
@@ -391,7 +388,9 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 #' @export
 #'
 # function that has library of dopt algorithms
-candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V, A, Y, newW, newV, newA, newY, QAW.reg, gAW, moMain_model = NULL, moCont_model = NULL, family = family) {
+getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V, A, Y, newV, QAW.reg, gAW, moMain_model = NULL, moCont_model = NULL, family = family) {
+
+  if (is.null(newV)) newV = V
 
   if (any(dopt.SL.library %in% c("OWL", "EARL", "optclass", "RWL", "Qlearn"))) {
 
@@ -440,7 +439,7 @@ candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, 
     regime <- as.formula(paste("~ ", paste(colnames(W), collapse= "+")))
 
 
-    optclass = function(W, A, Y, moPropen, moClass, regime, newW, newA, newY) {
+    optclass = function(W, A, Y, moPropen, moClass, regime, newV) {
       optclass.est <- optimalClass(moPropen = moPropen,
                                    moClass = moClass,
                                    data = data.frame(W, A,Y),
@@ -449,12 +448,12 @@ candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, 
                                    regime = regime,
                                    verbose = F)
 
-      dopt = data.frame(optTx(optclass.est, data.frame(newW, A=newA, Y=newY))$optimalTx)
+      dopt = data.frame(optTx(x = optclass.est, newdata = newV)$optimalTx)
       colnames(dopt) = "optclass"
-      return(dopt)
+      return(list(dopt = dopt, dopt.fit = optclass.est))
     }
 
-    EARL = function(W, A, Y, moPropen, moMain, regime, newW, newA, newY) {
+    EARL = function(W, A, Y, moPropen, moMain, regime, newV) {
       EARL.est <- earl(moPropen = moPropen,
                        momain = moMain,
                      #  moCont = moCont,
@@ -463,12 +462,12 @@ candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, 
                        txName = 'A',
                        regime = regime,
                        verbose = F)
-      dopt = data.frame(optTx(EARL.est, data.frame(newW, A=newA, Y=newY))$optimalTx)
+      dopt = data.frame(optTx(EARL.est, newdata = newV)$optimalTx)
       colnames(dopt) = "EARL"
-      return(dopt)
+      return(list(dopt = dopt, dopt.fit = EARL.est))
     }
 
-    RWL = function(W, A, Y, moPropen, moMain, regime, newW, newA, newY) {
+    RWL = function(W, A, Y, moPropen, moMain, regime, newV) {
       responseType = ifelse(max(Y) <= 1 & min(Y) >= 0, "binary", "continuous")
       RWL.est <- rwl(moPropen = moPropen,
                      moMain = moMain,
@@ -478,12 +477,12 @@ candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, 
                      regime = regime,
                      verbose = F,
                      responseType = responseType)
-      dopt = data.frame(optTx(RWL.est, data.frame(newW, A=newA, Y=newY))$optimalTx)
+      dopt = data.frame(optTx(RWL.est, newdata = newV)$optimalTx)
       colnames(dopt) = "RWL"
-      return(dopt)
+      return(list(dopt = dopt, dopt.fit = RWL.est))
     }
 
-    OWL = function (W, A, Y, moPropen, regime, newW, newA, newY) {
+    OWL = function (W, A, Y, moPropen, regime, newV) {
       OWL.est = owl(moPropen = moPropen,
                     data = data.frame(W, A=A),
                     reward = Y,
@@ -491,20 +490,20 @@ candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, 
                     kernel = "poly",
                     regime = regime,
                     verbose = F)
-      dopt = data.frame(optTx(OWL.est, data.frame(newW, A=newA, Y=newY))$optimalTx)
+      dopt = data.frame(optTx(OWL.est,newdata = newV)$optimalTx)
       colnames(dopt) = "OWL"
-      return(dopt)
+      return(list(dopt = dopt, dopt.fit = OWL.est))
     }
 
-    Qlearn = function (W, A, Y, moMain, regime, newW, newA, newY) {
+    Qlearn = function (W, A, Y, moMain, regime, newV) {
       Qlearn.est = qLearn(moMain = moMain,
                           data = data.frame(W, A=A),
                           response = Y,
                           txName = 'A',
                           verbose = F)
-      dopt = data.frame(optTx(Qlearn.est, newdata = data.frame(newW, A=newA))$optimalTx)
+      dopt = data.frame(optTx(Qlearn.est,  newdata = newV)$optimalTx)
       colnames(dopt) = "Qlearn"
-      return(dopt)
+      return(list(dopt = dopt, dopt.fit = Qlearn.est))
     }
 
   }
@@ -519,37 +518,39 @@ candidate_dopts = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, 
     candidate.blips = SL.blips$library.predict
     dopt = data.frame(apply(candidate.blips > 0, 2, as.numeric))
     colnames(dopt) = paste0("DonV.", colnames(dopt))
-    return(dopt)
+    return(list(dopt = dopt, dopt.fit = SL.blips))
   }
 
   treatall = function(newV) {
     dopt = data.frame(rep(1, nrow(newV)))
     colnames(dopt) = "treatall"
-    return(dopt)
+    return(list(dopt = dopt, dopt.fit = "treat all"))
   }
 
 
   treatnone = function(newV) {
     dopt = data.frame(rep(0, nrow(newV)))
     colnames(dopt) = "treatnone"
-    return(dopt)
+    return(list(dopt = dopt, dopt.fit = "treat no one"))
   }
 
 
   dopts.list = list()
 
   if (any(dopt.SL.library == "DonV")) { dopts.list$DonV = DonV(W = W, V = V, A = A, Y = Y, gAW = gAW, QAW.reg = QAW.reg, blip.SL.library = blip.SL.library, newV = newV)}
-  if (any(dopt.SL.library == "Qlearn")) { dopts.list$Qlearn = Qlearn(W = W, A = A, Y = Y, moMain = moMain, regime = regime, newW = newW, newA = newA, newY = newY)}
-  if (any(dopt.SL.library == "OWL")) {dopts.list$OWL = OWL(W = W, A = A, Y = Y, moPropen = moPropen, regime = regime, newW = newW, newA = newA, newY = newY)}
-  if (any(dopt.SL.library == "EARL")) {dopts.list$EARL = EARL(W = W, A = A, Y = Y, moPropen = moPropen, moMain = moMain, regime = regime, newW = newW, newA = newA, newY = newY)}
-  if (any(dopt.SL.library == "optclass")) {dopts.list$optclass = optclass(W = W, A = A, Y = Y, moPropen = moPropen, moClass = moClass, regime = regime, newW = newW, newA = newA, newY = newY)}
-  if (any(dopt.SL.library == "RWL")) {dopts.list$RWL = RWL(W = W, A = A, Y = Y, moPropen = moPropen, moMain = moMain, regime = regime, newW = newW, newA = newA, newY = newY)}
+  if (any(dopt.SL.library == "Qlearn")) { dopts.list$Qlearn = Qlearn(W = W, A = A, Y = Y, moMain = moMain, regime = regime, newV)}
+  if (any(dopt.SL.library == "OWL")) {dopts.list$OWL = OWL(W = W, A = A, Y = Y, moPropen = moPropen, regime = regime, newV)}
+  if (any(dopt.SL.library == "EARL")) {dopts.list$EARL = EARL(W = W, A = A, Y = Y, moPropen = moPropen, moMain = moMain, regime = regime, newV)}
+  if (any(dopt.SL.library == "optclass")) {dopts.list$optclass = optclass(W = W, A = A, Y = Y, moPropen = moPropen, moClass = moClass, regime = regime, newV)}
+  if (any(dopt.SL.library == "RWL")) {dopts.list$RWL = RWL(W = W, A = A, Y = Y, moPropen = moPropen, moMain = moMain, regime = regime, newV)}
   if (any(dopt.SL.library == "treatall")) {dopts.list$treatall = treatall(newV = newV)}
   if (any(dopt.SL.library == "treatnone")) {dopts.list$treatnone = treatnone(newV = newV)}
 
-  candidate_dopts = do.call("cbind", dopts.list)
+  toreturn = list()
+  toreturn$library.predict = do.call("cbind", lapply(dopts.list, function(x) x$dopt))
+  toreturn$fitLibrary = lapply(dopts.list, function(x) x$dopt.fit)
 
-  return(candidate_dopts)
+  return(toreturn)
 
 
 }

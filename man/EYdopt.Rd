@@ -8,7 +8,7 @@ EYdopt(W, W_for_g = 1, V, A, Y, metalearner, QAW.SL.library,
   blip.SL.library, dopt.SL.library = NULL, risk.type,
   moMain_model = NULL, moCont_model = NULL, grid.size = 100,
   VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
-  family = NULL, discrete.SL = F)
+  family = NULL)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
