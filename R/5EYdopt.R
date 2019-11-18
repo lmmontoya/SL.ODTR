@@ -16,8 +16,6 @@
 #' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}.
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
-#' @param moMain_model for DynTxRegime outcome regression
-#' @param moCont_model for DynTxRegime contrast function
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
@@ -64,7 +62,6 @@
 
 EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
                   QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type,
-                  moMain_model = NULL, moCont_model = NULL,
                   grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
                   family = NULL){
 
@@ -75,8 +72,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
   SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                  dopt.SL.library = dopt.SL.library, metalearner = metalearner,
                  risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL, newV = NULL,
-                 moMain_model = moMain_model, moCont_model = moCont_model, W_for_g = W_for_g,
-                 kappa = kappa, g1W = g1W, family = family)
+                 W_for_g = W_for_g, kappa = kappa, g1W = g1W, family = family)
 
   QAW.reg = SL.odtr$QAW.reg
 
@@ -98,7 +94,6 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
     SL.odtr.train = odtr(V = V[folds!=i,], W = W[folds!=i,], A = A[folds!=i], Y = Y[folds!=i], newV = V[folds==i,],
                          QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library, dopt.SL.library = dopt.SL.library,
                          metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
-                         moMain_model = moMain_model, moCont_model = moCont_model,
                          W_for_g = W_for_g, kappa = kappa, g1W = g1W[folds!=i], family = family, ab = ab)
     QAW.reg.train = SL.odtr.train$QAW.reg
     dopt.test = SL.odtr.train$dopt

@@ -5,8 +5,7 @@
 \title{Estimation of E[Ydopt]}
 \usage{
 EYdopt(W, W_for_g = 1, V, A, Y, metalearner, QAW.SL.library,
-  blip.SL.library, dopt.SL.library = NULL, risk.type,
-  moMain_model = NULL, moCont_model = NULL, grid.size = 100,
+  blip.SL.library, dopt.SL.library = NULL, risk.type, grid.size = 100,
   VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
   family = NULL)
 }
@@ -30,10 +29,6 @@ EYdopt(W, W_for_g = 1, V, A, Y, metalearner, QAW.SL.library,
 \item{dopt.SL.library}{SuperLearner library for estimating dopt directly. Default is \code{NULL}.}
 
 \item{risk.type}{Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"}
-
-\item{moMain_model}{for DynTxRegime outcome regression}
-
-\item{moCont_model}{for DynTxRegime contrast function}
 
 \item{grid.size}{Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients}
 

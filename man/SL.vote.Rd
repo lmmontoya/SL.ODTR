@@ -5,8 +5,8 @@
 \title{Vote-based SL}
 \usage{
 SL.vote(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
-  dopt.SL.library, risk.type, grid.size, newV = NULL, VFolds,
-  moMain_model = NULL, moCont_model = NULL, family, discrete.SL)
+  dopt.SL.library, risk.type, grid.size, newV = NULL, VFolds, family,
+  discrete.SL)
 }
 \arguments{
 \item{V}{subset covariates for designing ODTR}
@@ -34,10 +34,6 @@ SL.vote(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 \item{newV}{newV}
 
 \item{VFolds}{number of folds}
-
-\item{moMain_model}{for DynTxRegime}
-
-\item{moCont_model}{for DynTxRegime}
 
 \item{family}{family for outcome}
 

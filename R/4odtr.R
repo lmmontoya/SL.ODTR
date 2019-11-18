@@ -17,8 +17,6 @@
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
-#' @param moMain_model for DynTxRegime modeling outcome regression
-#' @param moCont_model for DynTxRegime modeling contrast
 #' @param g1W user-supplied vector of g1W
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
 #'
@@ -48,7 +46,7 @@
 odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
                 QAW.SL.library, risk.type, grid.size = 100,
                 metalearner, kappa = NULL, QAW = NULL, VFolds = 10,
-                moMain_model = NULL, moCont_model = NULL, g1W = NULL, family = NULL){
+                g1W = NULL, family = NULL){
 
   n = length(A)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
@@ -67,8 +65,12 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
   gAW = ifelse(A == 1, g1W, 1-g1W)
 
   if (metalearner == "discrete") {
-    SL.type = "vote"
     discrete.SL = T
+    if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
+      SL.type = "vote"
+    } else if (risk.type == "CV MSE") {
+      SL.type = "blip"
+    }
   } else {
     SL.type = metalearner
     discrete.SL = F
@@ -79,8 +81,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
     SL.fit = SL.vote(V = V, W = W, W_for_g, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library, dopt.SL.library = dopt.SL.library,
                      gAW = gAW, risk.type = risk.type, grid.size = grid.size,
-                     VFolds = VFolds, moMain_model = moMain_model, moCont_model = moCont_model,
-                     newV = newV, family = family, discrete.SL = discrete.SL)
+                     VFolds = VFolds, newV = newV, family = family, discrete.SL = discrete.SL)
     # get estimate of txt under optimal rule
     dopt = SL.fit$SL.predict
   } else if (SL.type == "blip") {

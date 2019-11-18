@@ -189,6 +189,165 @@ SL.blip.incorrect4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 }
 
 
+
+
+
+
+#' @name SL.QAW.incorrect1
+#' @aliases SL.QAW.incorrect1
+#' @title Epi HTE GLM for QAW 1
+#' @description Standard HTE GLM used in Epi analyses for QAW 1.
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+#SL.QAW.incorrect1
+#correctly specified param model blip
+SL.QAW.incorrect1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+
+  fit.glm <- glm(Y ~ W1*A, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
+
+
+
+#' @name SL.QAW.incorrect2
+#' @aliases SL.QAW.incorrect2
+#' @title Epi HTE GLM for QAW 2
+#' @description Standard HTE GLM used in Epi analyses for QAW 2.
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+#SL.QAW.incorrect2
+#correctly specified param model QAW
+SL.QAW.incorrect2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+
+  fit.glm <- glm(Y ~ A*W2, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
+
+
+#' @name SL.QAW.incorrect3
+#' @aliases SL.QAW.incorrect3
+#' @title Epi HTE GLM for QAW 3
+#' @description Standard HTE GLM used in Epi analyses for QAW 3.
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+#SL.blip.incorrect3
+#correctly specified param model blip
+SL.QAW.incorrect3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+
+  fit.glm <- glm(Y ~ A*W3, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
+
+
+#' @name SL.QAW.incorrect4
+#' @aliases SL.QAW.incorrect4
+#' @title Epi HTE GLM for QAW 4
+#' @description Standard HTE GLM used in Epi analyses for QAW 4.
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+#SL.QAW.incorrect4
+#correctly specified param model QAW
+SL.QAW.incorrect4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+
+  fit.glm <- glm(Y ~ A*W4, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
+
+
+
+
 #' @name SL.QAW.correct_cont
 #' @aliases SL.QAW.correct_cont
 #' @title Correctly specified model for DB smooth function

@@ -7,8 +7,7 @@
 odtr(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL,
   blip.SL.library, dopt.SL.library = NULL, QAW.SL.library, risk.type,
   grid.size = 100, metalearner, kappa = NULL, QAW = NULL,
-  VFolds = 10, moMain_model = NULL, moCont_model = NULL,
-  g1W = NULL, family = NULL)
+  VFolds = 10, g1W = NULL, family = NULL)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
@@ -36,10 +35,6 @@ odtr(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL,
 \item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
 
 \item{VFolds}{Number of folds to use in cross-validation. Default is 10.}
-
-\item{moMain_model}{for DynTxRegime modeling outcome regression}
-
-\item{moCont_model}{for DynTxRegime modeling contrast}
 
 \item{g1W}{user-supplied vector of g1W}
 

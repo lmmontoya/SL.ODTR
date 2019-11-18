@@ -19,16 +19,23 @@ DGP_fun = DGP_bin
 SL.full.library = c("SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet", "SL.svm", "SL.rpart")
 
 
-
+risk.type = "CV MSE"
+QAW.SL.library = "SL.QAW.incorrect"
+blip.SL.library = "SL.glm"
+dopt.SL.library = NULL
+metalearner = "blip"
+moMain_model = NULL
+moCont_model = NULL
 ODTR_incorrectglm_NA_NA = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                      risk.type = "CV TMLE",
+                                                                                      risk.type = risk.type,
                                                                                       DGP_fun = DGP_fun,
                                                                                       QAW = QAW,
-                                                                                      QAW.SL.library = "SL.QAW.incorrect",
-                                                                                      blip.SL.library = "SL.glm",
-                                                                                      dopt.SL.library = "DonV",
-                                                                                      metalearner = "blip",
-                                                                                      moMain_model = NULL, moCont_model = NULL), mc.cores = cores))
+                                                                                      QAW.SL.library = QAW.SL.library,
+                                                                                      blip.SL.library = blip.SL.library,
+                                                                                      dopt.SL.library = dopt.SL.library,
+                                                                                      metalearner = metalearner,
+                                                                                      moMain_model = moMain_model,
+                                                                                      moCont_model = moCont_model), mc.cores = cores))
 ODTR_bliponly_discrete_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                       risk.type = "CV MSE",
                                                                                       DGP_fun = DGP_fun,

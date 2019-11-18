@@ -5,8 +5,7 @@
 \title{Candidate dopt for direct search algorithms}
 \usage{
 getpreds.dopt.fun(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V,
-  A, Y, newV, QAW.reg, gAW, moMain_model = NULL, moCont_model = NULL,
-  family = family)
+  A, Y, newV, QAW.reg, gAW, family = family)
 }
 \arguments{
 \item{dopt.SL.library}{dopt library}
@@ -26,10 +25,6 @@ getpreds.dopt.fun(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V,
 \item{QAW.reg}{regression object for QAW}
 
 \item{gAW}{P(A|W)}
-
-\item{moMain_model}{for DynTxRegime}
-
-\item{moCont_model}{for DynTxRegime}
 
 \item{family}{family}
 }

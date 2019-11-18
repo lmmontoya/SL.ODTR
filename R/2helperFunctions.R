@@ -379,8 +379,6 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 #' @param newV new V
 #' @param QAW.reg regression object for QAW
 #' @param gAW P(A|W)
-#' @param moMain_model for DynTxRegime
-#' @param moCont_model for DynTxRegime
 #' @param family family
 #'
 #' @return
@@ -388,7 +386,7 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 #' @export
 #'
 # function that has library of dopt algorithms
-getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V, A, Y, newV, QAW.reg, gAW, moMain_model = NULL, moCont_model = NULL, family = family) {
+getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V, A, Y, newV, QAW.reg, gAW, family = family) {
 
   if (is.null(newV)) newV = V
 
@@ -403,7 +401,7 @@ getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g
                               predict.method = 'predict.glm',
                               predict.args = list(type='response'))
 
-    if (is.null(moMain_model) & is.null(moCont_model)) {
+   # if (is.null(moMain_model) & is.null(moCont_model)) {
       # main model
       QAW.pred <- function(object, newdata, QAW.reg, ...) {
         res <- predict.SuperLearner(object = QAW.reg, newdata = newdata, ...)
@@ -415,18 +413,18 @@ getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g
                               predict.args = list("QAW.reg" = QAW.reg,
                                                   "newdata" = "newdata",
                                                   "object" = "object"))
-    } else {
-      moCont <- buildModelObj(model = as.formula(paste("~ ", moCont_model)),
-                                  solver.method = 'glm',
-                                  solver.args = list(family=family),
-                                  predict.method = 'predict.glm',
-                                  predict.args = list(type='response'))
-      moMain <- buildModelObj(model = as.formula(paste("~ ", moMain_model)),
-                              solver.method = 'glm',
-                              solver.args = list(family=family),
-                              predict.method = 'predict.glm',
-                              predict.args = list(type='response'))
-    }
+   # } else {
+  #    moCont <- buildModelObj(model = as.formula(paste("~ ", moCont_model)),
+  #                                solver.method = 'glm',
+  #                                solver.args = list(family=family),
+  #                                predict.method = 'predict.glm',
+  #                                predict.args = list(type='response'))
+  #    moMain <- buildModelObj(model = as.formula(paste("~ ", moMain_model)),
+  #                            solver.method = 'glm',
+  #                            solver.args = list(family=family),
+  #                            predict.method = 'predict.glm',
+  #                            predict.args = list(type='response'))
+  #  }
 
     # classification model
     moClass <- buildModelObj(model = as.formula(paste("~ ", paste(colnames(W), collapse= "+"))),
@@ -514,7 +512,7 @@ getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g
     Q1W.pred = predict(QAW.reg, newdata = data.frame(W, A = 1), type = "response")$pred
     Q0W.pred = predict(QAW.reg, newdata = data.frame(W, A = 0), type = "response")$pred
     D = (2*A-1)/gAW * (Y-QAW.pred) + Q1W.pred - Q0W.pred
-    SL.blips = getpreds.fun(Y = D, X = V, SL.library = blip.SL.library, newX = newV, family = 'gaussian')
+    SL.blips = getpreds.blip.fun(Y = D, X = V, SL.library = blip.SL.library, newX = newV, family = 'gaussian')
     candidate.blips = SL.blips$library.predict
     dopt = data.frame(apply(candidate.blips > 0, 2, as.numeric))
     colnames(dopt) = paste0("DonV.", colnames(dopt))

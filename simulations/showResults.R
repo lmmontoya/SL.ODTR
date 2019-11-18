@@ -484,7 +484,7 @@ plot_ODTR_results = function(results, risk, EY, EY1, CI_EY1, EY0, CI_EY0, title)
     ggtitle(title) +
     annotate("text", x = 0.5, y = max(odtr$upperCI, EY, na.rm = T)+.032, label = paste0(round(unique(odtr$prop_dopt)*100, 2),"%"), colour = "black") +
     annotate("text", x = 0, y = max(odtr$upperCI, EY, na.rm = T)+.032, xmin = -0.5, label = "~underline('% treated under ODR:')", colour = "black", parse = TRUE) +
-    ylim(min(odtr$lowerCI, na.rm = T)-.005, max(odtr$upperCI, EY, na.rm = T)+.035) +
+    ylim(min(c(odtr$lowerCI, CI_EY1, CI_EY0), na.rm = T)-.005, max(c(odtr$upperCI, EY, CI_EY1, CI_EY0), na.rm = T)+.035) +
     theme_bw() +
     theme(panel.border = element_blank())
 

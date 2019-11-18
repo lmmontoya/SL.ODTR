@@ -147,8 +147,6 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 #' @param newV newV
 #' @param VFolds number of folds
 #' @param dopt.SL.library dopt SL library
-#' @param moMain_model for DynTxRegime
-#' @param moCont_model for DynTxRegime
 #' @param family family for outcome
 #' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
 #'
@@ -167,7 +165,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
                    risk.type,
                    grid.size,
                    newV = NULL,
-                   VFolds, moMain_model = NULL, moCont_model = NULL, family, discrete.SL){
+                   VFolds, family, discrete.SL){
 
   n = length(A)
   family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
@@ -191,7 +189,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     candidate.dopts.test = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
                                            W = W[train_ind,], V = V[train_ind,], A = A[train_ind], Y = Y[train_ind],
                                            newV = V[test_ind,], QAW.reg = QAW.reg.train, gAW = gAW[train_ind],
-                                           moMain_model = moMain_model, moCont_model = moCont_model, family = family)
+                                           family = family)
     candidates.doptsXalpha.test = as.matrix(candidate.dopts.test$library.predict)%*%t(simplex.grid)
     dopt.combos.test = apply(candidates.doptsXalpha.test > .5, 2, as.numeric)
     Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
@@ -228,7 +226,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   SL.init = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
                                                 W = W, V = V, A = A, Y = Y, newV = newV,
                                                 QAW.reg = QAW.reg, gAW = gAW,
-                                                moMain_model = moMain_model, moCont_model = moCont_model, family = family)
+                                                family = family)
   SL.out$librarydoptPredict = SL.init$library.predict
   SL.out$SL.predict = as.numeric(as.matrix(SL.out$librarydoptPredict)%*%SL.out$coef > .5)
   SL.out$libraryNames = names(SL.out$coef) = names(SL.out$librarydoptPredict)
