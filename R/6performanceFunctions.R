@@ -13,6 +13,7 @@
 #' @param dopt.SL.library library for dopt
 #' @param metalearner SL type
 #' @param grid.size grid size
+#' @param gform default is 1
 #'
 #' @return
 #'
@@ -21,7 +22,7 @@
 # optimal dynamic regime performance function
 # odtr_performance
 
-performance_ODTR = function(x, n, risk.type, DGP_fun, QAW, QAW.SL.library, blip.SL.library, dopt.SL.library, metalearner, grid.size, W_for_g = 1){
+performance_ODTR = function(x, n, risk.type, DGP_fun, QAW, QAW.SL.library, blip.SL.library, dopt.SL.library, metalearner, grid.size, gform = 1){
 
   ObsData = subset(DGP_fun(n), select = -c(A_star, Y_star))
   W = subset(ObsData, select = -c(A, Y))
@@ -34,7 +35,7 @@ performance_ODTR = function(x, n, risk.type, DGP_fun, QAW, QAW.SL.library, blip.
 
   results = odtr(V=V, W=W, A=A, Y=Y, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                  dopt.SL.library = dopt.SL.library, metalearner = metalearner,
-                 risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW, W_for_g = W_for_g)
+                 risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW, gform = gform)
 
   return(results)
 }
