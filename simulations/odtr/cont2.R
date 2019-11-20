@@ -14,26 +14,39 @@ cores = 24
 
 r = 1000
 n = 1000
-QAW = QAW_bin
-DGP_fun = DGP_bin
+QAW = QAW_cont2
+DGP_fun = DGP_cont2
 
 
-
+# risk.type = "CV MSE"
+# QAW.SL.library = "SL.QAW.correct_cont2"
+# blip.SL.library = "SL.blip.correct_cont2"
+# dopt.SL.library = NULL
+# metalearner = "blip"
+# ODTRcont2_correctglm_NA_NA = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+#                                                                                       risk.type = risk.type,
+#                                                                                       DGP_fun = DGP_fun,
+#                                                                                       QAW = QAW,
+#                                                                                       QAW.SL.library = QAW.SL.library,
+#                                                                                       blip.SL.library = blip.SL.library,
+#                                                                                       dopt.SL.library = dopt.SL.library,
+#                                                                                       metalearner = metalearner), mc.cores = cores))
 risk.type = "CV MSE"
 QAW.SL.library = "SL.QAW.incorrect"
 blip.SL.library = "SL.glm"
 dopt.SL.library = NULL
 metalearner = "blip"
-ODTRbin_incorrectglm_NA_NA = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                          risk.type = risk.type,
-                                                                                          DGP_fun = DGP_fun,
-                                                                                          QAW = QAW,
-                                                                                          QAW.SL.library = QAW.SL.library,
-                                                                                          blip.SL.library = blip.SL.library,
-                                                                                          dopt.SL.library = dopt.SL.library,
-                                                                                          metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_incorrectglm_NA_NA,
-     file = "results/ODTRbin_GLM.RData")
+ODTRcont2_incorrectglm_NA_NA = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+                                                                                      risk.type = risk.type,
+                                                                                      DGP_fun = DGP_fun,
+                                                                                      QAW = QAW,
+                                                                                      QAW.SL.library = QAW.SL.library,
+                                                                                      blip.SL.library = blip.SL.library,
+                                                                                      dopt.SL.library = dopt.SL.library,
+                                                                                      metalearner = metalearner), mc.cores = cores))
+save(ODTRcont2_incorrectglm_NA_NA,
+     #ODTRcont2_correctglm_NA_NA,
+     file = "results/ODTRcont2_GLM.RData")
 
 
 
@@ -42,37 +55,37 @@ QAW.SL.library = c("SL.QAW.incorrect1", "SL.QAW.incorrect2", "SL.QAW.incorrect3"
 blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorrect3", "SL.blip.incorrect4")
 dopt.SL.library = NULL
 metalearner = "discrete"
-ODTRbin_bliponlyparam_discrete_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                                    risk.type = risk.type,
-                                                                                                    DGP_fun = DGP_fun,
-                                                                                                    QAW = QAW,
-                                                                                                    QAW.SL.library = QAW.SL.library,
-                                                                                                    blip.SL.library = blip.SL.library,
-                                                                                                    dopt.SL.library = dopt.SL.library,
-                                                                                                    metalearner = metalearner), mc.cores = cores))
+ODTRcont2_bliponlyparam_discrete_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+                                                                                           risk.type = risk.type,
+                                                                                           DGP_fun = DGP_fun,
+                                                                                           QAW = QAW,
+                                                                                           QAW.SL.library = QAW.SL.library,
+                                                                                           blip.SL.library = blip.SL.library,
+                                                                                           dopt.SL.library = dopt.SL.library,
+                                                                                           metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE"
 dopt.SL.library = "DonV"
-ODTRbin_bliponlyparam_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                                     risk.type = risk.type,
-                                                                                                     DGP_fun = DGP_fun,
-                                                                                                     QAW = QAW,
-                                                                                                     QAW.SL.library = QAW.SL.library,
-                                                                                                     blip.SL.library = blip.SL.library,
-                                                                                                     dopt.SL.library = dopt.SL.library,
-                                                                                                     metalearner = metalearner), mc.cores = cores))
+ODTRcont2_bliponlyparam_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+                                                                                                risk.type = risk.type,
+                                                                                                DGP_fun = DGP_fun,
+                                                                                                QAW = QAW,
+                                                                                                QAW.SL.library = QAW.SL.library,
+                                                                                                blip.SL.library = blip.SL.library,
+                                                                                                dopt.SL.library = dopt.SL.library,
+                                                                                                metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE CI"
-ODTRbin_bliponlyparam_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                                       risk.type = risk.type,
-                                                                                                       DGP_fun = DGP_fun,
-                                                                                                       QAW = QAW,
-                                                                                                       QAW.SL.library = QAW.SL.library,
-                                                                                                       blip.SL.library = blip.SL.library,
-                                                                                                       dopt.SL.library = dopt.SL.library,
-                                                                                                       metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_bliponlyparam_discrete_CVMSE,
-     ODTRbin_bliponlyparam_discrete_CVTMLE,
-     ODTRbin_bliponlyparam_discrete_CVTMLECI,
-     file = "results/ODTRbin_bliponlyparam_discrete.RData")
+ODTRcont2_bliponlyparam_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+                                                                                                 risk.type = risk.type,
+                                                                                                 DGP_fun = DGP_fun,
+                                                                                                 QAW = QAW,
+                                                                                                 QAW.SL.library = QAW.SL.library,
+                                                                                                 blip.SL.library = blip.SL.library,
+                                                                                                 dopt.SL.library = dopt.SL.library,
+                                                                                                 metalearner = metalearner), mc.cores = cores))
+save(ODTRcont2_bliponlyparam_discrete_CVMSE,
+     ODTRcont2_bliponlyparam_discrete_CVTMLE,
+     ODTRcont2_bliponlyparam_discrete_CVTMLECI,
+     file = "results/ODTRcont2_bliponlyparam_discrete.RData")
 
 
 
@@ -86,7 +99,7 @@ QAW.SL.library = c("SL.QAW.incorrect1", "SL.QAW.incorrect2", "SL.QAW.incorrect3"
 blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorrect3", "SL.blip.incorrect4")
 dopt.SL.library = NULL
 metalearner = "blip"
-ODTRbin_bliponlyparam_blipmeta_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyparam_blipmeta_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                     risk.type = risk.type,
                                                                                                     DGP_fun = DGP_fun,
                                                                                                     QAW = QAW,
@@ -95,7 +108,7 @@ ODTRbin_bliponlyparam_blipmeta_CVMSE = do.call("rbind", mclapply(1:r, function(x
                                                                                                     dopt.SL.library = dopt.SL.library,
                                                                                                     metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE"
-ODTRbin_bliponlyparam_blipmeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyparam_blipmeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                      risk.type = risk.type,
                                                                                                      DGP_fun = DGP_fun,
                                                                                                      QAW = QAW,
@@ -104,7 +117,7 @@ ODTRbin_bliponlyparam_blipmeta_CVTMLE = do.call("rbind", mclapply(1:r, function(
                                                                                                      dopt.SL.library = dopt.SL.library,
                                                                                                      metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE CI"
-ODTRbin_bliponlyparam_blipmeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyparam_blipmeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                        risk.type = risk.type,
                                                                                                        DGP_fun = DGP_fun,
                                                                                                        QAW = QAW,
@@ -112,10 +125,10 @@ ODTRbin_bliponlyparam_blipmeta_CVTMLECI = do.call("rbind", mclapply(1:r, functio
                                                                                                        blip.SL.library = blip.SL.library,
                                                                                                        dopt.SL.library = dopt.SL.library,
                                                                                                        metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_bliponlyparam_blipmeta_CVMSE,
-     ODTRbin_bliponlyparam_blipmeta_CVTMLE,
-     ODTRbin_bliponlyparam_blipmeta_CVTMLECI,
-     file = "results/ODTRbin_bliponlyparam_blipmeta.RData")
+save(ODTRcont2_bliponlyparam_blipmeta_CVMSE,
+     ODTRcont2_bliponlyparam_blipmeta_CVTMLE,
+     ODTRcont2_bliponlyparam_blipmeta_CVTMLECI,
+     file = "results/ODTRcont2_bliponlyparam_blipmeta.RData")
 
 
 
@@ -129,7 +142,7 @@ blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorre
 dopt.SL.library = "DonV"
 metalearner = "vote"
 risk.type = "CV TMLE"
-ODTRbin_bliponlyparam_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyparam_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                      risk.type = risk.type,
                                                                                                      DGP_fun = DGP_fun,
                                                                                                      QAW = QAW,
@@ -138,7 +151,7 @@ ODTRbin_bliponlyparam_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(
                                                                                                      dopt.SL.library = dopt.SL.library,
                                                                                                      metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE CI"
-ODTRbin_bliponlyparam_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyparam_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                        risk.type = risk.type,
                                                                                                        DGP_fun = DGP_fun,
                                                                                                        QAW = QAW,
@@ -146,9 +159,9 @@ ODTRbin_bliponlyparam_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, functio
                                                                                                        blip.SL.library = blip.SL.library,
                                                                                                        dopt.SL.library = dopt.SL.library,
                                                                                                        metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_bliponlyparam_votemeta_CVTMLE,
-     ODTRbin_bliponlyparam_votemeta_CVTMLECI,
-     file = "results/ODTRbin_bliponlyparam_votemeta.RData")
+save(ODTRcont2_bliponlyparam_votemeta_CVTMLE,
+     ODTRcont2_bliponlyparam_votemeta_CVTMLECI,
+     file = "results/ODTRcont2_bliponlyparam_votemeta.RData")
 
 
 
@@ -165,26 +178,7 @@ blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorre
                     "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet", "SL.svm", "SL.rpart")
 dopt.SL.library = NULL
 metalearner = "discrete"
-ODTRbin_bliponlyML_discrete_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                                 risk.type = risk.type,
-                                                                                                 DGP_fun = DGP_fun,
-                                                                                                 QAW = QAW,
-                                                                                                 QAW.SL.library = QAW.SL.library,
-                                                                                                 blip.SL.library = blip.SL.library,
-                                                                                                 dopt.SL.library = dopt.SL.library,
-                                                                                                 metalearner = metalearner), mc.cores = cores))
-risk.type = "CV TMLE"
-dopt.SL.library = "DonV"
-ODTRbin_bliponlyML_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                                  risk.type = risk.type,
-                                                                                                  DGP_fun = DGP_fun,
-                                                                                                  QAW = QAW,
-                                                                                                  QAW.SL.library = QAW.SL.library,
-                                                                                                  blip.SL.library = blip.SL.library,
-                                                                                                  dopt.SL.library = dopt.SL.library,
-                                                                                                  metalearner = metalearner), mc.cores = cores))
-risk.type = "CV TMLE CI"
-ODTRbin_bliponlyML_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyML_discrete_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                     risk.type = risk.type,
                                                                                                     DGP_fun = DGP_fun,
                                                                                                     QAW = QAW,
@@ -192,10 +186,29 @@ ODTRbin_bliponlyML_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x
                                                                                                     blip.SL.library = blip.SL.library,
                                                                                                     dopt.SL.library = dopt.SL.library,
                                                                                                     metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_bliponlyML_discrete_CVMSE,
-     ODTRbin_bliponlyML_discrete_CVTMLE,
-     ODTRbin_bliponlyML_discrete_CVTMLECI,
-     file = "results/ODTRbin_bliponlyML_discrete.RData")
+risk.type = "CV TMLE"
+dopt.SL.library = "DonV"
+ODTRcont2_bliponlyML_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+                                                                                                     risk.type = risk.type,
+                                                                                                     DGP_fun = DGP_fun,
+                                                                                                     QAW = QAW,
+                                                                                                     QAW.SL.library = QAW.SL.library,
+                                                                                                     blip.SL.library = blip.SL.library,
+                                                                                                     dopt.SL.library = dopt.SL.library,
+                                                                                                     metalearner = metalearner), mc.cores = cores))
+risk.type = "CV TMLE CI"
+ODTRcont2_bliponlyML_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+                                                                                                       risk.type = risk.type,
+                                                                                                       DGP_fun = DGP_fun,
+                                                                                                       QAW = QAW,
+                                                                                                       QAW.SL.library = QAW.SL.library,
+                                                                                                       blip.SL.library = blip.SL.library,
+                                                                                                       dopt.SL.library = dopt.SL.library,
+                                                                                                       metalearner = metalearner), mc.cores = cores))
+save(ODTRcont2_bliponlyML_discrete_CVMSE,
+     ODTRcont2_bliponlyML_discrete_CVTMLE,
+     ODTRcont2_bliponlyML_discrete_CVTMLECI,
+     file = "results/ODTRcont2_bliponlyML_discrete.RData")
 
 
 
@@ -213,7 +226,7 @@ blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorre
                     "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet", "SL.svm", "SL.rpart")
 dopt.SL.library = NULL
 metalearner = "blip"
-ODTRbin_bliponlyML_blipmeta_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyML_blipmeta_CVMSE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                  risk.type = risk.type,
                                                                                                  DGP_fun = DGP_fun,
                                                                                                  QAW = QAW,
@@ -222,7 +235,7 @@ ODTRbin_bliponlyML_blipmeta_CVMSE = do.call("rbind", mclapply(1:r, function(x) p
                                                                                                  dopt.SL.library = dopt.SL.library,
                                                                                                  metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE"
-ODTRbin_bliponlyML_blipmeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyML_blipmeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                   risk.type = risk.type,
                                                                                                   DGP_fun = DGP_fun,
                                                                                                   QAW = QAW,
@@ -231,7 +244,7 @@ ODTRbin_bliponlyML_blipmeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) 
                                                                                                   dopt.SL.library = dopt.SL.library,
                                                                                                   metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE CI"
-ODTRbin_bliponlyML_blipmeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyML_blipmeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                     risk.type = risk.type,
                                                                                                     DGP_fun = DGP_fun,
                                                                                                     QAW = QAW,
@@ -239,10 +252,10 @@ ODTRbin_bliponlyML_blipmeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x
                                                                                                     blip.SL.library = blip.SL.library,
                                                                                                     dopt.SL.library = dopt.SL.library,
                                                                                                     metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_bliponlyML_blipmeta_CVMSE,
-     ODTRbin_bliponlyML_blipmeta_CVTMLE,
-     ODTRbin_bliponlyML_blipmeta_CVTMLECI,
-     file = "results/ODTRbin_bliponlyML_blipmeta.RData")
+save(ODTRcont2_bliponlyML_blipmeta_CVMSE,
+     ODTRcont2_bliponlyML_blipmeta_CVTMLE,
+     ODTRcont2_bliponlyML_blipmeta_CVTMLECI,
+     file = "results/ODTRcont2_bliponlyML_blipmeta.RData")
 
 
 
@@ -260,7 +273,7 @@ blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorre
                     "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet", "SL.svm", "SL.rpart")
 dopt.SL.library = "DonV"
 metalearner = "vote"
-ODTRbin_bliponlyML_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyML_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                   risk.type = risk.type,
                                                                                                   DGP_fun = DGP_fun,
                                                                                                   QAW = QAW,
@@ -269,7 +282,7 @@ ODTRbin_bliponlyML_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) 
                                                                                                   dopt.SL.library = dopt.SL.library,
                                                                                                   metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE CI"
-ODTRbin_bliponlyML_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_bliponlyML_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                                     risk.type = risk.type,
                                                                                                     DGP_fun = DGP_fun,
                                                                                                     QAW = QAW,
@@ -277,9 +290,9 @@ ODTRbin_bliponlyML_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x
                                                                                                     blip.SL.library = blip.SL.library,
                                                                                                     dopt.SL.library = dopt.SL.library,
                                                                                                     metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_bliponlyML_votemeta_CVTMLE,
-     ODTRbin_bliponlyML_votemeta_CVTMLECI,
-     file = "results/ODTRbin_bliponlyML_votemeta.RData")
+save(ODTRcont2_bliponlyML_votemeta_CVTMLE,
+     ODTRcont2_bliponlyML_votemeta_CVTMLECI,
+     file = "results/ODTRcont2_bliponlyML_votemeta.RData")
 
 
 
@@ -298,7 +311,16 @@ blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorre
 dopt.SL.library = "all"
 metalearner = "discrete"
 risk.type = "CV TMLE"
-ODTRbin_all_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_all_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+                                                                                                  risk.type = risk.type,
+                                                                                                  DGP_fun = DGP_fun,
+                                                                                                  QAW = QAW,
+                                                                                                  QAW.SL.library = QAW.SL.library,
+                                                                                                  blip.SL.library = blip.SL.library,
+                                                                                                  dopt.SL.library = dopt.SL.library,
+                                                                                                  metalearner = metalearner), mc.cores = cores))
+risk.type = "CV TMLE CI"
+ODTRcont2_all_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                            risk.type = risk.type,
                                                                                            DGP_fun = DGP_fun,
                                                                                            QAW = QAW,
@@ -306,18 +328,9 @@ ODTRbin_all_discrete_CVTMLE = do.call("rbind", mclapply(1:r, function(x) perform
                                                                                            blip.SL.library = blip.SL.library,
                                                                                            dopt.SL.library = dopt.SL.library,
                                                                                            metalearner = metalearner), mc.cores = cores))
-risk.type = "CV TMLE CI"
-ODTRbin_all_discrete_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
-                                                                                             risk.type = risk.type,
-                                                                                             DGP_fun = DGP_fun,
-                                                                                             QAW = QAW,
-                                                                                             QAW.SL.library = QAW.SL.library,
-                                                                                             blip.SL.library = blip.SL.library,
-                                                                                             dopt.SL.library = dopt.SL.library,
-                                                                                             metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_all_discrete_CVTMLECI,
-     ODTRbin_all_discrete_CVTMLE,
-     file = "results/ODTRbin_all_discrete.RData")
+save(ODTRcont2_all_discrete_CVTMLECI,
+     ODTRcont2_all_discrete_CVTMLE,
+     file = "results/ODTRcont2_all_discrete.RData")
 
 
 
@@ -339,7 +352,7 @@ blip.SL.library = c("SL.blip.incorrect1", "SL.blip.incorrect2", "SL.blip.incorre
 dopt.SL.library = "all"
 metalearner = "vote"
 risk.type = "CV TMLE"
-ODTRbin_all_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_all_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                            risk.type = risk.type,
                                                                                            DGP_fun = DGP_fun,
                                                                                            QAW = QAW,
@@ -348,7 +361,7 @@ ODTRbin_all_votemeta_CVTMLE = do.call("rbind", mclapply(1:r, function(x) perform
                                                                                            dopt.SL.library = dopt.SL.library,
                                                                                            metalearner = metalearner), mc.cores = cores))
 risk.type = "CV TMLE CI"
-ODTRbin_all_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
+ODTRcont2_all_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) performance_ODTR(n = n,
                                                                                              risk.type = risk.type,
                                                                                              DGP_fun = DGP_fun,
                                                                                              QAW = QAW,
@@ -356,8 +369,8 @@ ODTRbin_all_votemeta_CVTMLECI = do.call("rbind", mclapply(1:r, function(x) perfo
                                                                                              blip.SL.library = blip.SL.library,
                                                                                              dopt.SL.library = dopt.SL.library,
                                                                                              metalearner = metalearner), mc.cores = cores))
-save(ODTRbin_all_votemeta_CVTMLE,
-     ODTRbin_all_votemeta_CVTMLECI,
-     file = "results/ODTRbin_all_votemeta.RData")
+save(ODTRcont2_all_votemeta_CVTMLE,
+     ODTRcont2_all_votemeta_CVTMLECI,
+     file = "results/ODTRcont2_all_votemeta.RData")
 
 
