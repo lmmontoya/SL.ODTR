@@ -1,6 +1,0 @@
-﻿,DGP 1,,,,,DGP 2,,,,
-Library,GLM,Blip only,,,Full,GLM,Blip only,,,Full
-Metalearner,N/A,Blip-based,,Vote-based,,N/A,Blip-based,,Vote-based,
-Risk,N/A,MSE,Eyd,Eyd,Eyd,N/A,MSE,Eyd,Eyd,Eyd
-Average regret,-0.3741,-0.3209,-0.212,-0.2256,-0.2249,-0.0765,-0.0253,-0.0268,-0.0277,-0.0288
-Variance of regret,0.0038,0.0795,0.0337,0.0459,0.0351,0.0003,0.0002,0.0002,0.0002,0.0002
