@@ -372,7 +372,7 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 #'
 #' @param dopt.SL.library dopt library
 #' @param W covariates
-#' @param W_for_g covariates for estimating g
+#' @param gform gform
 #' @param V subset of covariates for designing ODTR
 #' @param A txt
 #' @param Y outcome
@@ -386,7 +386,7 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
 #' @export
 #'
 # function that has library of dopt algorithms
-getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V, A, Y, newV, QAW.reg, gAW, family = family) {
+getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, gform, V, A, Y, newV, QAW.reg, gAW, family = family) {
 
   if (is.null(newV)) newV = V
 
@@ -395,7 +395,7 @@ getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, W_for_g
    # form = as.formula(paste("~ ", paste(colnames(W), collapse= "+")))
 
     # propensity model
-    moPropen <- buildModelObj(model = as.formula(paste("~ ", paste(W_for_g, collapse= "+"))),
+    moPropen <- buildModelObj(model = as.formula(paste("~ ", gform)),
                               solver.method = 'glm',
                               solver.args = list(family='binomial'),
                               predict.method = 'predict.glm',

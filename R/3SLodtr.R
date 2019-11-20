@@ -135,7 +135,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 #'
 #' @param V subset covariates for designing ODTR
 #' @param W covariates
-#' @param W_for_g W for g
+#' @param gform gform
 #' @param A txt
 #' @param Y outcome
 #' @param ab range of Y
@@ -160,7 +160,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 # 1. txt under optimal rule (convex combination) => SL.predict
 # 2. txt under optimal rule for each algorithm  => library.predict
 # 3. coefficients on each of the candidate rules => coef
-SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
+SL.vote = function(V, W, gform, A, Y, ab, QAW.reg, gAW, blip.SL.library,
                    dopt.SL.library,
                    risk.type,
                    grid.size,
@@ -186,7 +186,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
     train_ind = folds != i
     test_ind = folds == i
     QAW.reg.train = SuperLearner(Y = Y[train_ind], X = data.frame(A, W)[train_ind,], SL.library = QAW.reg$SL.library$library$predAlgorithm, family = family)
-    candidate.dopts.test = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
+    candidate.dopts.test = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, gform = gform,
                                            W = W[train_ind,], V = V[train_ind,], A = A[train_ind], Y = Y[train_ind],
                                            newV = V[test_ind,], QAW.reg = QAW.reg.train, gAW = gAW[train_ind],
                                            family = family)
@@ -223,7 +223,7 @@ SL.vote = function(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 
 
   # predict on new data
-  SL.init = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, W_for_g = W_for_g,
+  SL.init = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library, gform = gform,
                                                 W = W, V = V, A = A, Y = Y, newV = newV,
                                                 QAW.reg = QAW.reg, gAW = gAW,
                                                 family = family)

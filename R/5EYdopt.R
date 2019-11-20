@@ -6,7 +6,7 @@
 #' @description Given a W, A, Y dataset, this function will compute the estimated ODTR using SuperLearner. If a Qbar function is provided that computes the true E[Y|A,W] (e.g., if simulating), the function will also return the true treatment under the optimal rule and other metrics of evaluating the estimated optimal rule's performance. Then, it will estimate E[Ydopt] using g-computation, IPTW, IPTW-DR, TMLE, and CV-TMLE. Follows the framework of Luedtke and van der laan, 2015 and 2016.
 #'
 #' @param W Data frame of observed baseline covariates
-#' @param W_for_g Data frame of observed baseline covariates used for predicting g1W (probability of treatment) via a GLM, e.g., if there's stratified randomization.
+#' @param gform Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
 #' @param V Data frame of observed baseline covariates (subset of W) used to design the ODTR
 #' @param A Vector of treatment
 #' @param Y Vector of outcome (continuous or binary)
@@ -60,7 +60,7 @@
 
 
 
-EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
+EYdopt = function(W, gform = 1, V, A, Y, metalearner,
                   QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type,
                   grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
                   family = NULL){
@@ -72,7 +72,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
   SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                  dopt.SL.library = dopt.SL.library, metalearner = metalearner,
                  risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL, newV = NULL,
-                 W_for_g = W_for_g, kappa = kappa, g1W = g1W, family = family)
+                 gform = gform, kappa = kappa, g1W = g1W, family = family)
 
   QAW.reg = SL.odtr$QAW.reg
 
@@ -94,7 +94,7 @@ EYdopt = function(W, W_for_g = 1, V, A, Y, metalearner,
     SL.odtr.train = odtr(V = V[folds!=i,], W = W[folds!=i,], A = A[folds!=i], Y = Y[folds!=i], newV = V[folds==i,],
                          QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library, dopt.SL.library = dopt.SL.library,
                          metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
-                         W_for_g = W_for_g, kappa = kappa, g1W = g1W[folds!=i], family = family, ab = ab)
+                         gform = gform, kappa = kappa, g1W = g1W[folds!=i], family = family, ab = ab)
     QAW.reg.train = SL.odtr.train$QAW.reg
     dopt.test = SL.odtr.train$dopt
     Qdopt.test = predict(QAW.reg.train, newdata = data.frame(W[folds == i,], A = dopt.test), type = "response")$pred

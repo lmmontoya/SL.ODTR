@@ -5,7 +5,7 @@
 \title{Performance ODTR}
 \usage{
 performance_ODTR(x, n, risk.type, DGP_fun, QAW, QAW.SL.library,
-  blip.SL.library, dopt.SL.library, metalearner, grid.size)
+  blip.SL.library, dopt.SL.library, metalearner, grid.size, W_for_g = 1)
 }
 \arguments{
 \item{x}{dummy}

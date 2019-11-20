@@ -4,7 +4,7 @@
 \alias{EYdopt}
 \title{Estimation of E[Ydopt]}
 \usage{
-EYdopt(W, W_for_g = 1, V, A, Y, metalearner, QAW.SL.library,
+EYdopt(W, gform = 1, V, A, Y, metalearner, QAW.SL.library,
   blip.SL.library, dopt.SL.library = NULL, risk.type, grid.size = 100,
   VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
   family = NULL)
@@ -12,7 +12,7 @@ EYdopt(W, W_for_g = 1, V, A, Y, metalearner, QAW.SL.library,
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
 
-\item{W_for_g}{Data frame of observed baseline covariates used for predicting g1W (probability of treatment) via a GLM, e.g., if there's stratified randomization.}
+\item{gform}{Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).}
 
 \item{V}{Data frame of observed baseline covariates (subset of W) used to design the ODTR}
 

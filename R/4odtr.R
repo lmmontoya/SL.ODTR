@@ -5,7 +5,7 @@
 #' @description Given a W, A, Y dataset, this function will compute the estimated ODTR using SuperLearner. If a QAW function is provided that computes the true E[Y|A,W] (e.g., if simulating), the function will also return the true treatment under the optimal rule and other metrics of evaluating the estimated optimal rule's performance.
 #'
 #' @param W Data frame of observed baseline covariates
-#' @param W_for_g Data frame of observed baseline covariates used for predicting g1W (probability of treatment). Could also be 1 if using mean of A as estimate of g1W.
+#' @param gform Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
 #' @param A Vector of treatment
 #' @param Y Vector of treatment (continuous or binary)
 #' @param V Data frame of observed baseline covariates (subset of W) used to design the ODTR
@@ -40,10 +40,10 @@
 #' Y = ObsData$Y
 #'
 #' # blip-based estimate of ODTR with risk function CV-TMLE
-#' odtr(W = W, W_for_g = subset(W, select = c(W1, W2)), A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
+#' odtr(W = W, gform = "W1 + W2", A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
 #'
 #'
-odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
+odtr = function(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
                 QAW.SL.library, risk.type, grid.size = 100,
                 metalearner, kappa = NULL, QAW = NULL, VFolds = 10,
                 g1W = NULL, family = NULL){
@@ -57,7 +57,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
 
   # estimate pred. prob. observed exposure, P(A|W)=g(A|W)
   if (is.null(g1W)) {
-    g.reg = glm(A ~ ., data = data.frame(A,W_for_g), family = "binomial")
+    g.reg = glm(as.formula(paste("A ~", gform)), data = data.frame(A,W), family = "binomial")
     g1W = predict(g.reg, type = "response")
   } else {
     g.reg = NULL
@@ -78,7 +78,7 @@ odtr = function(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library
 
   if (SL.type == "vote") {
     # get estimate of txt under rule based on risk type (CV TMLE, CV IPCWDR, CV TMLE CI)
-    SL.fit = SL.vote(V = V, W = W, W_for_g, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
+    SL.fit = SL.vote(V = V, W = W, gform, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
                      blip.SL.library = blip.SL.library, dopt.SL.library = dopt.SL.library,
                      gAW = gAW, risk.type = risk.type, grid.size = grid.size,
                      VFolds = VFolds, newV = newV, family = family, discrete.SL = discrete.SL)

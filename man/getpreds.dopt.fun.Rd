@@ -4,7 +4,7 @@
 \alias{getpreds.dopt.fun}
 \title{Candidate dopt for direct search algorithms}
 \usage{
-getpreds.dopt.fun(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V,
+getpreds.dopt.fun(dopt.SL.library, blip.SL.library = NULL, W, gform, V,
   A, Y, newV, QAW.reg, gAW, family = family)
 }
 \arguments{
@@ -12,7 +12,7 @@ getpreds.dopt.fun(dopt.SL.library, blip.SL.library = NULL, W, W_for_g, V,
 
 \item{W}{covariates}
 
-\item{W_for_g}{covariates for estimating g}
+\item{gform}{gform}
 
 \item{V}{subset of covariates for designing ODTR}
 

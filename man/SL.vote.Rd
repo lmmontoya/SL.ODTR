@@ -4,7 +4,7 @@
 \alias{SL.vote}
 \title{Vote-based SL}
 \usage{
-SL.vote(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
+SL.vote(V, W, gform, A, Y, ab, QAW.reg, gAW, blip.SL.library,
   dopt.SL.library, risk.type, grid.size, newV = NULL, VFolds, family,
   discrete.SL)
 }
@@ -13,7 +13,7 @@ SL.vote(V, W, W_for_g, A, Y, ab, QAW.reg, gAW, blip.SL.library,
 
 \item{W}{covariates}
 
-\item{W_for_g}{W for g}
+\item{gform}{gform}
 
 \item{A}{txt}
 

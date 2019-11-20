@@ -4,15 +4,15 @@
 \alias{odtr}
 \title{Function that computes ODTR}
 \usage{
-odtr(W, W_for_g = 1, A, Y, ab = NULL, V, newV = NULL,
-  blip.SL.library, dopt.SL.library = NULL, QAW.SL.library, risk.type,
-  grid.size = 100, metalearner, kappa = NULL, QAW = NULL,
-  VFolds = 10, g1W = NULL, family = NULL)
+odtr(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library,
+  dopt.SL.library = NULL, QAW.SL.library, risk.type, grid.size = 100,
+  metalearner, kappa = NULL, QAW = NULL, VFolds = 10, g1W = NULL,
+  family = NULL)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
 
-\item{W_for_g}{Data frame of observed baseline covariates used for predicting g1W (probability of treatment). Could also be 1 if using mean of A as estimate of g1W.}
+\item{gform}{Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).}
 
 \item{A}{Vector of treatment}
 
@@ -57,7 +57,7 @@ A = ObsData$A
 Y = ObsData$Y
 
 # blip-based estimate of ODTR with risk function CV-TMLE
-odtr(W = W, W_for_g = subset(W, select = c(W1, W2)), A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
+odtr(W = W, gform = "W1 + W2", A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
 
 
 }
