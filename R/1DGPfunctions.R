@@ -347,7 +347,7 @@ QAW_bin2 = function(A, W) {
   W3 = W$W3
   W4 = W$W4
 
-  return(0.5*plogis(1-W1^2 + 3*W2 + 5*W3^2*A - 4.45*A)+0.5*plogis(-0.5- W3 + 2*W1*W2 + 3*abs(W2)*A - 1.5*A))
+  return(0.5*plogis(1-W1^2 + 3*W2 + 5*W3^2*A - 4.45*A)+0.5*plogis(-0.5- W3 + 2*W1*W2 + 3*abs(W2)*A - 7*A))
 
 }
 
@@ -387,6 +387,7 @@ DGP_bin2 = function(n, dA = NULL, a = NULL, kappa = NULL){
   QAW1 = QAW_bin2(A = 1, W)
   QAW0 = QAW_bin2(A = 0, W)
   blip = QAW1 - QAW0
+  mean(blip > 0)
 
   # Treatment under rule
   if (!is.null(dA) & !is.null(a)){
