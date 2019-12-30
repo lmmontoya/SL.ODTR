@@ -7,7 +7,7 @@
 EYdopt(W, gform = 1, V, A, Y, metalearner, QAW.SL.library,
   blip.SL.library, dopt.SL.library = NULL, risk.type, grid.size = 100,
   VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
-  family = NULL)
+  family = NULL, contrast = NULL)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
@@ -41,6 +41,8 @@ EYdopt(W, gform = 1, V, A, Y, metalearner, QAW.SL.library,
 \item{g1W}{user-supplied vector of g1W}
 
 \item{family}{either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
+
+\item{contrast}{An integer to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.}
 
 \item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
 }

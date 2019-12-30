@@ -4,7 +4,8 @@
 \alias{estimatorsEYdopt_nonCVTMLE}
 \title{Estimators of E[Yd] that are not CV-TMLE}
 \usage{
-estimatorsEYdopt_nonCVTMLE(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.library, ab)
+estimatorsEYdopt_nonCVTMLE(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.library, ab,
+  contrast)
 }
 \arguments{
 \item{W}{covariates}
@@ -22,6 +23,8 @@ estimatorsEYdopt_nonCVTMLE(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.library, ab)
 \item{QAW.SL.library}{library for QAW}
 
 \item{ab}{range of Y}
+
+\item{contrast}{contrast}
 }
 \value{
 

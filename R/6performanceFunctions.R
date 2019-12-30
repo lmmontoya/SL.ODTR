@@ -65,7 +65,7 @@ performance_ODTR = function(x, n, risk.type, DGP_fun, QAW, QAW.SL.library, blip.
 #' @export
 #'
 # EYdopt performance function
-performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.library, VFolds){
+performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.library, VFolds, contrast){
 
   ObsData = subset(DGP_fun(n), select = -c(A_star, Y_star))
   W = subset(ObsData, select = -c(A, Y))
@@ -79,7 +79,7 @@ performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.librar
 
   results = EYdopt(V=V, W=W, A=A, Y=Y, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                    dopt.SL.library = dopt.SL.library, metalearner = metalearner,
-                   risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW)
+                   risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW, contrast = contrast)
 
   return(results)
 }

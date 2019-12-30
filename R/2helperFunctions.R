@@ -297,12 +297,13 @@ dopt.fun = function(blip, kappa){
 #' @param gAW P(A|W)
 #' @param QAW.SL.library library for QAW
 #' @param ab range of Y
+#' @param contrast contrast
 #'
 #' @return
 #'
 #' @export
 #'
-estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.library, ab) {
+estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.library, ab, contrast) {
 
   n = length(Y)
   family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
@@ -335,16 +336,49 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
   varIC_TMLE = var(tmle_objects.dopt$IC)/n
   CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE)
 
-  if (length(grep("SL.QAW", QAW.SL.library)) != 0) {
-    ltmle_objects.dopt = NA
-    Psi_LTMLE = NA
-    CI_LTMLE = c(NA,NA)
-  } else {
-    # TMLE using ltmle
-    ltmle_objects.dopt = summary(ltmle(data = data.frame(W, A, Y), Anodes = "A", Lnodes = NULL, Ynodes = "Y", gform = "A ~ 1", abar = as.matrix(dopt, nrow = n), SL.library = QAW.SL.library))
-    Psi_LTMLE = ltmle_objects.dopt$treatment$estimate["tmle"]
-    CI_LTMLE = ltmle_objects.dopt$treatment$CI
+  if (!is.null(contrast)) {
+
+    Qcontrast = predict(QAW.reg, newdata = data.frame(W, A = contrast), type = "response")$pred
+
+    # Unadj
+    Psi_unadj = mean(Y[A==dopt]) - mean(Y[A==contrast])
+    SE_Psi_unadj = sqrt(var(Y[A==dopt])/sum(A==dopt) + var(Y[A==contrast])/sum(A==contrast))
+    CI_unadj = Psi_unadj + + c(-1, 1) * qnorm(0.975) * SE_Psi_unadj
+
+    # g-comp
+    Psi_gcomp = Psi_gcomp - mean(Qcontrast)
+
+    # IPTW
+    Psi_IPTW = Psi_IPTW - mean(Y*(1/gAW)*as.numeric(A == contrast))
+    IC_IPTW_contrast = ((1/gAW)*as.numeric(A == contrast)*Y - mean(as.numeric(A == contrast)/gAW*Y))
+    IC_IPTW = IC_IPTW - IC_IPTW_contrast
+    varIC_IPTW = var(IC_IPTW)/n
+    CI_IPTW = Psi_IPTW + c(-1,1)*qnorm(0.975)*sqrt(varIC_IPTW)
+
+    # IPTW-DR
+    Psi_IPTW_DR = Psi_IPTW_DR - mean(as.numeric(A == contrast)/gAW * (Y-Qcontrast) + Qcontrast)
+    IC_IPTW_DR_contrast = (as.numeric(A == contrast)/gAW * (Y-Qcontrast) + Qcontrast - mean(as.numeric(A == contrast)/gAW * (Y-contrast) + Qcontrast))
+    IC_IPTW_DR = IC_IPTW_DR - IC_IPTW_DR_contrast
+    varIC_IPTW_DR = var(IC_IPTW_DR)/n
+    CI_IPTW_DR = Psi_IPTW_DR + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR))
+
+    # TMLE handcoded
+    tmle_objects.contrast = tmle.fun(A = A, d = contrast, Y = Y, Qd = Qcontrast, gAW = gAW, ab = ab)
+    Psi_TMLE = tmle_objects.dopt$psi - tmle_objects.contrast$psi
+    varIC_TMLE = var(tmle_objects.dopt$IC - tmle_objects.contrast$IC)/n
+    CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE)
   }
+
+  # if (length(grep("SL.QAW", QAW.SL.library)) != 0) {
+  #   ltmle_objects.dopt = NA
+  #   Psi_LTMLE = NA
+  #   CI_LTMLE = c(NA,NA)
+  # } else {
+  #   # TMLE using ltmle
+  #   ltmle_objects.dopt = summary(ltmle(data = data.frame(W, A, Y), Anodes = "A", Lnodes = NULL, Ynodes = "Y", gform = "A ~ 1", abar = as.matrix(dopt, nrow = n), SL.library = QAW.SL.library))
+  #   Psi_LTMLE = ltmle_objects.dopt$treatment$estimate["tmle"]
+  #   CI_LTMLE = ltmle_objects.dopt$treatment$CI
+  # }
 
 
   toreturn = c(Psi_unadj = Psi_unadj,
@@ -355,9 +389,9 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.librar
                Psi_IPTW_DR = Psi_IPTW_DR,
                CI_IPTW_DR = CI_IPTW_DR,
                Psi_TMLE = Psi_TMLE,
-               CI_TMLE = CI_TMLE,
-               Psi_LTMLE = Psi_LTMLE,
-               CI_LTMLE = CI_LTMLE)
+               CI_TMLE = CI_TMLE)#,
+               #Psi_LTMLE = Psi_LTMLE,
+               #CI_LTMLE = CI_LTMLE)
 
   return(toreturn)
 

@@ -5,7 +5,7 @@
 \title{Performance EYdopt}
 \usage{
 performance_EYdopt(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.library,
-  VFolds)
+  VFolds, contrast)
 }
 \arguments{
 \item{x}{dummy}
