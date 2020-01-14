@@ -2,7 +2,7 @@
 % Please edit documentation in R/7SLwrappers.R
 \name{SL.blip.incorrect2}
 \alias{SL.blip.incorrect2}
-\title{Epi HTE GLM for blip 2}
+\title{Blip W2}
 \usage{
 SL.blip.incorrect2(Y, X, newX, family, obsWeights, model = TRUE, ...)
 }
@@ -27,5 +27,5 @@ SL.blip.incorrect2(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 }
 \description{
-Standard HTE GLM used in Epi analyses for blip 2.
+Blip W2.
 }

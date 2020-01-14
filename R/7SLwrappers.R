@@ -16,14 +16,15 @@
 #'
 #' @export
 #'
-#SL.QAW.incorrect
-#correctly specified param model QAW
 SL.QAW.incorrect = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
   }
 
-  fit.glm <- glm(Y ~ W1 + W2 + W3 + W4 + A*(W1 + W2 +W3 + W4), data = X, family = family, weights = obsWeights,
+  Wnames = colnames(X)[grep(pattern = "W", colnames(X))]
+
+  fit.glm <- glm(as.formula(paste("Y ~ ", paste(Wnames, collapse= "+"), "+ A*(", paste(Wnames, collapse= "+"), ")"))
+, data = X, family = family, weights = obsWeights,
                  model = model)
   if (is.matrix(newX)) {
     newX = as.data.frame(newX)
@@ -36,10 +37,11 @@ SL.QAW.incorrect = function (Y, X, newX, family, obsWeights, model = TRUE, ...) 
 }
 
 
+
 #' @name SL.blip.incorrect1
 #' @aliases SL.blip.incorrect1
-#' @title Epi HTE GLM for blip 1
-#' @description Standard HTE GLM used in Epi analyses for blip 1.
+#' @title Blip W1
+#' @description Blip W1.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -54,8 +56,6 @@ SL.QAW.incorrect = function (Y, X, newX, family, obsWeights, model = TRUE, ...) 
 #'
 #' @export
 #'
-#SL.blip.incorrect1
-#correctly specified param model blip
 SL.blip.incorrect1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
@@ -77,8 +77,8 @@ SL.blip.incorrect1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 
 #' @name SL.blip.incorrect2
 #' @aliases SL.blip.incorrect2
-#' @title Epi HTE GLM for blip 2
-#' @description Standard HTE GLM used in Epi analyses for blip 2.
+#' @title Blip W2
+#' @description Blip W2.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -93,8 +93,6 @@ SL.blip.incorrect1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 #'
 #' @export
 #'
-#SL.blip.incorrect2
-#correctly specified param model blip
 SL.blip.incorrect2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
@@ -115,8 +113,8 @@ SL.blip.incorrect2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 
 #' @name SL.blip.incorrect3
 #' @aliases SL.blip.incorrect3
-#' @title Epi HTE GLM for blip 3
-#' @description Standard HTE GLM used in Epi analyses for blip 3.
+#' @title Blip W3
+#' @description Blip W3.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -131,8 +129,6 @@ SL.blip.incorrect2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 #'
 #' @export
 #'
-#SL.blip.incorrect3
-#correctly specified param model blip
 SL.blip.incorrect3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
@@ -153,8 +149,8 @@ SL.blip.incorrect3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 
 #' @name SL.blip.incorrect4
 #' @aliases SL.blip.incorrect4
-#' @title Epi HTE GLM for blip 4
-#' @description Standard HTE GLM used in Epi analyses for blip 4.
+#' @title Blip W4
+#' @description Blip W4.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -169,8 +165,6 @@ SL.blip.incorrect3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 #'
 #' @export
 #'
-#SL.blip.incorrect4
-#correctly specified param model blip
 SL.blip.incorrect4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
@@ -189,14 +183,10 @@ SL.blip.incorrect4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 }
 
 
-
-
-
-
-#' @name SL.QAW.incorrect1
-#' @aliases SL.QAW.incorrect1
-#' @title Epi HTE GLM for QAW 1
-#' @description Standard HTE GLM used in Epi analyses for QAW 1.
+#' @name SL.blip.incorrect5
+#' @aliases SL.blip.incorrect5
+#' @title Blip W5
+#' @description Blip W5.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -211,8 +201,46 @@ SL.blip.incorrect4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...
 #'
 #' @export
 #'
-#SL.QAW.incorrect1
-#correctly specified param model blip
+SL.blip.incorrect5 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+
+  fit.glm <- glm(Y ~ W5, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
+
+
+
+
+
+
+#' @name SL.QAW.incorrect1
+#' @aliases SL.QAW.incorrect1
+#' @title QAW for W1
+#' @description QAW for W1.
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
 SL.QAW.incorrect1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
@@ -234,8 +262,8 @@ SL.QAW.incorrect1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 #' @name SL.QAW.incorrect2
 #' @aliases SL.QAW.incorrect2
-#' @title Epi HTE GLM for QAW 2
-#' @description Standard HTE GLM used in Epi analyses for QAW 2.
+#' @title QAW for W2
+#' @description QAW for W2.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -250,8 +278,6 @@ SL.QAW.incorrect1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...)
 #'
 #' @export
 #'
-#SL.QAW.incorrect2
-#correctly specified param model QAW
 SL.QAW.incorrect2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
@@ -272,8 +298,8 @@ SL.QAW.incorrect2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 #' @name SL.QAW.incorrect3
 #' @aliases SL.QAW.incorrect3
-#' @title Epi HTE GLM for QAW 3
-#' @description Standard HTE GLM used in Epi analyses for QAW 3.
+#' @title QAW for W3
+#' @description QAW for W3.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -288,8 +314,6 @@ SL.QAW.incorrect2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...)
 #'
 #' @export
 #'
-#SL.blip.incorrect3
-#correctly specified param model blip
 SL.QAW.incorrect3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   if (is.matrix(X)) {
     X = as.data.frame(X)
@@ -310,8 +334,8 @@ SL.QAW.incorrect3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 #' @name SL.QAW.incorrect4
 #' @aliases SL.QAW.incorrect4
-#' @title Epi HTE GLM for QAW 4
-#' @description Standard HTE GLM used in Epi analyses for QAW 4.
+#' @title QAW for W5
+#' @description QAW for W5.
 #'
 #' @param Y outcome
 #' @param X predictors
@@ -345,6 +369,44 @@ SL.QAW.incorrect4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...)
   return(out)
 }
 
+
+
+#' @name SL.QAW.incorrect5
+#' @aliases SL.QAW.incorrect5
+#' @title QAW for W5
+#' @description QAW for W5.
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+#SL.QAW.incorrect5
+#correctly specified param model QAW
+SL.QAW.incorrect5 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+
+  fit.glm <- glm(Y ~ A*W5, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
 
 
 

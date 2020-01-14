@@ -2,7 +2,7 @@
 % Please edit documentation in R/7SLwrappers.R
 \name{SL.QAW.incorrect4}
 \alias{SL.QAW.incorrect4}
-\title{Epi HTE GLM for QAW 4}
+\title{QAW for W5}
 \usage{
 SL.QAW.incorrect4(Y, X, newX, family, obsWeights, model = TRUE, ...)
 }
@@ -27,5 +27,5 @@ SL.QAW.incorrect4(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 }
 \description{
-Standard HTE GLM used in Epi analyses for QAW 4.
+QAW for W5.
 }
