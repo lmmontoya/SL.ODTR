@@ -1,5 +1,5 @@
-#' @name QAW_bin
-#' @aliases QAW_bin
+#' @name QAW_bin_complex
+#' @aliases QAW_bin_complex
 #' @title Simulate with AL bin DGP
 #' @description Generate QAW according to AL bin DGP
 #'
@@ -16,7 +16,7 @@
 ### AL DGP binary outcome #####################
 ###############################################
 # QAW
-QAW_bin = function(A, W) {
+QAW_bin_complex = function(A, W) {
 
   W1 = W$W1
   W2 = W$W2
@@ -29,8 +29,8 @@ QAW_bin = function(A, W) {
 
 
 
-#' @name DGP_bin
-#' @aliases DGP_bin
+#' @name DGP_bin_complex
+#' @aliases DGP_bin_complex
 #' @title Simulate with AL bin DGP
 #' @description Generate data according to AL bin DGP
 #'
@@ -44,7 +44,7 @@ QAW_bin = function(A, W) {
 #' @export
 #'
 
-DGP_bin = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_complex = function(n, dA = NULL, a = NULL, kappa = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -57,11 +57,11 @@ DGP_bin = function(n, dA = NULL, a = NULL, kappa = NULL){
   W = data.frame(W1, W2, W3, W4)
 
   u = runif(n)
-  Y = as.numeric(u<QAW_bin(A,W))
+  Y = as.numeric(u<QAW_bin_complex(A,W))
 
   # Blip function
-  QAW1 = QAW_bin(A = 1, W)
-  QAW0 = QAW_bin(A = 0, W)
+  QAW1 = QAW_bin_complex(A = 1, W)
+  QAW0 = QAW_bin_complex(A = 0, W)
   blip = QAW1 - QAW0
 
   # Treatment under rule
@@ -86,7 +86,7 @@ DGP_bin = function(n, dA = NULL, a = NULL, kappa = NULL){
   }
 
   # Outcome
-  Y_star = as.numeric(u<QAW_bin(A_star,W))
+  Y_star = as.numeric(u<QAW_bin_complex(A_star,W))
 
   # Data and target parameter
   O = data.frame(W, A, A_star, Y, Y_star)
@@ -550,10 +550,10 @@ DGP_cont3 = function(n, dA = NULL, a = NULL, kappa = NULL){
 
 
 
-#' @name QAW_bin3
-#' @aliases QAW_bin3
-#' @title Simulate with AL bin DGP with influential variable
-#' @description Generate QAW according to AL bin DGP with influential variable
+#' @name QAW_bin_simple
+#' @aliases QAW_bin_simple
+#' @title Simulate with AL bin DGP simple
+#' @description Generate QAW according to AL bin simple
 #'
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
@@ -567,8 +567,8 @@ DGP_cont3 = function(n, dA = NULL, a = NULL, kappa = NULL){
 ###############################################
 ### AL DGP binary outcome #####################
 ###############################################
-# QAW3
-QAW_bin3 = function(A, W) {
+# QAW_bin_simple
+QAW_bin_simple = function(A, W) {
 
   W1 = W$W1
   W2 = W$W2
@@ -581,8 +581,8 @@ QAW_bin3 = function(A, W) {
 
 
 
-#' @name DGP_bin3
-#' @aliases DGP_bin3
+#' @name DGP_bin_simple
+#' @aliases DGP_bin_simple
 #' @title Simulate with AL bin DGP with influential variable
 #' @description Generate data according to AL bin DGP with influential variable
 #'
@@ -596,7 +596,7 @@ QAW_bin3 = function(A, W) {
 #' @export
 #'
 
-DGP_bin3 = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_simple = function(n, dA = NULL, a = NULL, kappa = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -609,11 +609,11 @@ DGP_bin3 = function(n, dA = NULL, a = NULL, kappa = NULL){
   W = data.frame(W1, W2, W3, W4)
 
   u = runif(n)
-  Y = as.numeric(u<QAW_bin3(A,W))
+  Y = as.numeric(u<QAW_bin_simple(A,W))
 
   # Blip function
-  QAW1 = QAW_bin3(A = 1, W)
-  QAW0 = QAW_bin3(A = 0, W)
+  QAW1 = QAW_bin_simple(A = 1, W)
+  QAW0 = QAW_bin_simple(A = 0, W)
   blip = QAW1 - QAW0
 
   # Treatment under rule
@@ -638,7 +638,7 @@ DGP_bin3 = function(n, dA = NULL, a = NULL, kappa = NULL){
   }
 
   # Outcome
-  Y_star = as.numeric(u<QAW_bin3(A_star,W))
+  Y_star = as.numeric(u<QAW_bin_simple(A_star,W))
 
   # Data and target parameter
   O = data.frame(W, A, A_star, Y, Y_star)
