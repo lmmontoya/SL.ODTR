@@ -295,7 +295,6 @@ dopt.fun = function(blip, kappa){
 #' @param dopt txt under rule
 #' @param QAW.reg QAW regression object
 #' @param gAW P(A|W)
-#' @param QAW.SL.library library for QAW
 #' @param ab range of Y
 #' @param contrast contrast
 #'
@@ -303,7 +302,7 @@ dopt.fun = function(blip, kappa){
 #'
 #' @export
 #'
-estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, QAW.SL.library, ab, contrast) {
+estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, ab, contrast) {
 
   n = length(Y)
   family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")

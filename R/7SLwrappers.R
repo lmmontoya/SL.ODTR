@@ -23,8 +23,8 @@ SL.QAW.HTEepi = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 
   Wnames = colnames(X)[grep(pattern = "W", colnames(X))]
 
-  fit.glm <- glm(as.formula(paste("Y ~ ", paste(Wnames, collapse= "+"), "+ A + A*(", paste(Wnames, collapse= "+"), ")"))
-, data = X, family = family, weights = obsWeights,
+  fit.glm <- glm(as.formula(paste("Y ~ ", "A*(", paste(Wnames, collapse= "+"), ")")),
+                 data = X, family = family, weights = obsWeights,
                  model = model)
   if (is.matrix(newX)) {
     newX = as.data.frame(newX)

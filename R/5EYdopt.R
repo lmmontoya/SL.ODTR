@@ -88,7 +88,7 @@ EYdopt = function(W, gform = 1, V, A, Y, metalearner,
 
   toreturn_dopt = estimatorsEYdopt_nonCVTMLE(W = W, A = A, Y = Y, dopt = dopt,
                                              QAW.reg = QAW.reg, gAW = gAW,
-                                             QAW.SL.library = QAW.SL.library, ab = ab,
+                                             ab = ab,
                                              contrast = contrast)
   ### CV-TMLE ###
   folds = sample(1:VFolds, size = n, replace = T)
@@ -137,7 +137,7 @@ EYdopt = function(W, gform = 1, V, A, Y, metalearner,
     dopt0 = dopt.fun(blip = QAW(A = 1, W = W) - QAW(A = 0, W = W), kappa = kappa)
     toreturn_dopt0 = estimatorsEYdopt_nonCVTMLE(W = W, A = A, Y = Y, dopt = dopt0,
                                                 QAW.reg = QAW.reg, gAW = gAW,
-                                                QAW.SL.library = QAW.SL.library, ab = ab,
+                                                ab = ab,
                                                 contrast = contrast)
     ### CV-TMLE ###
     folds = sample(1:VFolds, size = n, replace = T)
