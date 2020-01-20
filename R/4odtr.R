@@ -33,14 +33,14 @@
 #' ## Example
 #' library(SuperLearner)
 #' library(hitandrun)
-#' ObsData = subset(DGP_smooth2(1000), select = -c(A_star, Y_star))
+#' ObsData = subset(DGP_bin_simple(1000), select = -c(A_star, Y_star))
 #' W = subset(ObsData, select = -c(A,Y))
 #' V = W
 #' A = ObsData$A
 #' Y = ObsData$Y
 #'
 #' # blip-based estimate of ODTR with risk function CV-TMLE
-#' odtr(W = W, gform = "W1 + W2", A = A, Y = Y, V = W, blip.SL.library = "SL.blip.correct_smooth", QAW.SL.library = "SL.QAW.correct_smooth", risk.type = "CV TMLE", metalearner = 'blip')
+#' odtr(W = W, gform = "W1 + W2", A = A, Y = Y, V = W, blip.SL.library = "SL.blip.HTEepi", QAW.SL.library = "SL.QAW.HTEepi", risk.type = "CV TMLE", metalearner = 'blip')
 #'
 #'
 odtr = function(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
