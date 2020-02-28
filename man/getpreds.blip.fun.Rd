@@ -4,9 +4,18 @@
 \alias{getpreds.blip.fun}
 \title{Predictions}
 \usage{
-getpreds.blip.fun(Y, X, newX = NULL, family = gaussian(), SL.library,
-  id = NULL, verbose = FALSE, control = list(), obsWeights = NULL,
-  env = parent.frame())
+getpreds.blip.fun(
+  Y,
+  X,
+  newX = NULL,
+  family = gaussian(),
+  SL.library,
+  id = NULL,
+  verbose = FALSE,
+  control = list(),
+  obsWeights = NULL,
+  env = parent.frame()
+)
 }
 \arguments{
 \item{Y}{outcome}

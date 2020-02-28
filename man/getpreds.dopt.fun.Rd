@@ -4,8 +4,19 @@
 \alias{getpreds.dopt.fun}
 \title{Candidate dopt for direct search algorithms}
 \usage{
-getpreds.dopt.fun(dopt.SL.library, blip.SL.library = NULL, W, gform, V,
-  A, Y, newV, QAW.reg, gAW, family = family)
+getpreds.dopt.fun(
+  dopt.SL.library,
+  blip.SL.library = NULL,
+  W,
+  gform,
+  V,
+  A,
+  Y,
+  newV,
+  QAW.reg,
+  gAW,
+  family = family
+)
 }
 \arguments{
 \item{dopt.SL.library}{dopt library}

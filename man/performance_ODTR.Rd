@@ -4,8 +4,19 @@
 \alias{performance_ODTR}
 \title{Performance ODTR}
 \usage{
-performance_ODTR(x, n, risk.type, DGP_fun, QAW, QAW.SL.library,
-  blip.SL.library, dopt.SL.library, metalearner, grid.size, gform = 1)
+performance_ODTR(
+  x,
+  n,
+  risk.type,
+  DGP_fun,
+  QAW,
+  QAW.SL.library,
+  blip.SL.library,
+  dopt.SL.library,
+  metalearner,
+  grid.size,
+  gform = 1
+)
 }
 \arguments{
 \item{x}{dummy}

@@ -4,8 +4,22 @@
 \alias{SL.blip}
 \title{Blip-based SL}
 \usage{
-SL.blip(V, W, A, Y, ab, QAW.reg, gAW, blip.SL.library, risk.type,
-  grid.size, newV = NULL, VFolds, family, discrete.SL)
+SL.blip(
+  V,
+  W,
+  A,
+  Y,
+  ab,
+  QAW.reg,
+  gAW,
+  blip.SL.library,
+  risk.type,
+  grid.size,
+  newV = NULL,
+  VFolds,
+  family,
+  discrete.SL
+)
 }
 \arguments{
 \item{V}{subset covariates for designing ODTR}

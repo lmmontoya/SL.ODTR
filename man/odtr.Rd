@@ -4,10 +4,26 @@
 \alias{odtr}
 \title{Function that computes ODTR}
 \usage{
-odtr(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library,
-  dopt.SL.library = NULL, QAW.SL.library, risk.type, grid.size = 100,
-  metalearner, kappa = NULL, QAW = NULL, VFolds = 10, g1W = NULL,
-  family = NULL)
+odtr(
+  W,
+  gform = 1,
+  A,
+  Y,
+  ab = NULL,
+  V,
+  newV = NULL,
+  blip.SL.library,
+  dopt.SL.library = NULL,
+  QAW.SL.library,
+  risk.type,
+  grid.size = 100,
+  metalearner,
+  kappa = NULL,
+  QAW = NULL,
+  VFolds = 10,
+  g1W = NULL,
+  family = NULL
+)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}

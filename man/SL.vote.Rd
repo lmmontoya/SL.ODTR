@@ -4,9 +4,24 @@
 \alias{SL.vote}
 \title{Vote-based SL}
 \usage{
-SL.vote(V, W, gform, A, Y, ab, QAW.reg, gAW, blip.SL.library,
-  dopt.SL.library, risk.type, grid.size, newV = NULL, VFolds, family,
-  discrete.SL)
+SL.vote(
+  V,
+  W,
+  gform,
+  A,
+  Y,
+  ab,
+  QAW.reg,
+  gAW,
+  blip.SL.library,
+  dopt.SL.library,
+  risk.type,
+  grid.size,
+  newV = NULL,
+  VFolds,
+  family,
+  discrete.SL
+)
 }
 \arguments{
 \item{V}{subset covariates for designing ODTR}

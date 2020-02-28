@@ -4,10 +4,25 @@
 \alias{EYdopt}
 \title{Estimation of E[Ydopt]}
 \usage{
-EYdopt(W, gform = 1, V, A, Y, metalearner, QAW.SL.library,
-  blip.SL.library, dopt.SL.library = NULL, risk.type, grid.size = 100,
-  VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
-  family = NULL, contrast = NULL)
+EYdopt(
+  W,
+  gform = 1,
+  V,
+  A,
+  Y,
+  metalearner,
+  QAW.SL.library,
+  blip.SL.library,
+  dopt.SL.library = NULL,
+  risk.type,
+  grid.size = 100,
+  VFolds = 10,
+  kappa = NULL,
+  QAW = NULL,
+  g1W = NULL,
+  family = NULL,
+  contrast = NULL
+)
 }
 \arguments{
 \item{W}{Data frame of observed baseline covariates}
@@ -43,8 +58,6 @@ EYdopt(W, gform = 1, V, A, Y, metalearner, QAW.SL.library,
 \item{family}{either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
 
 \item{contrast}{An integer to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.}
-
-\item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
 }
 \value{
 If the true Qbar function is specified, the output will be a vector of point estimates of E[Ydopt] and their respective confidence intervals. This will be for both the estimated optimal rule and the true optimal rule. Performance results on the optimal rule will also be output: proportion of people treated under ODTR, proportion of times the estimated rule matches the optimal rule, the mean outcome under the estimated optimal rule under the true mean outcome function, and the mean outcome under the estimated optimal rule under the sample-specific true mean outcome.

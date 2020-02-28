@@ -4,8 +4,16 @@
 \alias{performance_EYdopt}
 \title{Performance EYdopt}
 \usage{
-performance_EYdopt(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.library,
-  VFolds, contrast)
+performance_EYdopt(
+  x,
+  n,
+  DGP_fun,
+  QAW,
+  QAW.SL.library,
+  blip.SL.library,
+  VFolds,
+  contrast
+)
 }
 \arguments{
 \item{x}{dummy}

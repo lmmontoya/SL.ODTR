@@ -3,6 +3,7 @@
 export(DGP_bin6)
 export(DGP_bin_complex)
 export(DGP_bin_complex_3tx)
+export(DGP_bin_complex_min)
 export(DGP_bin_simple)
 export(EYdopt)
 export(QAW_bin6)

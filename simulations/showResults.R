@@ -17,7 +17,7 @@ makeplotdf_ODTR = function(x, ODTR, truevalues) {
   Bias = mean(est - truth)
   Variance = var(est)
   MSE = mean((est - truth)^2)
-  
+
   match_dopt = mean(estimates[,grep(colnames(estimates), pattern = "match")])
   mean_dopt = colMeans(estimates[,grep(colnames(estimates), pattern = "mean_dopt")])
   df = data.frame(Library = substr(names(ODTR[x]), start = gregexpr(pattern ='_', names(ODTR[x]))[[1]][1]+1, stop = gregexpr(pattern ='_', names(ODTR[x]))[[1]][2]-1),
@@ -66,6 +66,10 @@ maketable_ODTR = function(ODTR, truevalues, caption, scalebox = .7){
   return(df)
 
 }
+
+
+
+
 
 # for real data
 plot_ODTR_results = function(results, risk, EY, EY1, CI_EY1, EY0, CI_EY0, title) {
