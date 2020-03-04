@@ -72,36 +72,47 @@ maketable_ODTR = function(ODTR, truevalues, caption, scalebox = .7){
 
 
 # for real data
-plot_ODTR_results = function(results, risk, EY, EY1, CI_EY1, EY0, CI_EY0, title) {
+plot_ODTR_results = function(results, risk, EY = NULL, EY1 = NULL, EY0 = NULL, title) {
 
   estimates = results$EYdopt_estimates
-  estimates = estimates[-grep("LTMLE", names(estimates))]
+  #estimates = estimates[-grep("LTMLE", names(estimates))]
   est = estimates[grep(names(estimates), pattern = "Psi_")]
   odtr = data.frame(Risk = risk,
                   EYdn = factor(names(est), levels = names(est)),
                   Estimates = est,
-                  lowerCI = c(estimates["CI_unadj1"], EY , estimates["CI_IPTW1"], estimates["CI_IPTW_DR1"], estimates["CI_TMLE1"], estimates["CI_CV.TMLE1"]), #estimates["CI_LTMLE1"],
-                  upperCI = c(estimates["CI_unadj2"], EY , estimates["CI_IPTW2"], estimates["CI_IPTW_DR2"], estimates["CI_TMLE2"], estimates["CI_CV.TMLE2"]), #estimates["CI_LTMLE2"],
+                  lowerCI = c(estimates["CI_unadj1"], NA , estimates["CI_IPTW1"], estimates["CI_IPTW_DR1"], estimates["CI_TMLE1"], estimates["CI_CV.TMLE1"]), #estimates["CI_LTMLE1"],
+                  upperCI = c(estimates["CI_unadj2"], NA , estimates["CI_IPTW2"], estimates["CI_IPTW_DR2"], estimates["CI_TMLE2"], estimates["CI_CV.TMLE2"]), #estimates["CI_LTMLE2"],
                   prop_dopt = mean(results$SL.odtr$dopt))
 
   pd <- position_dodge(width = 0.7)
+
+  if (is.null(EY)) {
+    forylab = ""
+    EY = EY1 = EY0 = 0
+    colEY = colEY1 = colEY0 = "black"
+  } else {
+    forylab = "Blue = E[Y]; Red = E[Y1]; Green = E[Y0]"
+    colEY = "blue"
+    colEY1 = "red"
+    colEY0 = "green"
+  }
 
   odtr %>%
     ggplot(aes(x = Risk, y = Estimates, group = EYdn)) +
     geom_point(position = pd, size = 3, shape = 15) +
     geom_point(aes(colour = EYdn), shape = 15, position = pd, size = 2.5) +
     geom_errorbar(aes(ymin = odtr$lowerCI, ymax = odtr$upperCI), width = .4, position = pd) +
-    geom_hline(yintercept = EY, colour = "blue") +
-    geom_hline(yintercept = EY1, colour = "red") +
-    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = min(CI_EY1), ymax = max(CI_EY1)), fill="red", alpha = 0.01) +
-    geom_hline(yintercept = EY0, colour = "green") +
-    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = min(CI_EY0), ymax = max(CI_EY0)), fill="green", alpha = 0.01) +
+    geom_hline(yintercept = EY, colour = colEY) +
+    geom_hline(yintercept = EY1, colour = colEY1) +
+   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = min(CI_EY1), ymax = max(CI_EY1)), fill="red", alpha = 0.01) +
+    geom_hline(yintercept = EY0, colour = colEY0) +
+  #  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = min(CI_EY0), ymax = max(CI_EY0)), fill="green", alpha = 0.01) +
     scale_x_discrete(name ="Rule estimator (risk type)") +
-    ylab("Blue = E[Y]; Red = E[Y1]; Green = E[Y0] ") +
+    ylab(forylab) +
     ggtitle(title) +
     annotate("text", x = 0.5, y = max(odtr$upperCI, EY, na.rm = T)+.032, label = paste0(round(unique(odtr$prop_dopt)*100, 2),"%"), colour = "black") +
     annotate("text", x = 0, y = max(odtr$upperCI, EY, na.rm = T)+.032, xmin = -0.5, label = "~underline('% treated under ODR:')", colour = "black", parse = TRUE) +
-    ylim(min(c(odtr$lowerCI, CI_EY1, CI_EY0), na.rm = T)-.005, max(c(odtr$upperCI, EY, CI_EY1, CI_EY0), na.rm = T)+.035) +
+    ylim(min(c(odtr$lowerCI, EY, EY1, EY0), na.rm = T)-.005, max(c(odtr$upperCI, EY, EY1, EY0), na.rm = T)+.035) +
     theme_bw() +
     theme(panel.border = element_blank())
 
