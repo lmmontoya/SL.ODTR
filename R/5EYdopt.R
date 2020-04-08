@@ -6,16 +6,16 @@
 #' @description Given a W, A, Y dataset, this function will compute the estimated ODTR using SuperLearner. If a Qbar function is provided that computes the true E[Y|A,W] (e.g., if simulating), the function will also return the true treatment under the optimal rule and other metrics of evaluating the estimated optimal rule's performance. Then, it will estimate E[Ydopt] using g-computation, IPTW, IPTW-DR, TMLE, and CV-TMLE. Follows the framework of Luedtke and van der laan, 2015 and 2016.
 #'
 #' @param W Data frame of observed baseline covariates
-#' @param gform Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
 #' @param V Data frame of observed baseline covariates (subset of W) used to design the ODTR
 #' @param A Vector of treatment
 #' @param Y Vector of outcome (continuous or binary)
 #' @param metalearner Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.
 #' @param QAW.SL.library SuperLearner library for estimating outcome regression
 #' @param blip.SL.library SuperLearner library for estimating the blip
-#' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}.
-#' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
+#' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}.
+#' @param gform Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
+#' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
@@ -23,6 +23,7 @@
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
 #' @param contrast An integer to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.
+#' @param odtr.obj An object from the odtr function that estimates the odtr.
 #'
 #' @importFrom stats predict var qnorm
 #' @import SuperLearner
@@ -61,19 +62,23 @@
 
 
 
-EYdopt = function(W, gform = 1, V, A, Y, metalearner,
-                  QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type,
+EYdopt = function(W, V, A, Y, metalearner,
+                  QAW.SL.library, blip.SL.library, risk.type, dopt.SL.library = NULL, gform = 1,
                   grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
-                  family = NULL, contrast = NULL){
+                  family = NULL, contrast = NULL, odtr.obj = NULL){
 
   n = length(Y)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
   ab = range(Y)
 
-  SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
-                 dopt.SL.library = dopt.SL.library, metalearner = metalearner,
-                 risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL, newV = NULL,
-                 gform = gform, kappa = kappa, g1W = g1W, family = family)
+  if (is.null(odtr.obj)) {
+    SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
+                   dopt.SL.library = dopt.SL.library, metalearner = metalearner,
+                   risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL, newV = NULL,
+                   gform = gform, kappa = kappa, g1W = g1W, family = family)
+  } else {
+    SL.odtr = odtr.obj
+  }
 
   QAW.reg = SL.odtr$QAW.reg
 
