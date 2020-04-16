@@ -13,7 +13,7 @@
 #' @param QAW.SL.library SuperLearner library for estimating outcome regression
 #' @param blip.SL.library SuperLearner library for estimating the blip
 #' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
-#' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}.
+#' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}. Could be "DonV", "Qlearn", "OWL", "EARL", "optclass", "RWL", "treatall", "treatnone". Could also be "all" for all algorithms.
 #' @param gform Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
@@ -65,20 +65,16 @@
 EYdopt = function(W, V, A, Y, metalearner,
                   QAW.SL.library, blip.SL.library, risk.type, dopt.SL.library = NULL, gform = 1,
                   grid.size = 100, VFolds = 10, kappa = NULL, QAW = NULL, g1W = NULL,
-                  family = NULL, contrast = NULL, odtr.obj = NULL){
+                  family = NULL, contrast = NULL){
 
   n = length(Y)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
   ab = range(Y)
 
-  if (is.null(odtr.obj)) {
-    SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
+  SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                    dopt.SL.library = dopt.SL.library, metalearner = metalearner,
                    risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL, newV = NULL,
                    gform = gform, kappa = kappa, g1W = g1W, family = family)
-  } else {
-    SL.odtr = odtr.obj
-  }
 
   QAW.reg = SL.odtr$QAW.reg
 
@@ -98,6 +94,7 @@ EYdopt = function(W, V, A, Y, metalearner,
   ### CV-TMLE ###
   folds = sample(1:VFolds, size = n, replace = T)
   CV.TMLE_fun = function(i){
+
     SL.odtr.train = odtr(V = V[folds!=i,], W = W[folds!=i,], A = A[folds!=i], Y = Y[folds!=i], newV = V[folds==i,],
                          QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library, dopt.SL.library = dopt.SL.library,
                          metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = NULL,
@@ -111,31 +108,60 @@ EYdopt = function(W, V, A, Y, metalearner,
                                       gAW = gAW.test, ab = ab)
     Psi_TMLE.test = tmle_objects.dopt.test$psi
     var_IC.test = var(tmle_objects.dopt.test$IC)
+    toreturn = list(Psi_TMLE.test = Psi_TMLE.test, var_IC.test = var_IC.test)
+
     if (!is.null(contrast)) {
-      Qcontrast.test = predict(QAW.reg.train, newdata = data.frame(W[folds == i,], A = contrast), type = "response")$pred
-      tmle_objects.contrast.test = tmle.fun(A = A[folds == i], Y = Y[folds==i],
-                                            d = contrast, Qd = Qdopt.test,
-                                            gAW = gAW.test, ab = ab)
-      Psi_TMLE.test = tmle_objects.dopt.test$psi - tmle_objects.contrast.test$psi
-      var_IC.test = var(tmle_objects.dopt.test$IC - tmle_objects.contrast.test$IC)
-    }
-    if (is.null(QAW)) {
-      toreturn = list(Psi_TMLE.test = Psi_TMLE.test, var_IC.test = var_IC.test)
-    } else {
-      E0Ydn_test = mean(QAW(A = dopt.test, W = W[folds == i,]))
-      if (!is.null(contrast)) {
-        E0Ydn_test = mean(QAW(A = dopt.test, W = W[folds == i,])) - mean(QAW(A = contrast, W = W[folds == i,]))
+
+      contrast_fun = function(contrast_i) {
+        contrast_i_test = contrast_i[folds == i]
+        Qcontrast.test_i = predict(QAW.reg.train, newdata = data.frame(W[folds == i,], A = contrast_i_test), type = "response")$pred
+        tmle_objects.contrast.test_i = tmle.fun(A = A[folds == i], Y = Y[folds==i],
+                                              d = contrast_i_test, Qd = Qcontrast.test_i,
+                                              gAW = gAW.test, ab = ab)
+        Psi_TMLE.test_i = tmle_objects.dopt.test$psi - tmle_objects.contrast.test_i$psi
+        var_IC.test_i = var(tmle_objects.dopt.test$IC - tmle_objects.contrast.test_i$IC)
+        toreturn_contrasts = c(Psi_TMLE.test_i = Psi_TMLE.test_i, var_IC.test_i = var_IC.test_i)
+        return(toreturn_contrasts)
       }
+
+      contrast_df = apply(contrast, 2, contrast_fun)
+      toreturn = list(Psi_TMLE.test = c(EYdopt = Psi_TMLE.test, contrast_df["Psi_TMLE.test_i",]),
+                      var_IC.test = c(EYdopt = var_IC.test, contrast_df["var_IC.test_i",]))
+    }
+
+
+    if (!is.null(QAW)) {
+      E0Ydn_test = mean(QAW(A = dopt.test, W = W[folds == i,]))
+     # if (!is.null(contrast)) {
+    #    E0Ydn_test = mean(QAW(A = dopt.test, W = W[folds == i,])) - mean(QAW(A = contrast, W = W[folds == i,]))
+    #  }
       toreturn = list(Psi_TMLE.test = Psi_TMLE.test, var_IC.test = var_IC.test, E0Ydn_test = E0Ydn_test)
     }
-    return(toreturn)
-  }
-  CV.TMLE.est = lapply(1:VFolds, CV.TMLE_fun)
-  Psi_CV.TMLE = mean(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$Psi_TMLE.test))
-  var_CV.TMLE = mean(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$var_IC.test))/n
-  CI_CV.TMLE = Psi_CV.TMLE + c(-1,1)*qnorm(0.975)*sqrt(var_CV.TMLE)
 
-  toreturn_dopt = c(toreturn_dopt, Psi_CV.TMLE = Psi_CV.TMLE, CI_CV.TMLE = CI_CV.TMLE)
+    return(toreturn)
+
+  }
+
+  CV.TMLE.est = lapply(1:VFolds, CV.TMLE_fun)
+
+  if (is.null(contrasts)) {
+
+    Psi_CV.TMLE = mean(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$Psi_TMLE.test))
+    var_CV.TMLE = mean(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$var_IC.test))/n
+    CI_CV.TMLE = Psi_CV.TMLE + c(-1,1)*qnorm(0.975)*sqrt(var_CV.TMLE)
+    toreturn_dopt = c(toreturn_dopt, Psi_CV.TMLE = Psi_CV.TMLE, CI_CV.TMLE = CI_CV.TMLE)
+
+  } else {
+
+    Psi_CV.TMLE = rowMeans(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$Psi_TMLE.test))
+    var_CV.TMLE = rowMeans(sapply(1:VFolds, function(i) CV.TMLE.est[[i]]$var_IC.test))/n
+    CI_CV.TMLE = sapply(1:length(Psi_CV.TMLE), function(i) Psi_CV.TMLE[i] + c(-1,1)*qnorm(0.975)*sqrt(var_CV.TMLE[i]))
+    rownames(CI_CV.TMLE) = c("CI_CV.TMLE1", "CI_CV.TMLE2")
+    colnames(CI_CV.TMLE) = names(Psi_CV.TMLE)
+    toreturn_dopt = rbind(toreturn_dopt, Psi_CV.TMLE = Psi_CV.TMLE, CI_CV.TMLE = CI_CV.TMLE)
+
+  }
+
 
   if (!is.null(QAW)) {
 
@@ -159,14 +185,14 @@ EYdopt = function(W, V, A, Y, metalearner,
                                         gAW = gAW.test, ab = ab)
       Psi_TMLE.test = tmle_objects.dopt.test$psi
       var_IC.test = var(tmle_objects.dopt.test$IC)
-      if (!is.null(contrast)) {
-        Qcontrast.test = predict(QAW.reg.train, newdata = data.frame(W[folds == i,], A = contrast), type = "response")$pred
-        tmle_objects.contrast.test = tmle.fun(A = A[folds == i], Y = Y[folds==i],
-                                              d = contrast, Qd = Qdopt.test,
-                                              gAW = gAW.test, ab = ab)
-        Psi_TMLE.test = tmle_objects.dopt.test$psi - tmle_objects.contrast.test$psi
-        var_IC.test = var(tmle_objects.dopt.test$IC - tmle_objects.contrast.test$IC)
-      }
+      #if (!is.null(contrast)) {
+      #  Qcontrast.test = predict(QAW.reg.train, newdata = data.frame(W[folds == i,], A = contrast), type = "response")$pred
+      #  tmle_objects.contrast.test = tmle.fun(A = A[folds == i], Y = Y[folds==i],
+      #                                        d = contrast, Qd = Qdopt.test,
+      #                                        gAW = gAW.test, ab = ab)
+      #  Psi_TMLE.test = tmle_objects.dopt.test$psi - tmle_objects.contrast.test$psi
+      #  var_IC.test = var(tmle_objects.dopt.test$IC - tmle_objects.contrast.test$IC)
+      #}
       return(list(Psi_TMLE.test = Psi_TMLE.test, var_IC.test = var_IC.test))
     }
     CV.TMLE.est0 = lapply(1:VFolds, CV.TMLE_fun)
@@ -178,9 +204,9 @@ EYdopt = function(W, V, A, Y, metalearner,
     names(toreturn_dopt0) = paste0(names(toreturn_dopt0), "_dopt0")
 
     EY0dn = mean(QAW(A = dopt, W = W))
-    if (!is.null(contrast)) {
-      EY0dn = EY0dn - mean(QAW(A = contrast, W = W))
-    }
+   # if (!is.null(contrast)) {
+  #    EY0dn = EY0dn - mean(QAW(A = contrast, W = W))
+  #  }
     toreturn = c(toreturn_dopt,
                  toreturn_dopt0,
                  #mean_dopt = mean(dopt),

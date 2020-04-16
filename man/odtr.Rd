@@ -38,6 +38,8 @@ odtr(
 
 \item{blip.SL.library}{SuperLearner library for estimating blip}
 
+\item{dopt.SL.library}{SuperLearner library for estimating dopt directly. Default is \code{NULL}. Could be "DonV", "Qlearn", "OWL", "EARL", "optclass", "RWL", "treatall", "treatnone". Could also be "all" for all algorithms.}
+
 \item{QAW.SL.library}{SuperLearner library for estimating the outcome regression}
 
 \item{risk.type}{Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"}

@@ -335,38 +335,68 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, ab, contrast)
   varIC_TMLE = var(tmle_objects.dopt$IC)/n
   CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE)
 
+  toreturn = c(Psi_unadj = Psi_unadj,
+               CI_unadj = CI_unadj,
+               Psi_gcomp = Psi_gcomp,
+               Psi_IPTW = Psi_IPTW,
+               CI_IPTW = CI_IPTW,
+               Psi_IPTW_DR = Psi_IPTW_DR,
+               CI_IPTW_DR = CI_IPTW_DR,
+               Psi_TMLE = Psi_TMLE,
+               CI_TMLE = CI_TMLE)
+
   if (!is.null(contrast)) {
 
-    Qcontrast = predict(QAW.reg, newdata = data.frame(W, A = contrast), type = "response")$pred
+     # contrast_i = contrast[,i]
+      contrast_fun = function(contrast_i) {
 
-    # Unadj
-    Psi_unadj = mean(Y[A==dopt]) - mean(Y[A==contrast])
-    SE_Psi_unadj = sqrt(var(Y[A==dopt])/sum(A==dopt) + var(Y[A==contrast])/sum(A==contrast))
-    CI_unadj = Psi_unadj + + c(-1, 1) * qnorm(0.975) * SE_Psi_unadj
+        Qcontrast_i = predict(QAW.reg, newdata = data.frame(W, A = contrast_i), type = "response")$pred
 
-    # g-comp
-    Psi_gcomp = Psi_gcomp - mean(Qcontrast)
+        # Unadj
+        Psi_unadj_i = Psi_unadj - mean(Y[A==contrast_i])
+        SE_Psi_unadj_i = sqrt(var(Y[A==dopt])/sum(A==dopt) + var(Y[A==contrast_i])/sum(A==contrast_i))
+        CI_unadj_i = Psi_unadj_i + c(-1, 1) * qnorm(0.975) * SE_Psi_unadj_i
 
-    # IPTW
-    Psi_IPTW = Psi_IPTW - mean(Y*(1/gAW)*as.numeric(A == contrast))
-    IC_IPTW_contrast = ((1/gAW)*as.numeric(A == contrast)*Y - mean(as.numeric(A == contrast)/gAW*Y))
-    IC_IPTW = IC_IPTW - IC_IPTW_contrast
-    varIC_IPTW = var(IC_IPTW)/n
-    CI_IPTW = Psi_IPTW + c(-1,1)*qnorm(0.975)*sqrt(varIC_IPTW)
+        # g-comp
+        Psi_gcomp_i = Psi_gcomp - mean(Qcontrast_i)
 
-    # IPTW-DR
-    Psi_IPTW_DR = Psi_IPTW_DR - mean(as.numeric(A == contrast)/gAW * (Y-Qcontrast) + Qcontrast)
-    IC_IPTW_DR_contrast = (as.numeric(A == contrast)/gAW * (Y-Qcontrast) + Qcontrast - mean(as.numeric(A == contrast)/gAW * (Y-contrast) + Qcontrast))
-    IC_IPTW_DR = IC_IPTW_DR - IC_IPTW_DR_contrast
-    varIC_IPTW_DR = var(IC_IPTW_DR)/n
-    CI_IPTW_DR = Psi_IPTW_DR + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR))
+        # IPTW
+        Psi_IPTW_i = Psi_IPTW - mean(Y*(1/gAW)*as.numeric(A == contrast_i))
+        IC_IPTW_contrast_i = ((1/gAW)*as.numeric(A == contrast_i)*Y - mean(as.numeric(A == contrast_i)/gAW*Y))
+        IC_IPTW_i = IC_IPTW - IC_IPTW_contrast_i
+        varIC_IPTW_i = var(IC_IPTW_i)/n
+        CI_IPTW_i = Psi_IPTW_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_IPTW_i)
 
-    # TMLE handcoded
-    tmle_objects.contrast = tmle.fun(A = A, d = contrast, Y = Y, Qd = Qcontrast, gAW = gAW, ab = ab)
-    Psi_TMLE = tmle_objects.dopt$psi - tmle_objects.contrast$psi
-    varIC_TMLE = var(tmle_objects.dopt$IC - tmle_objects.contrast$IC)/n
-    CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE)
-  }
+        # IPTW-DR
+        Psi_IPTW_DR_i = Psi_IPTW_DR - mean(as.numeric(A == contrast_i)/gAW * (Y-Qcontrast_i) + Qcontrast_i)
+        IC_IPTW_DR_contrast_i = (as.numeric(A == contrast_i)/gAW * (Y-Qcontrast_i) + Qcontrast_i - mean(as.numeric(A == contrast_i)/gAW * (Y-contrast_i) + Qcontrast_i))
+        IC_IPTW_DR_i = IC_IPTW_DR - IC_IPTW_DR_contrast_i
+        varIC_IPTW_DR_i = var(IC_IPTW_DR_i)/n
+        CI_IPTW_DR_i = Psi_IPTW_DR_i + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR_i))
+
+        # TMLE handcoded
+        tmle_objects.contrast_i = tmle.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
+        Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
+        varIC_TMLE_i = var(tmle_objects.dopt$IC - tmle_objects.contrast_i$IC)/n
+        CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE_i)
+
+        toreturn_contrasts = c(Psi_unadj = Psi_unadj_i,
+                               CI_unadj = CI_unadj_i,
+                               Psi_gcomp = Psi_gcomp_i,
+                               Psi_IPTW = Psi_IPTW_i,
+                               CI_IPTW = CI_IPTW_i,
+                               Psi_IPTW_DR = Psi_IPTW_DR_i,
+                               CI_IPTW_DR = CI_IPTW_DR_i,
+                               Psi_TMLE = Psi_TMLE_i,
+                               CI_TMLE = CI_TMLE_i)
+        return(toreturn_contrasts)
+      }
+
+      toreturn = cbind(EYdopt = toreturn, apply(contrast, 2, contrast_fun))
+
+
+    }
+
 
   # if (length(grep("SL.QAW", QAW.SL.library)) != 0) {
   #   ltmle_objects.dopt = NA
@@ -378,17 +408,6 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, ab, contrast)
   #   Psi_LTMLE = ltmle_objects.dopt$treatment$estimate["tmle"]
   #   CI_LTMLE = ltmle_objects.dopt$treatment$CI
   # }
-
-
-  toreturn = c(Psi_unadj = Psi_unadj,
-               CI_unadj = CI_unadj,
-               Psi_gcomp = Psi_gcomp,
-               Psi_IPTW = Psi_IPTW,
-               CI_IPTW = CI_IPTW,
-               Psi_IPTW_DR = Psi_IPTW_DR,
-               CI_IPTW_DR = CI_IPTW_DR,
-               Psi_TMLE = Psi_TMLE,
-               CI_TMLE = CI_TMLE)#,
                #Psi_LTMLE = Psi_LTMLE,
                #CI_LTMLE = CI_LTMLE)
 
