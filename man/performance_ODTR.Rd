@@ -14,8 +14,7 @@ performance_ODTR(
   blip.SL.library,
   dopt.SL.library,
   metalearner,
-  grid.size,
-  gform = 1
+  grid.size
 )
 }
 \arguments{
@@ -38,8 +37,6 @@ performance_ODTR(
 \item{metalearner}{SL type}
 
 \item{grid.size}{grid size}
-
-\item{gform}{default is 1}
 }
 \value{
 

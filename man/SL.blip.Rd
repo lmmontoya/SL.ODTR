@@ -11,7 +11,7 @@ SL.blip(
   Y,
   ab,
   QAW.reg,
-  gAW,
+  g.reg,
   blip.SL.library,
   risk.type,
   grid.size,
@@ -32,9 +32,9 @@ SL.blip(
 
 \item{ab}{range of Y}
 
-\item{QAW.reg}{QAW regression object}
+\item{QAW.reg}{Q(A,W) regression object}
 
-\item{gAW}{P(A|W)}
+\item{g.reg}{g(A|W) regression object}
 
 \item{blip.SL.library}{blip SL library}
 

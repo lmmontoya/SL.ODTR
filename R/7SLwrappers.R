@@ -446,3 +446,72 @@ SL.QAW.W5 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
   return(out)
 }
 
+
+#' @name SL.QAW.correct_cont
+#' @aliases SL.QAW.correct_cont
+#' @title QAW for cont. dist
+#' @description QAW for cont. dist
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+SL.QAW.correct_cont = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+  fit.glm <- glm(Y ~ W1 + A:I(W1^2) + W2 + A:W2 + W3:W1:A + I(W4^2) + W4 + A, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
+
+#' @name SL.blip.correct_cont
+#' @aliases SL.blip.correct_cont
+#' @title blip for cont. dist
+#' @description blip for cont. dist
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+SL.blip.correct_cont = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+  fit.glm <- glm(Y ~ I(W1^2) + W2 + W3:W1, data = X, family = family, weights = obsWeights,
+                 model = model)
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+  pred <- predict(fit.glm, newdata = newX, type = "response")
+  fit <- list(object = fit.glm)
+  class(fit) <- "SL.glm"
+  out <- list(pred = pred, fit = fit)
+  return(out)
+}
+

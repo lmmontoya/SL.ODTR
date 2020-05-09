@@ -5,21 +5,22 @@
 #' @description Given a W, A, Y dataset, this function will compute the estimated ODTR using SuperLearner. If a QAW function is provided that computes the true E[Y|A,W] (e.g., if simulating), the function will also return the true treatment under the optimal rule and other metrics of evaluating the estimated optimal rule's performance.
 #'
 #' @param W Data frame of observed baseline covariates
-#' @param gform Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
 #' @param A Vector of treatment
 #' @param Y Vector of treatment (continuous or binary)
 #' @param V Data frame of observed baseline covariates (subset of W) used to design the ODTR
+#' @param g.SL.library Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
+#' @param QAW.SL.library SuperLearner library for estimating the outcome regression
 #' @param blip.SL.library SuperLearner library for estimating blip
 #' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}. Could be "DonV", "Qlearn", "OWL", "EARL", "optclass", "RWL", "treatall", "treatnone". Could also be "all" for all algorithms.
-#' @param QAW.SL.library SuperLearner library for estimating the outcome regression
 #' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
 #' @param metalearner Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
 #' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
-#' @param g1W user-supplied vector of g1W
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
+#' @param ab range of Y
+#' @param newV new V for prediction
 #'
 #' @return
 #'
@@ -44,10 +45,8 @@
 #' odtr(W = W, gform = "W1 + W2", A = A, Y = Y, V = W, blip.SL.library = "SL.blip.HTEepi", QAW.SL.library = "SL.QAW.HTEepi", risk.type = "CV TMLE", metalearner = 'blip')
 #'
 #'
-odtr = function(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, dopt.SL.library = NULL,
-                QAW.SL.library, risk.type, grid.size = 100,
-                metalearner, kappa = NULL, QAW = NULL, VFolds = 10,
-                g1W = NULL, family = NULL){
+odtr = function(W, A, Y, V, g.SL.library, QAW.SL.library, blip.SL.library, dopt.SL.library = NULL, risk.type, metalearner,
+                kappa = NULL, newV = NULL, QAW = NULL, VFolds = 10, grid.size = 100, family = NULL, ab = NULL){
 
   n = length(A)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
@@ -55,15 +54,8 @@ odtr = function(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, 
 
   # E[Y|A,W]
   QAW.reg = SuperLearner(Y = Y, X = data.frame(A, W), SL.library = QAW.SL.library, family = family)
-
-  # estimate pred. prob. observed exposure, P(A|W)=g(A|W)
-  if (is.null(g1W)) {
-    g.reg = glm(as.formula(paste("A ~", gform)), data = data.frame(A,W), family = "binomial")
-    g1W = predict(g.reg, type = "response")
-  } else {
-    g.reg = NULL
-  }
-  gAW = ifelse(A == 1, g1W, 1-g1W)
+  # P(A=1|W)=g(1|W)
+  g.reg = SuperLearner(Y = A, X = W, SL.library = g.SL.library, family = family)
 
   if (metalearner == "discrete") {
     discrete.SL = T
@@ -78,18 +70,17 @@ odtr = function(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, 
   }
 
   if (SL.type == "vote") {
-    # get estimate of txt under rule based on risk type (CV TMLE, CV IPCWDR, CV TMLE CI)
-    SL.fit = SL.vote(V = V, W = W, gform, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
+    # get estimate of txt under rule based on risk type (CV TMLE, CV TMLE CI)
+    SL.fit = SL.vote(V = V, W = W, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg, g.reg = g.reg,
                      blip.SL.library = blip.SL.library, dopt.SL.library = dopt.SL.library,
-                     gAW = gAW, risk.type = risk.type, grid.size = grid.size,
-                     VFolds = VFolds, newV = newV, family = family, discrete.SL = discrete.SL)
+                     risk.type = risk.type, grid.size = grid.size, VFolds = VFolds,
+                     newV = newV, family = family, discrete.SL = discrete.SL)
     # get estimate of txt under optimal rule
     dopt = SL.fit$SL.predict
   } else if (SL.type == "blip") {
-    # get estimate of blip based on risk type (CV TMLE, CV IPCWDR, MSE, CV TMLE CI)
-    SL.fit = SL.blip(V = V, W = W, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg,
-                     blip.SL.library = blip.SL.library,
-                     gAW = gAW, risk.type = risk.type,
+    # get estimate of blip based on risk type (CV TMLE, MSE, CV TMLE CI)
+    SL.fit = SL.blip(V = V, W = W, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg, g.reg = g.reg,
+                     blip.SL.library = blip.SL.library, risk.type = risk.type,
                      grid.size = grid.size, VFolds = VFolds, newV = newV, family = family,
                      discrete.SL = discrete.SL)
     # get estimate of optimal rule based on blip estimate
@@ -117,16 +108,15 @@ odtr = function(W, gform = 1, A, Y, ab = NULL, V, newV = NULL, blip.SL.library, 
 
     toreturn = c(EYdn_QAWHat = EYdn_QAWHat,
                  match_dopt_QAWHat = match_dopt_QAWHat,
-                mean_dopt = mean(dopt),
-                mean_dopt0 = mean(true_dopt),
-                coef = SL.fit$coef,
-                CV.risk_min = SL.fit$CV.risk_min$est,
-                CV.risk_minCI = CV.risk_minCI)
+                 mean_dopt = mean(dopt),
+                 mean_dopt0 = mean(true_dopt),
+                 coef = SL.fit$coef,
+                 CV.risk_min = SL.fit$CV.risk_min$est,
+                 CV.risk_minCI = CV.risk_minCI)
   } else {
     toreturn = list(dopt = dopt,
                     QAW.reg = QAW.reg,
                     g.reg = g.reg,
-                    g1W = g1W,
                     SL.fit = SL.fit)
   }
   return(toreturn)

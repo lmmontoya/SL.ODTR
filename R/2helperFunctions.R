@@ -205,16 +205,13 @@ getpreds.blip.fun <- function(Y, X, newX = NULL, family = gaussian(), SL.library
 #' @param Y outcome
 #' @param d txt under rule
 #' @param Qd outcome regression predictions under rule
-#' @param gAW P(A|W)
+#' @param gAW probability observed txt predictions
 #' @param ab range of Y
 #'
 #' @return
 #'
 #' @export
 #'
-# tmle.fun
-# function that takes as input A, Y, txt under decision rule, mean under decision rule, gAW, and family
-# outputs TMLE estimate of mean under decision rule
 tmle.fun = function(A, Y, d, Qd, gAW, ab){
 
   Y01 = (Y-min(ab))/diff(ab)
@@ -284,17 +281,17 @@ dopt.fun = function(blip, kappa){
 
 
 
-#' @name estimatorsEYdopt_nonCVTMLE
-#' @aliases estimatorsEYdopt_nonCVTMLE
+#' @name estimatorsEYd_nonCVTMLE
+#' @aliases estimatorsEYd_nonCVTMLE
 #' @title Estimators of E[Yd] that are not CV-TMLE
 #' @description Estimators of E[Yd] that are not CV-TMLE
 #'
 #' @param W covariates
 #' @param A treatment
 #' @param Y outcome
-#' @param dopt txt under rule
-#' @param QAW.reg QAW regression object
-#' @param gAW P(A|W)
+#' @param d txt under rule
+#' @param QAW.reg Q(A,W) regression object
+#' @param gAW.reg g(A|W) regression object
 #' @param ab range of Y
 #' @param contrast contrast
 #'
@@ -302,111 +299,113 @@ dopt.fun = function(blip, kappa){
 #'
 #' @export
 #'
-estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, ab, contrast) {
+estimatorsEYd_nonCVTMLE = function(W, A, Y, d, QAW.reg, g.reg, ab, contrast) {
 
   n = length(Y)
   family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
 
-  Qdopt = predict(QAW.reg, newdata = data.frame(W, A = dopt), type = "response")$pred
+  Qd = predict(QAW.reg, newdata = data.frame(W, A = d), type = "response")$pred
+  g1W = predict(g.reg, data.frame(W), type = "response")$pred
+  gAW = ifelse(A == 1, g1W, 1 - g1W)
 
   # Unadj
-  Psi_unadj = mean(Y[A==dopt])
-  var_unadj = var(Y[A==dopt])/sum(A==dopt)
+  Psi_unadj = mean(Y[A==d])
+  var_unadj = var(Y[A==d])/sum(A==d)
   CI_unadj = Psi_unadj + c(-1, 1) * qnorm(0.975) * sqrt(var_unadj)
 
   # g-comp
-  Psi_gcomp = mean(Qdopt)
+  Psi_gcomp = mean(Qd)
 
   # IPTW
-  Psi_IPTW = mean(Y*(1/gAW)*as.numeric(A == dopt))
-  IC_IPTW = ((1/gAW)*as.numeric(A == dopt)*Y - mean(as.numeric(A == dopt)/gAW*Y))
+  Psi_IPTW = mean(Y*(1/gAW)*as.numeric(A == d))
+  IC_IPTW = ((1/gAW)*as.numeric(A == d)*Y - mean(as.numeric(A == d)/gAW*Y))
   varIC_IPTW = var(IC_IPTW)/n
   CI_IPTW = Psi_IPTW + c(-1,1)*qnorm(0.975)*sqrt(varIC_IPTW)
 
   # IPTW-DR
-  Psi_IPTW_DR = mean(as.numeric(A == dopt)/gAW * (Y-Qdopt) + Qdopt)
-  IC_IPTW_DR = (as.numeric(A == dopt)/gAW * (Y-Qdopt) + Qdopt - mean(as.numeric(A == dopt)/gAW * (Y-Qdopt) + Qdopt))
+  Psi_IPTW_DR = mean(as.numeric(A == d)/gAW * (Y-Qd) + Qd)
+  IC_IPTW_DR = (as.numeric(A == d)/gAW * (Y-Qd) + Qd - mean(as.numeric(A == d)/gAW * (Y-Qd) + Qd))
   varIC_IPTW_DR = var(IC_IPTW_DR)/n
   CI_IPTW_DR = Psi_IPTW_DR + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR))
 
   # TMLE handcoded
-  tmle_objects.dopt = tmle.fun(A = A, d = dopt, Y = Y, Qd = Qdopt, gAW = gAW, ab = ab)
-  Psi_TMLE = tmle_objects.dopt$psi
-  varIC_TMLE = var(tmle_objects.dopt$IC)/n
+  tmle_objects.d = tmle.fun(A = A, d = d, Y = Y, Qd = Qd, gAW = gAW, ab = ab)
+  Psi_TMLE = tmle_objects.d$psi
+  varIC_TMLE = var(tmle_objects.d$IC)/n
   CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE)
 
-  toreturn = c(Psi_unadj = Psi_unadj,
-               CI_unadj = CI_unadj,
-               Psi_gcomp = Psi_gcomp,
-               Psi_IPTW = Psi_IPTW,
-               CI_IPTW = CI_IPTW,
-               Psi_IPTW_DR = Psi_IPTW_DR,
-               CI_IPTW_DR = CI_IPTW_DR,
-               Psi_TMLE = Psi_TMLE,
-               CI_TMLE = CI_TMLE)
+  toreturn = data.frame(EYd = c(Psi_unadj = Psi_unadj,
+                                CI_unadj = CI_unadj,
+                                Psi_gcomp = Psi_gcomp,
+                                Psi_IPTW = Psi_IPTW,
+                                CI_IPTW = CI_IPTW,
+                                Psi_IPTW_DR = Psi_IPTW_DR,
+                                CI_IPTW_DR = CI_IPTW_DR,
+                                Psi_TMLE = Psi_TMLE,
+                                CI_TMLE = CI_TMLE))
 
   if (!is.null(contrast)) {
 
-     # contrast_i = contrast[,i]
-      contrast_fun = function(contrast_i) {
+    # contrast_i = contrast[,i]
+    contrast_fun = function(contrast_i) {
 
-        Qcontrast_i = predict(QAW.reg, newdata = data.frame(W, A = contrast_i), type = "response")$pred
+      Qcontrast_i = predict(QAW.reg, newdata = data.frame(W, A = contrast_i), type = "response")$pred
 
-        # Unadj
-        Psi_unadj_i = Psi_unadj - mean(Y[A==contrast_i])
-        SE_Psi_unadj_i = sqrt(var(Y[A==dopt])/sum(A==dopt) + var(Y[A==contrast_i])/sum(A==contrast_i))
-        CI_unadj_i = Psi_unadj_i + c(-1, 1) * qnorm(0.975) * SE_Psi_unadj_i
+      # Unadj
+      Psi_unadj_i = Psi_unadj - mean(Y[A==contrast_i])
+      SE_Psi_unadj_i = sqrt(var(Y[A==d])/sum(A==d) + var(Y[A==contrast_i])/sum(A==contrast_i))
+      CI_unadj_i = Psi_unadj_i + c(-1, 1) * qnorm(0.975) * SE_Psi_unadj_i
 
-        # g-comp
-        Psi_gcomp_i = Psi_gcomp - mean(Qcontrast_i)
+      # g-comp
+      Psi_gcomp_i = Psi_gcomp - mean(Qcontrast_i)
 
-        # IPTW
-        Psi_IPTW_i = Psi_IPTW - mean(Y*(1/gAW)*as.numeric(A == contrast_i))
-        IC_IPTW_contrast_i = ((1/gAW)*as.numeric(A == contrast_i)*Y - mean(as.numeric(A == contrast_i)/gAW*Y))
-        IC_IPTW_i = IC_IPTW - IC_IPTW_contrast_i
-        varIC_IPTW_i = var(IC_IPTW_i)/n
-        CI_IPTW_i = Psi_IPTW_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_IPTW_i)
+      # IPTW
+      Psi_IPTW_i = Psi_IPTW - mean(Y*(1/gAW)*as.numeric(A == contrast_i))
+      IC_IPTW_contrast_i = ((1/gAW)*as.numeric(A == contrast_i)*Y - mean(as.numeric(A == contrast_i)/gAW*Y))
+      IC_IPTW_i = IC_IPTW - IC_IPTW_contrast_i
+      varIC_IPTW_i = var(IC_IPTW_i)/n
+      CI_IPTW_i = Psi_IPTW_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_IPTW_i)
 
-        # IPTW-DR
-        Psi_IPTW_DR_i = Psi_IPTW_DR - mean(as.numeric(A == contrast_i)/gAW * (Y-Qcontrast_i) + Qcontrast_i)
-        IC_IPTW_DR_contrast_i = (as.numeric(A == contrast_i)/gAW * (Y-Qcontrast_i) + Qcontrast_i - mean(as.numeric(A == contrast_i)/gAW * (Y-contrast_i) + Qcontrast_i))
-        IC_IPTW_DR_i = IC_IPTW_DR - IC_IPTW_DR_contrast_i
-        varIC_IPTW_DR_i = var(IC_IPTW_DR_i)/n
-        CI_IPTW_DR_i = Psi_IPTW_DR_i + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR_i))
+      # IPTW-DR
+      Psi_IPTW_DR_i = Psi_IPTW_DR - mean(as.numeric(A == contrast_i)/gAW * (Y-Qcontrast_i) + Qcontrast_i)
+      IC_IPTW_DR_contrast_i = (as.numeric(A == contrast_i)/gAW * (Y-Qcontrast_i) + Qcontrast_i - mean(as.numeric(A == contrast_i)/gAW * (Y-contrast_i) + Qcontrast_i))
+      IC_IPTW_DR_i = IC_IPTW_DR - IC_IPTW_DR_contrast_i
+      varIC_IPTW_DR_i = var(IC_IPTW_DR_i)/n
+      CI_IPTW_DR_i = Psi_IPTW_DR_i + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR_i))
 
-        # TMLE handcoded
-        tmle_objects.contrast_i = tmle.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
-        Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
-        varIC_TMLE_i = var(tmle_objects.dopt$IC - tmle_objects.contrast_i$IC)/n
-        CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE_i)
+      # TMLE handcoded
+      tmle_objects.contrast_i = tmle.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
+      Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
+      varIC_TMLE_i = var(tmle_objects.d$IC - tmle_objects.contrast_i$IC)/n
+      CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE_i)
 
-        toreturn_contrasts = c(Psi_unadj = Psi_unadj_i,
-                               CI_unadj = CI_unadj_i,
-                               Psi_gcomp = Psi_gcomp_i,
-                               Psi_IPTW = Psi_IPTW_i,
-                               CI_IPTW = CI_IPTW_i,
-                               Psi_IPTW_DR = Psi_IPTW_DR_i,
-                               CI_IPTW_DR = CI_IPTW_DR_i,
-                               Psi_TMLE = Psi_TMLE_i,
-                               CI_TMLE = CI_TMLE_i)
-        return(toreturn_contrasts)
-      }
+      toreturn_contrast = c(Psi_unadj = Psi_unadj_i,
+                            CI_unadj = CI_unadj_i,
+                            Psi_gcomp = Psi_gcomp_i,
+                            Psi_IPTW = Psi_IPTW_i,
+                            CI_IPTW = CI_IPTW_i,
+                            Psi_IPTW_DR = Psi_IPTW_DR_i,
+                            CI_IPTW_DR = CI_IPTW_DR_i,
+                            Psi_TMLE = Psi_TMLE_i,
+                            CI_TMLE = CI_TMLE_i)
+      return(toreturn_contrast)
+    }
 
-      toreturn = cbind(EYdopt = toreturn, apply(contrast, 2, contrast_fun))
+      toreturn = cbind(EYd = toreturn, apply(contrast, 2, contrast_fun))
 
 
     }
 
 
   # if (length(grep("SL.QAW", QAW.SL.library)) != 0) {
-  #   ltmle_objects.dopt = NA
+  #   ltmle_objects.d = NA
   #   Psi_LTMLE = NA
   #   CI_LTMLE = c(NA,NA)
   # } else {
   #   # TMLE using ltmle
-  #   ltmle_objects.dopt = summary(ltmle(data = data.frame(W, A, Y), Anodes = "A", Lnodes = NULL, Ynodes = "Y", gform = "A ~ 1", abar = as.matrix(dopt, nrow = n), SL.library = QAW.SL.library))
-  #   Psi_LTMLE = ltmle_objects.dopt$treatment$estimate["tmle"]
-  #   CI_LTMLE = ltmle_objects.dopt$treatment$CI
+  #   ltmle_objects.d = summary(ltmle(data = data.frame(W, A, Y), Anodes = "A", Lnodes = NULL, Ynodes = "Y", gform = "A ~ 1", abar = as.matrix(d, nrow = n), SL.library = QAW.SL.library))
+  #   Psi_LTMLE = ltmle_objects.d$treatment$estimate["tmle"]
+  #   CI_LTMLE = ltmle_objects.d$treatment$CI
   # }
                #Psi_LTMLE = Psi_LTMLE,
                #CI_LTMLE = CI_LTMLE)
@@ -429,8 +428,8 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, ab, contrast)
 #' @param A txt
 #' @param Y outcome
 #' @param newV new V
-#' @param QAW.reg regression object for QAW
-#' @param gAW P(A|W)
+#' @param QAW.reg regression object for Q(A,W)
+#' @param g.reg regression object for g(A|W)
 #' @param family family
 #'
 #' @return
@@ -438,45 +437,35 @@ estimatorsEYdopt_nonCVTMLE = function(W, A, Y, dopt, QAW.reg, gAW, ab, contrast)
 #' @export
 #'
 # function that has library of dopt algorithms
-getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, gform, V, A, Y, newV, QAW.reg, gAW, family = family) {
+getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, V, A, Y, newV, QAW.reg, g.reg, family = family) {
 
-  if (is.null(newV)) newV = V
+  if (is.null(newV)){ newV = V }
 
   if (any(dopt.SL.library %in% c("OWL", "EARL", "optclass", "RWL", "Qlearn"))) {
 
-   # form = as.formula(paste("~ ", paste(colnames(W), collapse= "+")))
-
     # propensity model
-    moPropen <- buildModelObj(model = as.formula(paste("~ ", gform)),
-                              solver.method = 'glm',
-                              solver.args = list(family='binomial'),
-                              predict.method = 'predict.glm',
-                              predict.args = list(type='response'))
+    g.pred <- function(object, newdata, g.reg, ...) {
+      res <- predict.SuperLearner(object = g.reg, newdata = newdata, ...)
+      return(res$pred)
+    }
+    moPropen = buildModelObj(model = ~1,
+                             solver.method = "glm",
+                             predict.method=g.pred,
+                             predict.args = list("g.reg" = g.reg,
+                                                 "newdata" = "newdata",
+                                                 "object" = "object"))
 
-   # if (is.null(moMain_model) & is.null(moCont_model)) {
-      # main model
-      QAW.pred <- function(object, newdata, QAW.reg, ...) {
-        res <- predict.SuperLearner(object = QAW.reg, newdata = newdata, ...)
-        return(res$pred)
-      }
-      moMain <- buildModelObj(model = ~1,
-                              solver.method = "glm",
-                              predict.method=QAW.pred,
-                              predict.args = list("QAW.reg" = QAW.reg,
-                                                  "newdata" = "newdata",
-                                                  "object" = "object"))
-   # } else {
-  #    moCont <- buildModelObj(model = as.formula(paste("~ ", moCont_model)),
-  #                                solver.method = 'glm',
-  #                                solver.args = list(family=family),
-  #                                predict.method = 'predict.glm',
-  #                                predict.args = list(type='response'))
-  #    moMain <- buildModelObj(model = as.formula(paste("~ ", moMain_model)),
-  #                            solver.method = 'glm',
-  #                            solver.args = list(family=family),
-  #                            predict.method = 'predict.glm',
-  #                            predict.args = list(type='response'))
-  #  }
+    # outcome model
+    QAW.pred <- function(object, newdata, QAW.reg, ...) {
+      res <- predict.SuperLearner(object = QAW.reg, newdata = newdata, ...)
+      return(res$pred)
+    }
+    moMain <- buildModelObj(model = ~1,
+                            solver.method = "glm",
+                            predict.method=QAW.pred,
+                            predict.args = list("QAW.reg" = QAW.reg,
+                                                "newdata" = "newdata",
+                                                "object" = "object"))
 
     # classification model
     moClass <- buildModelObj(model = as.formula(paste("~ ", paste(colnames(W), collapse= "+"))),
@@ -488,113 +477,102 @@ getpreds.dopt.fun = function(dopt.SL.library, blip.SL.library = NULL, W, gform, 
     # regime
     regime <- as.formula(paste("~ ", paste(colnames(W), collapse= "+")))
 
-
-    optclass = function(W, A, Y, moPropen, moClass, regime, newV) {
-      optclass.est <- optimalClass(moPropen = moPropen,
-                                   moClass = moClass,
-                                   data = data.frame(W, A,Y),
-                                   response = Y,
-                                   txName = 'A',
-                                   regime = regime,
-                                   verbose = F)
-
-      dopt = data.frame(optTx(x = optclass.est, newdata = newV)$optimalTx)
-      colnames(dopt) = "optclass"
-      return(list(dopt = dopt, dopt.fit = optclass.est))
-    }
-
-    EARL = function(W, A, Y, moPropen, moMain, regime, newV) {
-      EARL.est <- earl(moPropen = moPropen,
-                       momain = moMain,
-                     #  moCont = moCont,
-                       data = data.frame(W, A,Y),
-                       response = Y,
-                       txName = 'A',
-                       regime = regime,
-                       verbose = F)
-      dopt = data.frame(optTx(EARL.est, newdata = newV)$optimalTx)
-      colnames(dopt) = "EARL"
-      return(list(dopt = dopt, dopt.fit = EARL.est))
-    }
-
-    RWL = function(W, A, Y, moPropen, moMain, regime, newV) {
-      responseType = ifelse(max(Y) <= 1 & min(Y) >= 0, "binary", "continuous")
-      RWL.est <- rwl(moPropen = moPropen,
-                     moMain = moMain,
-                     data = data.frame(W, A),
-                     reward = Y,
-                     txName = 'A',
-                     regime = regime,
-                     verbose = F,
-                     responseType = responseType)
-      dopt = data.frame(optTx(RWL.est, newdata = newV)$optimalTx)
-      colnames(dopt) = "RWL"
-      return(list(dopt = dopt, dopt.fit = RWL.est))
-    }
-
-    OWL = function (W, A, Y, moPropen, regime, newV) {
-      OWL.est = owl(moPropen = moPropen,
-                    data = data.frame(W, A=A),
-                    reward = Y,
-                    txName = "A",
-                    kernel = "poly",
-                    regime = regime,
-                    verbose = F)
-      dopt = data.frame(optTx(OWL.est,newdata = newV)$optimalTx)
-      colnames(dopt) = "OWL"
-      return(list(dopt = dopt, dopt.fit = OWL.est))
-    }
-
-    Qlearn = function (W, A, Y, moMain, regime, newV) {
-      Qlearn.est = qLearn(moMain = moMain,
-                          data = data.frame(W, A=A),
-                          response = Y,
-                          txName = 'A',
-                          verbose = F)
-      dopt = data.frame(optTx(Qlearn.est,  newdata = newV)$optimalTx)
-      colnames(dopt) = "Qlearn"
-      return(list(dopt = dopt, dopt.fit = Qlearn.est))
-    }
-
   }
 
-
-  DonV = function(W, V, A, Y, gAW, QAW.reg, blip.SL.library, newV) {
-    QAW.pred = predict(QAW.reg, newdata = data.frame(W, A = A), type = "response")$pred
-    Q1W.pred = predict(QAW.reg, newdata = data.frame(W, A = 1), type = "response")$pred
-    Q0W.pred = predict(QAW.reg, newdata = data.frame(W, A = 0), type = "response")$pred
-    D = (2*A-1)/gAW * (Y-QAW.pred) + Q1W.pred - Q0W.pred
-    SL.blips = getpreds.blip.fun(Y = D, X = V, SL.library = blip.SL.library, newX = newV, family = 'gaussian')
-    candidate.blips = SL.blips$library.predict
-    dopt = data.frame(apply(candidate.blips > 0, 2, as.numeric))
-    colnames(dopt) = paste0("DonV.", colnames(dopt))
-    return(list(dopt = dopt, dopt.fit = SL.blips))
-  }
-
-  treatall = function(newV) {
-    dopt = data.frame(rep(1, nrow(newV)))
-    colnames(dopt) = "treatall"
-    return(list(dopt = dopt, dopt.fit = "treat all"))
-  }
-
-
-  treatnone = function(newV) {
-    dopt = data.frame(rep(0, nrow(newV)))
-    colnames(dopt) = "treatnone"
-    return(list(dopt = dopt, dopt.fit = "treat no one"))
-  }
 
 
   dopts.list = list()
 
-  if (any(dopt.SL.library == "DonV")) { dopts.list$DonV = DonV(W = W, V = V, A = A, Y = Y, gAW = gAW, QAW.reg = QAW.reg, blip.SL.library = blip.SL.library, newV = newV)}
-  if (any(dopt.SL.library == "Qlearn")) { dopts.list$Qlearn = Qlearn(W = W, A = A, Y = Y, moMain = moMain, regime = regime, newV)}
-  if (any(dopt.SL.library == "OWL")) {dopts.list$OWL = OWL(W = W, A = A, Y = Y, moPropen = moPropen, regime = regime, newV)}
-  if (any(dopt.SL.library == "EARL")) {dopts.list$EARL = EARL(W = W, A = A, Y = Y, moPropen = moPropen, moMain = moMain, regime = regime, newV)}
-  if (any(dopt.SL.library == "optclass")) {dopts.list$optclass = optclass(W = W, A = A, Y = Y, moPropen = moPropen, moClass = moClass, regime = regime, newV)}
-  if (any(dopt.SL.library == "RWL")) {dopts.list$RWL = RWL(W = W, A = A, Y = Y, moPropen = moPropen, moMain = moMain, regime = regime, newV)}
-  if (any(dopt.SL.library == "treatall")) {dopts.list$treatall = treatall(newV = newV)}
-  if (any(dopt.SL.library == "treatnone")) {dopts.list$treatnone = treatnone(newV = newV)}
+  if (any(dopt.SL.library == "DonV")) {
+    QAW.pred = predict(QAW.reg, newdata = data.frame(W, A = A), type = "response")$pred
+    Q1W.pred = predict(QAW.reg, newdata = data.frame(W, A = 1), type = "response")$pred
+    Q0W.pred = predict(QAW.reg, newdata = data.frame(W, A = 0), type = "response")$pred
+    g1W.pred = predict(g.reg, data.frame(W), type = "response")$pred
+    gAW.pred = ifelse(A == 1, g1W.pred, 1 - g1W.pred)
+    D = (2*A-1)/gAW.pred * (Y-QAW.pred) + Q1W.pred - Q0W.pred
+    SL.blips = getpreds.blip.fun(Y = D, X = V, SL.library = blip.SL.library, newX = newV, family = 'gaussian')
+    candidate.blips = SL.blips$library.predict
+    dopt = data.frame(apply(candidate.blips > 0, 2, as.numeric))
+    colnames(dopt) = paste0("DonV.", colnames(dopt))
+    dopts.list$DonV = list(dopt = dopt, dopt.fit = SL.blips)
+  }
+
+  if (any(dopt.SL.library == "Qlearn")) {
+    Qlearn.est = qLearn(moMain = moMain,
+                        data = data.frame(W, A=A),
+                        response = Y,
+                        txName = 'A',
+                        verbose = F)
+    dopt = data.frame(optTx(Qlearn.est,  newdata = newV)$optimalTx)
+    colnames(dopt) = "Qlearn"
+    dopts.list$Qlearn = list(dopt = dopt, dopt.fit = Qlearn.est)
+  }
+
+  if (any(dopt.SL.library == "OWL")) {
+    OWL.est = owl(moPropen = moPropen,
+                  data = data.frame(W, A=A),
+                  reward = Y,
+                  txName = "A",
+                  kernel = "poly",
+                  regime = regime,
+                  verbose = F)
+    dopt = data.frame(optTx(OWL.est,newdata = newV)$optimalTx)
+    colnames(dopt) = "OWL"
+    dopts.list$OWL = list(dopt = dopt, dopt.fit = OWL.est)
+  }
+
+  if (any(dopt.SL.library == "EARL")) {
+    EARL.est <- earl(moPropen = moPropen,
+                     momain = moMain,
+                     data = data.frame(W, A,Y),
+                     response = Y,
+                     txName = 'A',
+                     regime = regime,
+                     verbose = F)
+    dopt = data.frame(optTx(EARL.est, newdata = newV)$optimalTx)
+    colnames(dopt) = "EARL"
+    dopts.list$EARL = list(dopt = dopt, dopt.fit = EARL.est)
+  }
+
+  if (any(dopt.SL.library == "optclass")) {
+    optclass.est <- optimalClass(moPropen = moPropen,
+                                 moClass = moClass,
+                                 data = data.frame(W, A,Y),
+                                 response = Y,
+                                 txName = 'A',
+                                 regime = regime,
+                                 verbose = F)
+    dopt = data.frame(optTx(x = optclass.est, newdata = newV)$optimalTx)
+    colnames(dopt) = "optclass"
+    dopts.list$optclass = list(dopt = dopt, dopt.fit = optclass.est)
+  }
+
+  if (any(dopt.SL.library == "RWL")) {
+    responseType = ifelse(max(Y) <= 1 & min(Y) >= 0, "binary", "continuous")
+    RWL.est <- rwl(moPropen = moPropen,
+                   moMain = moMain,
+                   data = data.frame(W, A),
+                   reward = Y,
+                   txName = 'A',
+                   regime = regime,
+                   verbose = F,
+                   responseType = responseType)
+    dopt = data.frame(optTx(RWL.est, newdata = newV)$optimalTx)
+    colnames(dopt) = "RWL"
+    dopts.list$RWL = list(dopt = dopt, dopt.fit = RWL.est)
+  }
+
+  if (any(dopt.SL.library == "treatall")) {
+    dopt = data.frame(rep(1, nrow(newV)))
+    colnames(dopt) = "treatall"
+    dopts.list$treatall = list(dopt = dopt, dopt.fit = "treat all")
+  }
+
+  if (any(dopt.SL.library == "treatnone")) {
+    dopt = data.frame(rep(0, nrow(newV)))
+    colnames(dopt) = "treatnone"
+    dopts.list$treatnone = list(dopt = dopt, dopt.fit = "treat no one")
+  }
 
   toreturn = list()
   toreturn$library.predict = do.call("cbind", lapply(dopts.list, function(x) x$dopt))

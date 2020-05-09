@@ -9,17 +9,16 @@ EYdopt(
   V,
   A,
   Y,
-  metalearner,
+  g.SL.library,
   QAW.SL.library,
   blip.SL.library,
-  risk.type,
   dopt.SL.library = NULL,
-  gform = 1,
+  metalearner,
+  risk.type,
   grid.size = 100,
   VFolds = 10,
   kappa = NULL,
   QAW = NULL,
-  g1W = NULL,
   family = NULL,
   contrast = NULL
 )
@@ -33,17 +32,17 @@ EYdopt(
 
 \item{Y}{Vector of outcome (continuous or binary)}
 
-\item{metalearner}{Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.}
+\item{g.SL.library}{SuperLearner library for estimating txt mechanism}
 
 \item{QAW.SL.library}{SuperLearner library for estimating outcome regression}
 
 \item{blip.SL.library}{SuperLearner library for estimating the blip}
 
-\item{risk.type}{Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"}
-
 \item{dopt.SL.library}{SuperLearner library for estimating dopt directly. Default is \code{NULL}. Could be "DonV", "Qlearn", "OWL", "EARL", "optclass", "RWL", "treatall", "treatnone". Could also be "all" for all algorithms.}
 
-\item{gform}{Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).}
+\item{metalearner}{Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.}
+
+\item{risk.type}{Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"}
 
 \item{grid.size}{Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients}
 
@@ -52,8 +51,6 @@ EYdopt(
 \item{kappa}{For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.}
 
 \item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
-
-\item{g1W}{user-supplied vector of g1W}
 
 \item{family}{either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
 
@@ -84,7 +81,7 @@ A = ObsData$A
 Y = ObsData$Y
 
 # E[Ydopt] using blip-based estimate of ODTR with risk function CV-TMLE
-EYdopt(W = W, A = A, Y = Y, V = W, blip.SL.library = "SL.blip.HTEepi", QAW.SL.library = "SL.QAW.HTEepi", risk.type = "CV TMLE", metalearner = 'blip')
+EYdopt(W = W, A = A, Y = Y, V = W, blip.SL.library = "SL.blip.HTEepi", g.SL.library = "SL.mean", QAW.SL.library = "SL.QAW.HTEepi", risk.type = "CV TMLE", metalearner = 'blip')
 }
 \references{
 van der Laan, Mark J., and Alexander R. Luedtke. "Targeted learning of the mean outcome under an optimal dynamic treatment rule." \emph{Journal of causal inference} 3.1 (2015): 61-95.

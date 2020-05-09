@@ -7,12 +7,11 @@
 SL.vote(
   V,
   W,
-  gform,
   A,
   Y,
   ab,
   QAW.reg,
-  gAW,
+  g.reg,
   blip.SL.library,
   dopt.SL.library,
   risk.type,
@@ -28,21 +27,19 @@ SL.vote(
 
 \item{W}{covariates}
 
-\item{gform}{gform}
-
 \item{A}{txt}
 
 \item{Y}{outcome}
 
 \item{ab}{range of Y}
 
-\item{QAW.reg}{QAW regression object}
+\item{QAW.reg}{Q(A,W) regression object}
 
-\item{gAW}{P(A|W)}
+\item{g.reg}{g(A|W) regression object}
 
 \item{blip.SL.library}{blip SL library}
 
-\item{dopt.SL.library}{dopt SL library}
+\item{dopt.SL.library}{dopt SL library. Options: "DonV", "Qlearn", "OWL", "EARL", "optclass", "RWL", "treatall", "treatnone". Can also be "all".}
 
 \item{risk.type}{risk type}
 

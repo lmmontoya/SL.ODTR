@@ -8,13 +8,12 @@ getpreds.dopt.fun(
   dopt.SL.library,
   blip.SL.library = NULL,
   W,
-  gform,
   V,
   A,
   Y,
   newV,
   QAW.reg,
-  gAW,
+  g.reg,
   family = family
 )
 }
@@ -22,8 +21,6 @@ getpreds.dopt.fun(
 \item{dopt.SL.library}{dopt library}
 
 \item{W}{covariates}
-
-\item{gform}{gform}
 
 \item{V}{subset of covariates for designing ODTR}
 
@@ -33,11 +30,13 @@ getpreds.dopt.fun(
 
 \item{newV}{new V}
 
-\item{QAW.reg}{regression object for QAW}
+\item{QAW.reg}{regression object for Q(A,W)}
 
-\item{gAW}{P(A|W)}
+\item{g.reg}{regression object for g(A|W)}
 
 \item{family}{family}
+
+\item{gform}{gform}
 }
 \value{
 

@@ -11,7 +11,7 @@ performance_EYdopt(
   QAW,
   QAW.SL.library,
   blip.SL.library,
-  VFolds,
+  grid.size,
   contrast
 )
 }
@@ -27,6 +27,8 @@ performance_EYdopt(
 \item{QAW.SL.library}{library for QAW}
 
 \item{blip.SL.library}{library for blip}
+
+\item{g.SL.library}{library for g}
 
 \item{VFolds}{CV Folds}
 }

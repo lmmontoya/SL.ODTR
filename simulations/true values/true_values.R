@@ -74,3 +74,7 @@ save(DGP_bin6_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.O
 DGP_bin_complex_min_true_values = get_true_vals(DGP_fun = DGP_bin_complex_min)
 save(DGP_bin_complex_min_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_bin_complex_min_true_values.RData")
 
+##### DGP cont######
+DGP_cont_true_values = get_true_vals(DGP_fun = DGP_cont)
+save(DGP_cont_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_cont_true_values.RData")
+

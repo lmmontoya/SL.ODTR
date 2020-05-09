@@ -15,7 +15,7 @@ tmle.fun(A, Y, d, Qd, gAW, ab)
 
 \item{Qd}{outcome regression predictions under rule}
 
-\item{gAW}{P(A|W)}
+\item{gAW}{probability observed txt predictions}
 
 \item{ab}{range of Y}
 }
