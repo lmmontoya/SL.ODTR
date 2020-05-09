@@ -12,7 +12,7 @@ performance_EYdopt(
   QAW.SL.library,
   blip.SL.library,
   grid.size,
-  contrast
+  contrast = NULL
 )
 }
 \arguments{
