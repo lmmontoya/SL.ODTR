@@ -13,8 +13,7 @@ performance_ODTR(
   QAW.SL.library,
   blip.SL.library,
   dopt.SL.library,
-  metalearner,
-  grid.size
+  metalearner
 )
 }
 \arguments{
@@ -35,8 +34,6 @@ performance_ODTR(
 \item{dopt.SL.library}{library for dopt}
 
 \item{metalearner}{SL type}
-
-\item{grid.size}{grid size}
 }
 \value{
 

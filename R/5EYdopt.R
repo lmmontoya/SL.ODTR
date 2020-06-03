@@ -156,6 +156,7 @@ EYdopt = function(W, V, A, Y, g.SL.library, QAW.SL.library, blip.SL.library, dop
   }
 
   CV.TMLE.est = lapply(1:VFolds, CV.TMLE_fun)
+
   #EnYdn, CVTMLE
   Psi_CV.TMLE = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$Psi_EnYdn.test)))
   var_CV.TMLE = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$varIC_EnYdn.test)))/n
@@ -163,20 +164,22 @@ EYdopt = function(W, V, A, Y, g.SL.library, QAW.SL.library, blip.SL.library, dop
   rownames(CI_CV.TMLE) = c("CI_CV.TMLE1", "CI_CV.TMLE2")
   colnames(CI_CV.TMLE) = names(Psi_CV.TMLE)
   EnYdn.CVTMLE = rbind(Psi_CV.TMLE = Psi_CV.TMLE, CI_CV.TMLE = CI_CV.TMLE)
-  #EnYd0, CVTMLE
-  Psi_CV.TMLE0 = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$Psi_EnYd0.test)))
-  var_CV.TMLE0 = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$varIC_EnYd0.test)))/n
-  CI_CV.TMLE0 = sapply(1:length(Psi_CV.TMLE0), function(i) Psi_CV.TMLE0[i] + c(-1,1)*qnorm(0.975)*sqrt(var_CV.TMLE0[i]))
-  rownames(CI_CV.TMLE0) = c("CI_CV.TMLE1", "CI_CV.TMLE2")
-  colnames(CI_CV.TMLE0) = names(Psi_CV.TMLE0)
-  EnYd0.CVTMLE = rbind(Psi_CV.TMLE = Psi_CV.TMLE0, CI_CV.TMLE = CI_CV.TMLE0)
-  #E0Ydn, CVTMLE
-  E0Ydn.CVTMLE = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$E0Ydn.test)))
 
   if (!is.null(QAW)) {
+    #EnYd0, CVTMLE
+    Psi_CV.TMLE0 = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$Psi_EnYd0.test)))
+    var_CV.TMLE0 = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$varIC_EnYd0.test)))/n
+    CI_CV.TMLE0 = sapply(1:length(Psi_CV.TMLE0), function(i) Psi_CV.TMLE0[i] + c(-1,1)*qnorm(0.975)*sqrt(var_CV.TMLE0[i]))
+    rownames(CI_CV.TMLE0) = c("CI_CV.TMLE1", "CI_CV.TMLE2")
+    colnames(CI_CV.TMLE0) = names(Psi_CV.TMLE0)
+    EnYd0.CVTMLE = rbind(Psi_CV.TMLE = Psi_CV.TMLE0, CI_CV.TMLE = CI_CV.TMLE0)
+    #E0Ydn, CVTMLE
+    E0Ydn.CVTMLE = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.TMLE.est[[i]]$E0Ydn.test)))
+
     toreturn = list(EnYdn = rbind(EnYdn.nonCVTMLE, EnYdn.CVTMLE),
                     EnYd0 = rbind(EnYd0.nonCVTMLE, EnYd0.CVTMLE),
                     E0Ydn = rbind(E0Ydn.nonCVTMLE, E0Ydn.CVTMLE))
+
   } else {
     toreturn = list(EYdopt_estimates = rbind(EnYdn.nonCVTMLE, EnYdn.CVTMLE),
                     SL.odtr = SL.odtr)
