@@ -1,0 +1,207 @@
+\documentclass[11pt]{article}
+%\usepackage[showframe]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{lscape,verbatim,mathrsfs}
+\usepackage{graphics,amsmath,pstricks}
+\usepackage{amssymb,enumerate}
+\usepackage{amsbsy,amsmath,amsthm,amsfonts, amssymb}
+\usepackage{graphicx, rotate, array}
+\usepackage{geometry,multirow}
+\usepackage{color,soul}
+\usepackage{float}
+%\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+%\renewcommand{\baselinestretch}{1.9}
+\usepackage{tcolorbox}
+\renewcommand{\familydefault}{cmss}
+\textwidth=6.65in \textheight=9.7in
+\parskip=.025in
+\parindent=0in
+\oddsidemargin=-0.1in \evensidemargin=-.1in \headheight=-.6in
+\footskip=0.5in \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\begin{document}
+
+The purpose of this simulation study is to examine different ways of evaluating an ODTR. Specifically, we examine how different estimators (unadjusted, g-comp, IPTW, IPTW-DR, TMLE, CV-TMLE) do with approximating the statistical parameter $E_0[Y_{d_0}]$ and the data-adaptive parameter $E_0[Y_{d_n}]$, under different SL ODTR estimators (ie different SL libraries, varying in ``aggressiveness"). Here, $d_0$ is true optimal rule, $d_n$ is estimate of optimal rule.
+
+
+<<libs_and_funs, echo = F, message = F,warning = F>>=
+library(dplyr)
+library(ggplot2)
+library(xtable)
+library(ggpubr)
+library('latex2exp')
+#source("/Users/linamontoya/Box Sync/Dissertation/R/7showResults.R")
+#source('/Users/linamontoya/Box Sync/Dissertation/R/1DGPfunctions.R')
+@
+
+
+
+
+
+
+
+
+
+<<DGP_bin, echo = F>>=
+# load DGP_bin stuff
+load(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_cont_true_values.RData")
+@
+
+<<EYdopt_DGP_AL_bin_step1a, echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+load(file = "/Users/linamontoya/Box Sync/Dissertation/simulations/EYdopt/results/EYdoptcont_wcontrast.RData")
+load(file = "/Users/linamontoya/Box Sync/Dissertation/simulations/EYdopt/results/EYdoptcont_nocontrast.RData")
+
+EYdopt = EYdoptcont_nocontrast
+truevalues = DGP_cont_true_values
+
+#E0Yd0
+E0Yd0 = DGP_cont_true_values$EYd_star
+E0Yd0_E0Y1 = E0Yd0 - DGP_cont_true_values$EY1
+E0Yd0_E0Y0 = E0Yd0 - DGP_cont_true_values$EY0
+
+truth = E0Yd0
+est = "EYd"
+
+#EnYdn
+EnYdn = do.call('rbind', lapply(EYdopt, function(x) x$EnYdn[grep("Psi_", rownames(x$EnYdn)), est]))
+colnames(EnYdn) = row.names(EYdopt[[1]]$EnYdn)[grep("Psi_", rownames(EYdopt[[1]]$EnYdn))]
+bias_EnYdn = colMeans(EnYdn - truth)
+var_EnYdn = diag(var(EnYdn))
+MSE_EnYdn = bias_EnYdn^2 + var_EnYdn
+CI_EnYdn = do.call('rbind', lapply(EYdopt, function(x) x$EnYdn[grep("CI_", rownames(x$EnYdn)), est]))
+colnames(CI_EnYdn) = row.names(EYdopt[[1]]$EnYdn)[grep("CI_", rownames(EYdopt[[1]]$EnYdn))]
+coverage_EnYdn = colMeans(truth > CI_EnYdn[,grep("1", colnames(CI_EnYdn))] & truth < CI_EnYdn[,grep("2", colnames(CI_EnYdn))])
+
+#EnYd0
+EnYd0 = do.call('rbind', lapply(EYdopt, function(x) x$EnYd0[grep("Psi_", rownames(x$EnYd0)), est]))
+colnames(EnYd0) = row.names(EYdopt[[1]]$EnYd0)[grep("Psi_", rownames(EYdopt[[1]]$EnYd0))]
+bias_EnYd0 = colMeans(EnYd0 - truth)
+var_EnYd0 = diag(var(EnYd0))
+MSE_EnYd0 = bias_EnYd0^2 + var_EnYd0
+CI_EnYd0 = do.call('rbind', lapply(EYdopt, function(x) x$EnYd0[grep("CI_", rownames(x$EnYd0)), est]))
+colnames(CI_EnYd0) = row.names(EYdopt[[1]]$EnYd0)[grep("CI_", rownames(EYdopt[[1]]$EnYd0))]
+coverage_EnYd0 = colMeans(truth > CI_EnYd0[,grep("1", colnames(CI_EnYd0))] & truth < CI_EnYd0[,grep("2", colnames(CI_EnYd0))])
+
+
+
+
+
+
+#E0Ydn 
+E0Ydn = do.call('rbind', lapply(EYdopt, function(x) x$E0Ydn[, est]))
+colnames(E0Ydn) = row.names(EYdopt[[1]]$E0Ydn)
+
+
+
+
+
+
+
+
+
+fun_perf = function(psi, ci) {
+
+  ci1 = paste0(ci, "1")
+  ci2 = paste0(ci, "2")
+
+  Psi = data.frame(EYdopt[grep(psi, rownames(EYdopt)),])
+  Bias_EYdstar = mean(Psi$EYd - EYdstar)
+  Bias_EYdstarY1 = mean(Psi$treatall - EYdstarY1)
+  Bias_EYdstarY0 = mean(Psi$treatnone - EYdstarY0)
+
+  Var = diag(var(Psi))
+
+  MSE_EYdstar = Bias_EYdstar^2 + Var["EYd"]
+  MSE_EYdstarY1 = Bias_EYdstarY1^2 + Var["treatall"]
+  MSE_EYdstarY0 = Bias_EYdstarY0^2 + Var["treatnone"]
+
+  CI = data.frame(EYdopt[grep(ci, rownames(EYdopt)),])
+  Coverage_EYdstar = mean(EYdstar > CI$EYd[grep(rownames(CI), pattern = ci1)] & EYdstar < CI$EYd[grep(rownames(CI), pattern = ci2)])
+  Coverage_EYdstarY1 = mean(EYdstarY1 > CI$treatall[grep(rownames(CI), pattern = ci1)] & EYdstarY1 < CI$treatall[grep(rownames(CI), pattern = ci2)])
+  Coverage_EYdstarY0 = mean(EYdstarY0 > CI$treatnone[grep(rownames(CI), pattern = ci1)] & EYdstarY0 < CI$treatnone[grep(rownames(CI), pattern = ci2)])
+
+  toreturn = c(Bias_EYdstar = Bias_EYdstar,
+               Bias_EYdstarY1 = Bias_EYdstarY1,
+               Bias_EYdstarY0 = Bias_EYdstarY0,
+               Var = Var,
+               MSE_EYdstar = MSE_EYdstar,
+               MSE_EYdstarY1 = MSE_EYdstarY1,
+               MSE_EYdstarY0 = MSE_EYdstarY0,
+               Coverage_EYdstar = Coverage_EYdstar,
+               Coverage_EYdstarY1 = Coverage_EYdstarY1,
+               Coverage_EYdstarY0 = Coverage_EYdstarY0)
+  return(toreturn)
+
+}
+
+fun_perf(psi = "Psi_gcomp", ci = "CI_gcomp")
+fun_perf(psi = "Psi_TMLE", ci = "CI_TMLE")
+fun_perf(psi = "Psi_IPTW", ci = "CI_IPTW")
+fun_perf(psi = "Psi_IPTW_DR", ci = "CI_IPTW_DR")
+fun_perf(psi = "Psi_CV.TMLE", ci = "CI_CV.TMLE")
+
+
+
+
+
+make_table_EYdopt = function(EYdopt, truevalues) {
+
+  truth = truevalues$EYd_star
+  Psi = data.frame(EYdopt[,grep("Psi_", colnames(EYdopt))])
+  if(length(Psi[,grep("LTMLE.tmle$", colnames(Psi))]) == 0) Psi$Psi_LTMLE = Psi$Psi_LTMLE else Psi$Psi_LTMLE = Psi[,grep("LTMLE.tmle$", colnames(Psi))]
+  if(length(Psi[,grep("LTMLE.tmle_", colnames(Psi))]) == 0) Psi$Psi_LTMLE_dopt0 = Psi$Psi_LTMLE_dopt0 else Psi$Psi_LTMLE_dopt0 = Psi[,grep("LTMLE.tmle_", colnames(Psi))]
+
+  Psi$Psi_LTMLE.tmle = Psi$LTMLE.tmle = Psi$Psi_LTMLE.tmle_dopt0 = Psi$LTMLE.tmle_dopt0 = NULL
+  colnames(Psi) = substr(colnames(Psi), start = 5, stop = nchar(colnames(Psi)))
+
+  CI = EYdopt[,grep(colnames(EYdopt), pattern = "^CI")]
+
+  # Compare EnYdn to E0Ydn
+  Bias = colMeans(Psi[,c("unadj", "gcomp", "IPTW", "IPTW_DR", "LTMLE", "TMLE")] - EYdopt[,"EY0dn"])
+  Bias = c(Bias, CV.TMLE = mean(Psi[,c("CV.TMLE")] - EYdopt[,"EY0dn_CVTMLE"]))
+  Variance = diag(var(Psi[,c("unadj", "gcomp", "IPTW", "IPTW_DR", "LTMLE", "TMLE", "CV.TMLE")]))
+  MSE = colMeans((Psi[,c("unadj", "gcomp", "IPTW", "IPTW_DR", "LTMLE", "TMLE")] - EYdopt[,"EY0dn"])^2)
+  MSE = c(MSE, CV.TMLE = mean((Psi[,c("CV.TMLE")] - EYdopt[,"EY0dn_CVTMLE"])^2))
+  results_sampspec = data.frame(Bias, Variance, MSE)
+  Coverage = colMeans(EYdopt[,"EY0dn"] > CI[,grep(colnames(CI), pattern = "1$")] & EYdopt[,"EY0dn"] < CI[,grep(colnames(CI), pattern = "2$")])
+  Coverage["CI_CV.TMLE1"] = mean(EYdopt[,"EY0dn_CVTMLE"] > CI[,"CI_CV.TMLE1"] & EYdopt[,"EY0dn_CVTMLE"] < CI[,"CI_CV.TMLE2"])
+  names(Coverage) = substr(names(Coverage), start = 4, stop = nchar(names(Coverage))-1)
+  results_sampspec$Coverage = NA
+  results_sampspec[names(Coverage),"Coverage"] = Coverage
+  rownames(results_sampspec) = paste0(rownames(results_sampspec), "_sampspec")
+  results_sampspec = round(results_sampspec, 4)
+  results_sampspec$Estimator = rownames(results_sampspec)
+
+  # Compare EnYdn or EnYd0 to E0Yd0
+  Bias = colMeans(Psi - truth)
+  Variance = diag(var(Psi))
+  MSE = colMeans((Psi - truth)^2)
+  results = data.frame(Bias, Variance, MSE)
+  Coverage_dn = colMeans(truth > CI[,grep(colnames(CI), pattern = "1$")] & truth < CI[,grep(colnames(CI), pattern = "2$")])
+  Coverage_d0 = colMeans(truth > CI[,grep(colnames(CI), pattern = "1_")] & truth < CI[,grep(colnames(CI), pattern = "2_")])
+  Coverage_EY0dn = colMeans(EYdopt[,"EY0dn"] > CI[,grep(colnames(CI), pattern = "1$")] & EYdopt[,"EY0dn"] < CI[,grep(colnames(CI), pattern = "2$")])
+  names(Coverage_dn) = substr(names(Coverage_dn), start = 4, stop = nchar(names(Coverage_dn))-1)
+  names(Coverage_d0) = paste0(substr(names(Coverage_d0), start = 4, stop = nchar(names(Coverage_d0))-7), "_dopt0")
+  results[names(Coverage_dn),"Coverage"] = Coverage_dn
+  results[names(Coverage_d0),"Coverage"] = Coverage_d0
+  results = round(results, 4)
+  results$Estimator = rownames(results)
+
+  #results = round(rbind(results, results_sampspec), 4)
+  results = rbind(results, results_sampspec)
+  results$Coverage = paste0(results$Coverage*100, "%")
+  results$Coverage[results$Coverage == "NA%"] = "-"
+
+  return(results)
+
+
+}
+
+@
+
+
+\end{document}

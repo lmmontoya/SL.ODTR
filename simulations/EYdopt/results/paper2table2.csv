@@ -1,0 +1,14 @@
+﻿,,Conditions for asymptotic linearity:,,,,,
+Estimands,Estimators,Positivity,$g_n = g_0$ or $g_n \overset{p}{\to} g_0$,$Q_n = Q_0$ or $Q_n \overset{p}{\to} Q_0$,$d^*_n \overset{p}{\to} d^*_0$,No overfit $Q_n$,No overfit $d_n$
+$\Psi_{d_0}$,IPTW,Required,Required,Not required,N/A,Not required,N/A
+,IPTW-DR,,Not required if $Q_n = Q_0$ or $Q_n \overset{p}{\to} Q_0$,Not required if $g_n = g_0$ or $g_n \overset{p}{\to} g_0$,,Required,
+,TMLE,,,,,Required,
+,CV-TMLE,,,,,Not required,
+$\Psi_{d^*_0}$,IPTW,Required,Required,Not required,Required,Not required,Required
+,IPTW-DR,,Not required if $Q_n = Q_0$ or $Q_n \overset{p}{\to} Q_0$,Not required if $g_n = g_0$ or $g_n \overset{p}{\to} g_0$,,Required,
+,TMLE,,,,,Required,
+,CV-TMLE,,,,,Not required,Not required
+$\Psi_{d^*_n}$,IPTW,Required,Required,Not required,Not required; require $d^*_n \overset{p}{\to} d \in \mathcal{D}$,Not required,Required
+,IPTW-DR,,Not required if $Q_n = Q_0$ or $Q_n \overset{p}{\to} Q_0$,Not required if $g_n = g_0$ or $g_n \overset{p}{\to} g_0$,,Required,
+,TMLE,,,,,Required,
+,CV-TMLE,,,,,Not required,Not required
