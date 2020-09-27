@@ -4,38 +4,16 @@
 \alias{performance_EYgstar}
 \title{Performance EYgstar}
 \usage{
-performance_EYgstar(
-  x,
-  n,
-  DGP_fun,
-  QAW,
-  QAW.SL.library,
-  blip.SL.library,
-  risk.type,
-  cs_to_try,
-  alphas_to_try
-)
+performance_EYgstar(x, n, risk.type, cs_to_try, alphas_to_try)
 }
 \arguments{
 \item{x}{dummy}
-
-\item{n}{n}
-
-\item{DGP_fun}{DGP_fun}
-
-\item{QAW}{QAW}
-
-\item{QAW.SL.library}{library for QAW}
-
-\item{blip.SL.library}{library for blip}
 
 \item{risk.type}{risk.type}
 
 \item{cs_to_try}{cs_to_try}
 
 \item{alphas_to_try}{alphas_to_try}
-
-\item{g.SL.library}{library for g}
 
 \item{VFolds}{CV Folds}
 }

@@ -94,15 +94,9 @@ performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.librar
 #' @description performance function for EYgstar
 #'
 #' @param x dummy
-#' @param n n
-#' @param DGP_fun DGP_fun
-#' @param QAW QAW
-#' @param g.SL.library library for g
-#' @param QAW.SL.library library for QAW
 #' @param risk.type risk.type
 #' @param cs_to_try cs_to_try
 #' @param alphas_to_try alphas_to_try
-#' @param blip.SL.library library for blip
 #' @param VFolds CV Folds
 #'
 #' @return
@@ -110,8 +104,10 @@ performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.librar
 #' @export
 #'
 # EYgstar performance function
-performance_EYgstar = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.library, risk.type, cs_to_try, alphas_to_try){
+performance_EYgstar = function(x, n, risk.type, cs_to_try, alphas_to_try){
 
+  QAW = QAW_bin_simple
+  DGP_fun = DGP_bin_simple
   ObsData = subset(DGP_fun(500), select = -c(A_star, Y_star))
   W = subset(ObsData, select = -c(A, Y))
   V = W
@@ -122,8 +118,12 @@ performance_EYgstar = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.libra
   metalearner = "discrete"
   VFolds = 10
   g.SL.library = "SL.mean"
-  grid.size = 100
+  grid.size = 10
   contrast = NULL
+  QAW.SL.library = c("SL.QAW.W1", "SL.QAW.W2", "SL.QAW.W3", "SL.QAW.W4",
+                     "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.rpart")
+  blip.SL.library = c("SL.blip.W1", "SL.blip.W2", "SL.blip.W3", "SL.blip.W4",
+                      "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.rpart")
 
   results = EYgstar(V=V, W=W, A=A, Y=Y, g.SL.library = g.SL.library, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
                    metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW, contrast = contrast, cs_to_try = cs_to_try, alphas_to_try = alphas_to_try)
