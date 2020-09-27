@@ -191,13 +191,66 @@ getpreds.blip.fun <- function(Y, X, newX = NULL, family = gaussian(), SL.library
   return(out)
 }
 
+#' @name tmle.g.fun
+#' @aliases tmle.g.fun
+#' @title TMLE function
+#' @description Compute E[Yg] using TMLE
+#'
+#' @param A txt
+#' @param Y outcome
+#' @param gstarAW stochastic rule under A = A
+#' @param gstar1W stochastic rule for A = 1
+#' @param gstar0W stochastic rule for A = 0
+#' @param gAW probability observed txt predictions
+#' @param QAW outcome regression A = A
+#' @param Q1W outcome regression A = 1
+#' @param Q0W outcome regression A = 0
+#' @param ab range of Y
+#'
+#' @return
+#'
+#' @export
+#'
+tmle.g.fun = function(A, Y, gstarAW, gstar1W, gstar0W, gAW, QAW, Q1W, Q0W, ab){
+
+  HdW = gstarAW/gAW
+
+  Y01 = (Y-min(ab))/diff(ab)
+  QAW01 = (QAW-min(ab))/diff(ab)
+  QAW01[QAW01>0.999] <- 0.999
+  QAW01[QAW01<0.001] <- 0.001
+
+  Q1W01 = (Q1W-min(ab))/diff(ab)
+  Q1W01[Q1W01>0.999] <- 0.999
+  Q1W01[Q1W01<0.001] <- 0.001
+
+  Q0W01 = (Q0W-min(ab))/diff(ab)
+  Q0W01[Q0W01>0.999] <- 0.999
+  Q0W01[Q0W01<0.001] <- 0.001
+
+  qlogisQAW01 = qlogis(QAW01)
+  qlogisQ1W01 = qlogis(Q1W01)
+  qlogisQ0W01 = qlogis(Q0W01)
+
+  logitUpdateHAW <- glm(Y01 ~ offset(qlogisQAW01), weights = HdW, family='quasibinomial')
+  epsilon = logitUpdateHAW$coef # get intercept coefficient
+
+  QAW.star<- plogis(qlogisQAW01+ epsilon)*diff(ab) + min(ab)
+  Q1W.star<- plogis(qlogisQ1W01+ epsilon)*diff(ab) + min(ab)
+  Q0W.star<- plogis(qlogisQ0W01+ epsilon)*diff(ab) + min(ab)
+
+  psi = mean(Q1W.star*gstar1W + Q0W.star*gstar0W)
+  IC = HdW*(Y-QAW.star) + (Q1W.star*gstar1W + Q0W.star*gstar0W) - psi
+
+  return(list(psi = psi, IC = IC))
+
+}
 
 
 
 
-
-#' @name tmle.fun
-#' @aliases tmle.fun
+#' @name tmle.d.fun
+#' @aliases tmle.d.fun
 #' @title TMLE function
 #' @description Compute E[Yd] using TMLE
 #'
@@ -212,7 +265,7 @@ getpreds.blip.fun <- function(Y, X, newX = NULL, family = gaussian(), SL.library
 #'
 #' @export
 #'
-tmle.fun = function(A, Y, d, Qd, gAW, ab){
+tmle.d.fun = function(A, Y, d, Qd, gAW, ab){
 
   Y01 = (Y-min(ab))/diff(ab)
   Qd01 = (Qd-min(ab))/diff(ab)
@@ -224,7 +277,6 @@ tmle.fun = function(A, Y, d, Qd, gAW, ab){
   update = glm(Y01~offset(logit.Qd01), weights = H, family="quasibinomial")
 
   Qd.star = predict(update, type = "response")*diff(ab)+min(ab)
-  Y = Y01*diff(ab)+min(ab)
 
   Psi_TMLE = mean(Qd.star)
   IC = H*(Y - Qd.star) + Qd.star - Psi_TMLE
@@ -329,7 +381,7 @@ estimatorsEYd_nonCVTMLE = function(W, A, Y, d, QAW.reg, g.reg, ab, contrast) {
   CI_IPTW_DR = Psi_IPTW_DR + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR))
 
   # TMLE handcoded
-  tmle_objects.d = tmle.fun(A = A, d = d, Y = Y, Qd = Qd, gAW = gAW, ab = ab)
+  tmle_objects.d = tmle.d.fun(A = A, d = d, Y = Y, Qd = Qd, gAW = gAW, ab = ab)
   Psi_TMLE = tmle_objects.d$psi
   varIC_TMLE = var(tmle_objects.d$IC)/n
   CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE)
@@ -374,7 +426,7 @@ estimatorsEYd_nonCVTMLE = function(W, A, Y, d, QAW.reg, g.reg, ab, contrast) {
       CI_IPTW_DR_i = Psi_IPTW_DR_i + c(-1,1)*qnorm(0.975)*as.numeric(sqrt(varIC_IPTW_DR_i))
 
       # TMLE handcoded
-      tmle_objects.contrast_i = tmle.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
+      tmle_objects.contrast_i = tmle.d.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
       Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
       varIC_TMLE_i = var(tmle_objects.d$IC - tmle_objects.contrast_i$IC)/n
       CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE_i)
@@ -409,6 +461,82 @@ estimatorsEYd_nonCVTMLE = function(W, A, Y, d, QAW.reg, g.reg, ab, contrast) {
   # }
                #Psi_LTMLE = Psi_LTMLE,
                #CI_LTMLE = CI_LTMLE)
+
+  return(toreturn)
+
+}
+
+
+
+
+
+
+#' @name estimatorsEYgstar_nonCVTMLE
+#' @aliases estimatorsEYgstar_nonCVTMLE
+#' @title Estimators of E[Ygstar] that are not CV-TMLE
+#' @description Estimators of E[Ygstar] that are not CV-TMLE
+#'
+#' @param W covariates
+#' @param A treatment
+#' @param Y outcome
+#' @param gstar1W gstar1W
+#' @param gstar0W gstar0W
+#' @param QAW.reg Q(A,W) regression object
+#' @param gAW.reg g(A|W) regression object
+#' @param ab range of Y
+#' @param contrast contrast
+#'
+#' @return
+#'
+#' @export
+#'
+estimatorsEYgstar_nonCVTMLE = function(W, A, Y, gstar1W, gstar0W, QAW.reg, g.reg, ab, contrast) {
+
+  n = length(Y)
+  family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
+
+  Q1W = predict(QAW.reg, newdata = data.frame(W, A = 1), type = "response")$pred
+  Q0W = predict(QAW.reg, newdata = data.frame(W, A = 0), type = "response")$pred
+  QAW = predict(QAW.reg, newdata = data.frame(W, A = A), type = "response")$pred
+  g1W = predict(g.reg, data.frame(W), type = "response")$pred
+  gAW = ifelse(A == 1, g1W, 1 - g1W)
+  gstarAW = ifelse(A == 1, gstar1W, gstar0W)
+
+  # TMLE handcoded
+  tmle_objects.g = tmle.g.fun(A = A,
+                              gstarAW = gstarAW, gstar1W = gstar1W, gstar0W = gstar0W,
+                              gAW = gAW,
+                              QAW = QAW, Q1W = Q1W, Q0W = Q0W,
+                              Y = Y, ab = ab)
+  Psi_TMLE = tmle_objects.g$psi
+  varIC_TMLE = var(tmle_objects.g$IC)/n
+  CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(as.numeric(varIC_TMLE))
+
+  toreturn = data.frame(EYgstar = c(Psi_TMLE = Psi_TMLE,
+                                CI_TMLE = CI_TMLE))
+
+  if (!is.null(contrast)) {
+
+    # contrast_i = contrast[,i]
+    contrast_fun = function(contrast_i) {
+
+      Qcontrast_i = predict(QAW.reg, newdata = data.frame(W, A = contrast_i), type = "response")$pred
+
+      # TMLE handcoded
+      tmle_objects.contrast_i = tmle.d.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
+      Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
+      varIC_TMLE_i = var(tmle_objects.g$IC - tmle_objects.contrast_i$IC)/n
+      CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE_i)
+
+      toreturn_contrast = c(Psi_TMLE = Psi_TMLE_i,
+                            CI_TMLE = CI_TMLE_i)
+      return(toreturn_contrast)
+    }
+
+    toreturn = cbind(EYd = toreturn, apply(contrast, 2, contrast_fun))
+
+
+  }
 
   return(toreturn)
 

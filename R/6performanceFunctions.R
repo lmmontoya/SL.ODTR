@@ -81,3 +81,53 @@ performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.librar
   print(x)
   return(results)
 }
+
+
+
+
+
+
+
+#' @name performance_EYgstar
+#' @aliases performance_EYgstar
+#' @title Performance EYgstar
+#' @description performance function for EYgstar
+#'
+#' @param x dummy
+#' @param n n
+#' @param DGP_fun DGP_fun
+#' @param QAW QAW
+#' @param g.SL.library library for g
+#' @param QAW.SL.library library for QAW
+#' @param risk.type risk.type
+#' @param cs_to_try cs_to_try
+#' @param alphas_to_try alphas_to_try
+#' @param blip.SL.library library for blip
+#' @param VFolds CV Folds
+#'
+#' @return
+#'
+#' @export
+#'
+# EYgstar performance function
+performance_EYgstar = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.library, risk.type, cs_to_try, alphas_to_try){
+
+  ObsData = subset(DGP_fun(500), select = -c(A_star, Y_star))
+  W = subset(ObsData, select = -c(A, Y))
+  V = W
+  A = ObsData$A
+  Y = ObsData$Y
+  risk.type = "CV TMLE"
+  kappa = NULL
+  metalearner = "discrete"
+  VFolds = 10
+  g.SL.library = "SL.mean"
+  grid.size = 100
+  contrast = NULL
+
+  results = EYgstar(V=V, W=W, A=A, Y=Y, g.SL.library = g.SL.library, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
+                   metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW, contrast = contrast, cs_to_try = cs_to_try, alphas_to_try = alphas_to_try)
+  print(x)
+  return(results)
+}
+

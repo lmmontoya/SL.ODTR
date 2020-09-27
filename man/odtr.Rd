@@ -9,6 +9,7 @@ odtr(
   A,
   Y,
   V,
+  rule.output = "d",
   g.SL.library,
   QAW.SL.library,
   blip.SL.library,
@@ -17,11 +18,13 @@ odtr(
   metalearner,
   kappa = NULL,
   newV = NULL,
-  QAW = NULL,
+  QAW.fun = NULL,
   VFolds = 10,
   grid.size = 100,
   family = NULL,
-  ab = NULL
+  ab = NULL,
+  cs_to_try = NULL,
+  alphas_to_try = NULL
 )
 }
 \arguments{
@@ -32,6 +35,8 @@ odtr(
 \item{Y}{Vector of treatment (continuous or binary)}
 
 \item{V}{Data frame of observed baseline covariates (subset of W) used to design the ODTR}
+
+\item{rule.output}{Either "d" for deterministic ODTR or "g" for stochastic ODTR. Default is "d."}
 
 \item{g.SL.library}{Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).}
 
@@ -47,17 +52,21 @@ odtr(
 
 \item{kappa}{For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.}
 
-\item{newV}{new V for prediction}
+\item{newV}{New V for prediction}
 
-\item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
+\item{QAW.fun}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
 
 \item{VFolds}{Number of folds to use in cross-validation. Default is 10.}
 
 \item{grid.size}{Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients}
 
-\item{family}{either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
+\item{family}{Either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
 
-\item{ab}{range of Y}
+\item{ab}{Range of Y}
+
+\item{cs_to_try}{Constants for SL.blip.c}
+
+\item{alphas_to_try}{Convex combination alphas for SL.blip.alpha}
 }
 \value{
 
