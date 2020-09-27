@@ -7,6 +7,7 @@ library(hitandrun)
 library(rpart)
 library(parallel)
 library(SL.ODTR)
+library(dplyr)
 
 cores = detectCores()
 

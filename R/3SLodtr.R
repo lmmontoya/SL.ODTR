@@ -257,6 +257,8 @@ SL.vote = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
 #' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
 #' @param cs_to_try constants to try for blip
 #'
+#' @import dplyr
+#'
 #' @return
 #'
 #' @export
@@ -390,6 +392,7 @@ SL.blip.c = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
 #' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
 #' @param alphas_to_try constants to try for blip
 #'
+#' @import dplyr
 #' @return
 #'
 #' @export
