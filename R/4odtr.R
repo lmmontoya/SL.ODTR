@@ -270,7 +270,7 @@ predict_odtr = function(odtr_obj, newV) {
     SL.out$param.type = odtr_obj$param.type
     SL.out$param = odtr_obj$param
     if (odtr_obj$param.type == "alpha") {
-      dopt = as.numeric(SL.out$SL.predict > 0)
+      dopt = as.numeric(SL.out$SL.predict <= 0)
       alpha = odtr_obj$param
       g1W.pred = predict(odtr_obj$g.reg, data.frame(newV), type = "response")$pred
       g0W.pred = 1 - g1W.pred

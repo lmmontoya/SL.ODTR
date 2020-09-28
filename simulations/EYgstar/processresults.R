@@ -1,5 +1,5 @@
-load("simulations/true values/DGP_bin_simple_true_values.RData")
-truth = DGP_bin_simple_true_values$EYd_star
+load("simulations/true values/DGP_null_true_values.RData")
+truth = DGP_null_true_values$EYd_star
 
 load("simulations/EYgstar/alpha_psi.RData")
 
