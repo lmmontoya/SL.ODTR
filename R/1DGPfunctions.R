@@ -18,7 +18,7 @@ QAW_null = function(A, W) {
   W3 = W$W3
   W4 = W$W4
 
-  return(plogis(W1 + 0.01*(A + .1*A*abs(W1) + W2)))
+  return(plogis(W1^2 + abs(W2) + W4 + 0.001*A*W3))
 
 }
 
