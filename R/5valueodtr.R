@@ -356,7 +356,7 @@ EYgstar = function(W, V, A, Y, g.SL.library, QAW.SL.library, blip.SL.library,
 
     toreturn = list(EnYgstar = rbind(EnYgstar.nonCVTMLE, EnYgstar.CVTMLE),
                     E0Ygstar = rbind(E0Ygstar.nonCVTMLE, E0Ygstar.CVTMLE),
-                    SL.info = data.frame(regret = regret, param.type = SL.odtr$param.type, param = SL.odtr$param, coef = SL.odtr$coef))
+                    SL.info = data.frame(regret = regret, param.type = SL.odtr$param.type, param = SL.odtr$param, coef = t(SL.odtr$SL.fit$coef)))
 
   } else {
     toreturn = list(EYdopt_estimates = rbind(EnYgstar.nonCVTMLE, EnYgstar.CVTMLE),

@@ -69,7 +69,7 @@ DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
   } else if (dA == "simple dynamic") {
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
-    A_star = as.numeric(blip > 0)
+    A_star = as.numeric(blip <= 0)
   } else if (dA == "ODTR-RC" & is.null(kappa)){
     stop("If you have dA as ODTR-RC you must specify a kappa")
   } else if (dA == "ODTR-RC"){

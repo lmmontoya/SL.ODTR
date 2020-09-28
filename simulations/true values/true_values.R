@@ -78,3 +78,6 @@ save(DGP_bin_complex_min_true_values, file = "/Users/linamontoya/Box Sync/Disser
 DGP_cont_true_values = get_true_vals(DGP_fun = DGP_cont)
 save(DGP_cont_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_cont_true_values.RData")
 
+##### DGP null######
+DGP_null_true_values = get_true_vals(DGP_fun = DGP_null)
+save(DGP_null_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_null_true_values.RData")
