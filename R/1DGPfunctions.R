@@ -44,15 +44,17 @@ DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
   # Covariates
   W1 = rnorm(n)
   W2 = rnorm(n)
-  W3 = rnorm(n, sd = 20)
-  W4 = rnorm(n, sd = 20)
-  W5 = rnorm(n, sd = 20)
-  W6 = rbinom(n, size = 1, prob = 0.5)
-  W7 = rbinom(n, size = 1, prob = 0.5)
+  W3 = rnorm(n)
+  W4 = rnorm(n)
+  W5 = rbinom(n, 1, .5)
+  W6 = rbinom(n, 1, .5)
+  W7 = rnorm(n, sd =20)
+  W8 = rnorm(n, sd =20)
+  W9 = rnorm(n, sd =20)
+  W10 = rnorm(n, sd =20)
+  W = data.frame(W1, W2, W3, W4, W5, W6, W7, W8, W9, W10)
 
   A = rbinom(n, size = 1, prob = 0.5)
-
-  W = data.frame(W1, W2, W3, W4, W5, W6, W7)
 
   u = runif(n)
   Y = as.numeric(u<QAW_null(A,W))
