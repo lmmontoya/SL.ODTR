@@ -18,7 +18,7 @@ QAW_null = function(A, W) {
   W3 = W$W3
   W4 = W$W4
 
-  return(plogis(W1^2 + abs(W2) + W4 + 0.001*A*W3))
+  return(plogis(W1^2 - abs(W2) - W4 + 0.0001*A))
 
 }
 
@@ -44,12 +44,15 @@ DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
   # Covariates
   W1 = rnorm(n)
   W2 = rnorm(n)
-  W3 = rnorm(n)
-  W4 = rnorm(n)
+  W3 = rnorm(n, sd = 20)
+  W4 = rnorm(n, sd = 20)
+  W5 = rnorm(n, sd = 20)
+  W6 = rbinom(n, size = 1, prob = 0.5)
+  W7 = rbinom(n, size = 1, prob = 0.5)
 
   A = rbinom(n, size = 1, prob = 0.5)
 
-  W = data.frame(W1, W2, W3, W4)
+  W = data.frame(W1, W2, W3, W4, W5, W6, W7)
 
   u = runif(n)
   Y = as.numeric(u<QAW_null(A,W))
