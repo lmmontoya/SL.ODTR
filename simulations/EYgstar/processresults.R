@@ -7,6 +7,9 @@ regret_alpha_psi = mean(unlist(lapply(alpha_psi, function(x) x$SL.info$regret)))
 param_alpha_psi = unlist(lapply(alpha_psi, function(x) x$SL.info$param))
 regret_alpha0_psi = mean(unlist(lapply(alpha0_psi, function(x) x$SL.info$regret)))
 
+colMeans(do.call('rbind', lapply(alpha_psi, function(x) x$SL.info[grep("coef.", colnames(x$SL.info))])))
+colMeans(do.call('rbind', lapply(alpha0_psi, function(x) x$SL.info[grep("coef.", colnames(x$SL.info))])))
+
 bias_EnYgstar_alpha_psi = mean(unlist(lapply(alpha_psi, function(x) x$EnYgstar["Psi_TMLE",] - truth)))
 bias_CV.EnYgstar_alpha_psi = mean(unlist(lapply(alpha_psi, function(x) x$EnYgstar["Psi_CV.TMLE",] - truth)))
 var_EnYgstar_alpha_psi = var(unlist(lapply(alpha_psi, function(x) x$EnYgstar["Psi_TMLE",])))
