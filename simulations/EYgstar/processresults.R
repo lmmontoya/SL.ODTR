@@ -14,6 +14,8 @@ bias_EnYgstar_alpha_psi = mean(unlist(lapply(alpha_psi, function(x) x$EnYgstar["
 bias_CV.EnYgstar_alpha_psi = mean(unlist(lapply(alpha_psi, function(x) x$EnYgstar["Psi_CV.TMLE",] - truth)))
 var_EnYgstar_alpha_psi = var(unlist(lapply(alpha_psi, function(x) x$EnYgstar["Psi_TMLE",])))
 var_CV.EnYgstar_alpha_psi = var(unlist(lapply(alpha_psi, function(x) x$EnYgstar["Psi_CV.TMLE",])))
+mse_EnYgstar_alpha_psi = bias_EnYgstar_alpha_psi^2 + var_EnYgstar_alpha_psi
+mse_CV.EnYgstar_alpha_psi = bias_CV.EnYgstar_alpha_psi^2 + var_CV.EnYgstar_alpha_psi
 cov_EnYgstar_alpha_psi = mean(unlist(lapply(alpha_psi, function(x) x$EnYgstar["CI_TMLE1",])) < truth & unlist(lapply(alpha_psi, function(x) x$EnYgstar["CI_TMLE2",])) > truth)
 cov_CV.EnYgstar_alpha_psi = mean(unlist(lapply(alpha_psi, function(x) x$EnYgstar["CI_CV.TMLE1",])) < truth & unlist(lapply(alpha_psi, function(x) x$EnYgstar["CI_CV.TMLE2",])) > truth)
 
@@ -21,6 +23,8 @@ bias_EnYgstar_alpha_psi0 = mean(unlist(lapply(alpha0_psi, function(x) x$EnYgstar
 bias_CV.EnYgstar_alpha_psi0 = mean(unlist(lapply(alpha0_psi, function(x) x$EnYgstar["Psi_CV.TMLE",] - truth)))
 var_EnYgstar_alpha_psi0 = var(unlist(lapply(alpha0_psi, function(x) x$EnYgstar["Psi_TMLE",])))
 var_CV.EnYgstar_alpha_psi0 = var(unlist(lapply(alpha0_psi, function(x) x$EnYgstar["Psi_CV.TMLE",])))
+mse_EnYgstar_alpha_psi0 = bias_EnYgstar_alpha_psi0^2 + var_EnYgstar_alpha_psi0
+mse_CV.EnYgstar_alpha_psi0 = bias_CV.EnYgstar_alpha_psi0^2 + var_CV.EnYgstar_alpha_psi0
 cov_EnYgstar_alpha_psi0 = mean(unlist(lapply(alpha0_psi, function(x) x$EnYgstar["CI_TMLE1",])) < truth & unlist(lapply(alpha_psi, function(x) x$EnYgstar["CI_TMLE2",])) > truth)
 cov_CV.EnYgstar_alpha_psi0 = mean(unlist(lapply(alpha0_psi, function(x) x$EnYgstar["CI_CV.TMLE1",])) < truth & unlist(lapply(alpha_psi, function(x) x$EnYgstar["CI_CV.TMLE2",])) > truth)
 
@@ -34,13 +38,7 @@ bias_EnYgstar_c_psi = mean(unlist(lapply(c_psi, function(x) x$EnYgstar["Psi_TMLE
 bias_CV.EnYgstar_c_psi = mean(unlist(lapply(c_psi, function(x) x$EnYgstar["Psi_CV.TMLE",] - truth)))
 var_EnYgstar_c_psi = var(unlist(lapply(c_psi, function(x) x$EnYgstar["Psi_TMLE",])))
 var_CV.EnYgstar_c_psi = var(unlist(lapply(c_psi, function(x) x$EnYgstar["Psi_CV.TMLE",])))
+mse_EnYgstar_c_psi = bias_EnYgstar_c_psi^2 + var_EnYgstar_c_psi
+mse_CV.EnYgstar_c_psi = bias_CV.EnYgstar_c_psi^2 + var_CV.EnYgstar_c_psi
 cov_EnYgstar_c_psi = mean(unlist(lapply(c_psi, function(x) x$EnYgstar["CI_TMLE1",])) < truth & unlist(lapply(c_psi, function(x) x$EnYgstar["CI_TMLE2",])) > truth)
 cov_CV.EnYgstar_c_psi = mean(unlist(lapply(c_psi, function(x) x$EnYgstar["CI_CV.TMLE1",])) < truth & unlist(lapply(c_psi, function(x) x$EnYgstar["CI_CV.TMLE2",])) > truth)
-
-bias_EnYgstar_c_psi0 = mean(unlist(lapply(c0_psi, function(x) x$EnYgstar["Psi_TMLE",] - truth)))
-bias_CV.EnYgstar_c_psi0 = mean(unlist(lapply(c0_psi, function(x) x$EnYgstar["Psi_CV.TMLE",] - truth)))
-var_EnYgstar_c_psi0 = var(unlist(lapply(c0_psi, function(x) x$EnYgstar["Psi_TMLE",])))
-var_CV.EnYgstar_c_psi0 = var(unlist(lapply(c0_psi, function(x) x$EnYgstar["Psi_CV.TMLE",])))
-cov_EnYgstar_c_psi0 = mean(unlist(lapply(c0_psi, function(x) x$EnYgstar["CI_TMLE1",])) < truth & unlist(lapply(c_psi, function(x) x$EnYgstar["CI_TMLE2",])) > truth)
-cov_CV.EnYgstar_c_psi0 = mean(unlist(lapply(c0_psi, function(x) x$EnYgstar["CI_CV.TMLE1",])) < truth & unlist(lapply(c_psi, function(x) x$EnYgstar["CI_CV.TMLE2",])) > truth)
-

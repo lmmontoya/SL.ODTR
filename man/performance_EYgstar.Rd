@@ -4,7 +4,15 @@
 \alias{performance_EYgstar}
 \title{Performance EYgstar}
 \usage{
-performance_EYgstar(x, n, risk.type, cs_to_try, alphas_to_try)
+performance_EYgstar(
+  x,
+  n,
+  risk.type,
+  cs_to_try,
+  alphas_to_try,
+  QAW.SL.library,
+  blip.SL.library
+)
 }
 \arguments{
 \item{x}{dummy}
