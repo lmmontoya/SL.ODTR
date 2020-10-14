@@ -11,7 +11,9 @@ performance_EYgstar(
   cs_to_try,
   alphas_to_try,
   QAW.SL.library,
-  blip.SL.library
+  blip.SL.library,
+  DGP_fun,
+  QAW.fun
 )
 }
 \arguments{
