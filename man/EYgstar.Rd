@@ -59,8 +59,6 @@ EYgstar(
 
 \item{alphas_to_try}{Convex combination alphas for SL.blip.alpha}
 
-\item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
-
 \item{odtr.obj}{An object from the odtr function that estimates the odtr.}
 }
 \value{

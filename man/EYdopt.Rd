@@ -57,8 +57,6 @@ EYdopt(
 
 \item{contrast}{An integer to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.}
 
-\item{QAW}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
-
 \item{odtr.obj}{An object from the odtr function that estimates the odtr.}
 }
 \value{

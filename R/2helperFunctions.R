@@ -429,7 +429,7 @@ estimatorsEYd_nonCVTMLE = function(W, A, Y, d, QAW.reg, g.reg, ab, contrast) {
       tmle_objects.contrast_i = tmle.d.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
       Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
       varIC_TMLE_i = var(tmle_objects.d$IC - tmle_objects.contrast_i$IC)/n
-      CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE_i)
+      CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(as.numeric(varIC_TMLE_i))
 
       toreturn_contrast = c(Psi_unadj = Psi_unadj_i,
                             CI_unadj = CI_unadj_i,
@@ -526,7 +526,7 @@ estimatorsEYgstar_nonCVTMLE = function(W, A, Y, gstar1W, gstar0W, QAW.reg, g.reg
       tmle_objects.contrast_i = tmle.d.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
       Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
       varIC_TMLE_i = var(tmle_objects.g$IC - tmle_objects.contrast_i$IC)/n
-      CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(varIC_TMLE_i)
+      CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(as.numeric(varIC_TMLE_i))
 
       toreturn_contrast = c(Psi_TMLE = Psi_TMLE_i,
                             CI_TMLE = CI_TMLE_i)

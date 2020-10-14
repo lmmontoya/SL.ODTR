@@ -39,7 +39,7 @@ alpha_psi_SL = mclapply(1:r, function(x) performance_EYgstar(x = x, risk.type = 
 c_psi_SL = mclapply(1:r, function(x) performance_EYgstar(x = x, risk.type = risk.type, cs_to_try = cs_to_try, alphas_to_try = NULL, QAW.SL.library = QAW.SL.library, blip.SL.library = blip.SL.library), mc.cores = cores)
 dn_psi_SL = mclapply(1:r, function(x) performance_EYgstar(x = x, risk.type = risk.type, alphas_to_try = 0, cs_to_try = NULL, QAW.SL.library = QAW.SL.library, blip.SL.library = blip.SL.library), mc.cores = cores)
 
-save(alpha_psi_glm, c_psi_glm, dn_psi_glm, file = "results/psi_SL.RData")
+save(alpha_psi_SL, c_psi_SL, dn_psi_SL, file = "results/psi_SL.RData")
 
 
 
@@ -69,6 +69,6 @@ alpha_CI_SL = mclapply(1:r, function(x) performance_EYgstar(x = x, risk.type = r
 c_CI_SL = mclapply(1:r, function(x) performance_EYgstar(x = x, risk.type = risk.type, cs_to_try = cs_to_try, alphas_to_try = NULL, QAW.SL.library = QAW.SL.library, blip.SL.library = blip.SL.library), mc.cores = cores)
 dn_CI_SL = mclapply(1:r, function(x) performance_EYgstar(x = x, risk.type = risk.type, alphas_to_try = 0, cs_to_try = NULL, QAW.SL.library = QAW.SL.library, blip.SL.library = blip.SL.library), mc.cores = cores)
 
-save(alpha_CI_glm, c_CI_glm, dn_CI_glm, file = "results/CI_SL.RData")
+save(alpha_CI_SL, c_CI_SL, dn_CI_SL, file = "results/CI_SL.RData")
 
 

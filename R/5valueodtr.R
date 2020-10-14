@@ -19,7 +19,6 @@
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
-#' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
 #' @param contrast An integer to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.
 #' @param odtr.obj An object from the odtr function that estimates the odtr.
@@ -226,7 +225,6 @@ EYdopt = function(W, V, A, Y, g.SL.library, QAW.SL.library, blip.SL.library, dop
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
-#' @param QAW True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
 #' @param contrast An integer to contrast Psi = E[Ygstar]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ygstar]-E[Y0]. Default is \code{NULL}.
 #' @param odtr.obj An object from the odtr function that estimates the odtr.
