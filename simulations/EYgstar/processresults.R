@@ -54,15 +54,17 @@ cov_da_CV.EnYgstar_c = mean(unlist(lapply(c, function(x) x$EnYgstar["CI_CV.TMLE1
 cov_da_CV.EnYgstar_dn = mean(unlist(lapply(dn, function(x) x$EnYgstar["CI_CV.TMLE1",] < x$E0Ygstar["E0Ygstar.CVTMLE",]))  & unlist(lapply(dn, function(x) x$EnYgstar["CI_CV.TMLE2",] > x$E0Ygstar["E0Ygstar.CVTMLE",])))
 
 
-
-
+truth = 0.5
+summary(unlist(lapply(alpha, function(x) x$E0Ygstar["E0Ygstar.CVTMLE",])) - truth)
+summary(unlist(lapply(c, function(x) x$E0Ygstar["E0Ygstar.CVTMLE",])) - truth)
+summary(unlist(lapply(dn, function(x) x$E0Ygstar["E0Ygstar.CVTMLE",])) - truth)
 
 
 
 load("simulations/EYgstar/psi_SL.RData")
-alpha = alpha_psi_glm
-c = c_psi_glm
-dn = dn_psi_glm
+alpha = alpha_psi_SL
+c = c_psi_SL
+dn = dn_psi_SL
 
 regret_alpha = mean(unlist(lapply(alpha, function(x) x$SL.info$regret)))
 regret_c = mean(unlist(lapply(c, function(x) x$SL.info$regret)))

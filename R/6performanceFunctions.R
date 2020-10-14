@@ -106,7 +106,7 @@ performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.librar
 # EYgstar performance function
 performance_EYgstar = function(x, n, risk.type, cs_to_try, alphas_to_try, QAW.SL.library, blip.SL.library){
 
-  QAW = QAW_null
+  QAW.fun = QAW_null
   DGP_fun = DGP_null
   ObsData = subset(DGP_fun(441), select = -c(A_star, Y_star))
   W = subset(ObsData, select = -c(A, Y))
@@ -121,7 +121,7 @@ performance_EYgstar = function(x, n, risk.type, cs_to_try, alphas_to_try, QAW.SL
   contrast = NULL
 
   results = EYgstar(V=V, W=W, A=A, Y=Y, g.SL.library = g.SL.library, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
-                   metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW = QAW, contrast = contrast, cs_to_try = cs_to_try, alphas_to_try = alphas_to_try)
+                   metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW.fun = QAW.fun, contrast = contrast, cs_to_try = cs_to_try, alphas_to_try = alphas_to_try)
   print(x)
   return(results)
 }
