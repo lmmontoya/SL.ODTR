@@ -106,7 +106,7 @@ performance_EYdopt = function(x, n, DGP_fun, QAW, QAW.SL.library, blip.SL.librar
 # EYgstar performance function
 performance_EYgstar = function(x, n, risk.type, cs_to_try, alphas_to_try, QAW.SL.library, blip.SL.library, DGP_fun, QAW.fun){
 
-  ObsData = subset(DGP_fun(300), select = -c(A_star, Y_star))
+  ObsData = subset(DGP_fun(441), select = -c(A_star, Y_star))
   W = subset(ObsData, select = -c(A, Y))
   V = W
   A = ObsData$A
