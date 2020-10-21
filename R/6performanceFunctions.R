@@ -114,8 +114,9 @@ performance_EYgstar = function(x, n, risk.type, cs_to_try, alphas_to_try, QAW.SL
   kappa = NULL
   metalearner = "discrete"
   VFolds = 10
-  g.SL.library = "SL.mean"
-  grid.size = 10
+  #g.SL.library = "SL.mean"
+  g.SL.library = "SL.glm"
+  grid.size = 100
   contrast = NULL
 
   results = EYgstar(V=V, W=W, A=A, Y=Y, g.SL.library = g.SL.library, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,

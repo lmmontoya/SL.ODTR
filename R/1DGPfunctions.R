@@ -57,6 +57,7 @@ DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
   W = data.frame(W1, W2, W3, W4, W5, W6, W7, W8, W9, W10)
 
   A = rbinom(n, size = 1, prob = 0.5)
+  #A = rbinom(n, size = 1, prob = plogis(W1 + W2))
 
   u = runif(n)
   Y = as.numeric(u<QAW_null(A,W))
@@ -96,6 +97,81 @@ DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
   return(O)
 
 }
+
+
+
+#' @name DGP_null_obs
+#' @aliases DGP_null_obs
+#' @title Simulate with null
+#' @description Generate data according to null with obs g
+#'
+#' @param n n
+#' @param dA rule type
+#' @param a static txt
+#' @param kappa for resource constraints
+#'
+#' @return
+#'
+#' @export
+#'
+
+DGP_null_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+
+  # Covariates
+  W1 = rnorm(n)
+  W2 = rnorm(n)
+  W3 = rnorm(n)
+  W4 = rnorm(n)
+  W5 = rbinom(n, 1, .5)
+  W6 = rbinom(n, 1, .5)
+  W7 = rnorm(n, sd =20)
+  W8 = rnorm(n, sd =20)
+  W9 = rnorm(n, sd =20)
+  W10 = rnorm(n, sd =20)
+  W = data.frame(W1, W2, W3, W4, W5, W6, W7, W8, W9, W10)
+
+  #A = rbinom(n, size = 1, prob = 0.5)
+  A = rbinom(n, size = 1, prob = plogis(W1 + W2))
+
+  u = runif(n)
+  Y = as.numeric(u<QAW_null(A,W))
+
+  # Blip function
+  QAW1 = QAW_null(A = 1, W)
+  QAW0 = QAW_null(A = 0, W)
+  blip = QAW1 - QAW0
+
+  # Treatment under rule
+  if (!is.null(dA) & !is.null(a)){
+    stop("Can only have dA or a")
+  } else if (is.null(a) & is.null(dA)) {
+    A_star = A
+  } else if (!is.null(a)){
+    A_star = a
+  } else if (dA == "simple dynamic") {
+    A_star = ifelse(W2 > 0, 1, 0)
+  } else if (dA == "ODTR"){
+    A_star = as.numeric(blip <= 0)
+  } else if (dA == "ODTR-RC" & is.null(kappa)){
+    stop("If you have dA as ODTR-RC you must specify a kappa")
+  } else if (dA == "ODTR-RC"){
+    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
+    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
+    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
+    tauP = max(c(nu, 0)) # max between nu and 0
+    A_star = as.numeric(blip > tauP)
+  }
+
+  # Outcome
+  Y_star = as.numeric(u<QAW_null(A_star,W))
+
+  # Data and target parameter
+  O = data.frame(W, A, A_star, Y, Y_star)
+
+  return(O)
+
+}
+
 
 
 #' @name QAW_bin_complex
@@ -197,6 +273,72 @@ DGP_bin_complex = function(n, dA = NULL, a = NULL, kappa = NULL){
 
 
 
+#' @name DGP_bin_complex_obs
+#' @aliases DGP_bin_complex_obs
+#' @title Simulate with AL bin DGP
+#' @description Generate data according to AL bin DGP obs g
+#'
+#' @param n n
+#' @param dA rule type
+#' @param a static txt
+#' @param kappa for resource constraints
+#'
+#' @return
+#'
+#' @export
+#'
+
+DGP_bin_complex_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+
+  # Covariates
+  W1 = rnorm(n)
+  W2 = rnorm(n)
+  W3 = rnorm(n)
+  W4 = rnorm(n)
+
+  #A = rbinom(n, size = 1, prob = 0.5)
+  A = rbinom(n, size = 1, prob = plogis(W1 + W2))
+
+  W = data.frame(W1, W2, W3, W4)
+
+  u = runif(n)
+  Y = as.numeric(u<QAW_bin_complex(A,W))
+
+  # Blip function
+  QAW1 = QAW_bin_complex(A = 1, W)
+  QAW0 = QAW_bin_complex(A = 0, W)
+  blip = QAW1 - QAW0
+
+  # Treatment under rule
+  if (!is.null(dA) & !is.null(a)){
+    stop("Can only have dA or a")
+  } else if (is.null(a) & is.null(dA)) {
+    A_star = A
+  } else if (!is.null(a)){
+    A_star = a
+  } else if (dA == "simple dynamic") {
+    A_star = ifelse(W2 > 0, 1, 0)
+  } else if (dA == "ODTR"){
+    A_star = as.numeric(blip > 0)
+  } else if (dA == "ODTR-RC" & is.null(kappa)){
+    stop("If you have dA as ODTR-RC you must specify a kappa")
+  } else if (dA == "ODTR-RC"){
+    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
+    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
+    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
+    tauP = max(c(nu, 0)) # max between nu and 0
+    A_star = as.numeric(blip > tauP)
+  }
+
+  # Outcome
+  Y_star = as.numeric(u<QAW_bin_complex(A_star,W))
+
+  # Data and target parameter
+  O = data.frame(W, A, A_star, Y, Y_star)
+
+  return(O)
+
+}
 
 
 
@@ -371,6 +513,72 @@ DGP_bin_simple = function(n, dA = NULL, a = NULL, kappa = NULL){
 }
 
 
+#' @name DGP_bin_simple_obs
+#' @aliases DGP_bin_simple_obs
+#' @title Simulate with AL bin DGP with influential variable
+#' @description Generate data according to AL bin DGP with influential variable obs g
+#'
+#' @param n n
+#' @param dA rule type
+#' @param a static txt
+#' @param kappa for resource constraints
+#'
+#' @return
+#'
+#' @export
+#'
+
+DGP_bin_simple_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+
+  # Covariates
+  W1 = rnorm(n)
+  W2 = rnorm(n)
+  W3 = rnorm(n)
+  W4 = rnorm(n)
+
+  #A = rbinom(n, size = 1, prob = 0.5)
+  A = rbinom(n, size = 1, prob = plogis(W1 + W2))
+
+  W = data.frame(W1, W2, W3, W4)
+
+  u = runif(n)
+  Y = as.numeric(u<QAW_bin_simple(A,W))
+
+  # Blip function
+  QAW1 = QAW_bin_simple(A = 1, W)
+  QAW0 = QAW_bin_simple(A = 0, W)
+  blip = QAW1 - QAW0
+
+  # Treatment under rule
+  if (!is.null(dA) & !is.null(a)){
+    stop("Can only have dA or a")
+  } else if (is.null(a) & is.null(dA)) {
+    A_star = A
+  } else if (!is.null(a)){
+    A_star = a
+  } else if (dA == "simple dynamic") {
+    A_star = ifelse(W2 > 0, 1, 0)
+  } else if (dA == "ODTR"){
+    A_star = as.numeric(blip > 0)
+  } else if (dA == "ODTR-RC" & is.null(kappa)){
+    stop("If you have dA as ODTR-RC you must specify a kappa")
+  } else if (dA == "ODTR-RC"){
+    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
+    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
+    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
+    tauP = max(c(nu, 0)) # max between nu and 0
+    A_star = as.numeric(blip > tauP)
+  }
+
+  # Outcome
+  Y_star = as.numeric(u<QAW_bin_simple(A_star,W))
+
+  # Data and target parameter
+  O = data.frame(W, A, A_star, Y, Y_star)
+
+  return(O)
+
+}
 
 
 
