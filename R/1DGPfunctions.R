@@ -174,6 +174,181 @@ DGP_null_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
 
 
 
+#' @name QAW_eff
+#' @aliases QAW_eff
+#' @title Simulate with eff
+#' @description Generate QAW according to eff
+#'
+#' @param W Data frame of observed baseline covariates
+#' @param A Vector of treatment
+#'
+#' @return
+#'
+#' @export
+#'
+
+QAW_eff = function(A, W) {
+
+  W1 = W$W1
+  W2 = W$W2
+  W3 = W$W3
+  W4 = W$W4
+
+  return(plogis(W1 + 0.01*A + 5*W1*A))
+  #return(plogis(W1 + 0.1*A + W1*A))
+
+}
+
+
+
+#' @name DGP_eff
+#' @aliases DGP_eff
+#' @title Simulate with eff
+#' @description Generate data according to eff
+#'
+#' @param n n
+#' @param dA rule type
+#' @param a static txt
+#' @param kappa for resource constraints
+#'
+#' @return
+#'
+#' @export
+#'
+
+DGP_eff = function(n, dA = NULL, a = NULL, kappa = NULL){
+
+  # Covariates
+  W1 = rnorm(n)
+  W2 = rnorm(n)
+  W3 = rnorm(n)
+  W4 = rnorm(n)
+  W5 = rbinom(n, 1, .5)
+  W6 = rbinom(n, 1, .5)
+  W7 = rnorm(n, sd =20)
+  W8 = rnorm(n, sd =20)
+  W9 = rnorm(n, sd =20)
+  W10 = rnorm(n, sd =20)
+  W = data.frame(W1, W2, W3, W4, W5, W6, W7, W8, W9, W10)
+
+  A = rbinom(n, size = 1, prob = 0.5)
+  #A = rbinom(n, size = 1, prob = plogis(W1 + W2))
+
+  u = runif(n)
+  Y = as.numeric(u<QAW_eff(A,W))
+
+  # Blip function
+  QAW1 = QAW_eff(A = 1, W)
+  QAW0 = QAW_eff(A = 0, W)
+  blip = QAW1 - QAW0
+
+  # Treatment under rule
+  if (!is.null(dA) & !is.null(a)){
+    stop("Can only have dA or a")
+  } else if (is.null(a) & is.null(dA)) {
+    A_star = A
+  } else if (!is.null(a)){
+    A_star = a
+  } else if (dA == "simple dynamic") {
+    A_star = ifelse(W2 > 0, 1, 0)
+  } else if (dA == "ODTR"){
+    A_star = as.numeric(blip <= 0)
+  } else if (dA == "ODTR-RC" & is.null(kappa)){
+    stop("If you have dA as ODTR-RC you must specify a kappa")
+  } else if (dA == "ODTR-RC"){
+    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
+    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
+    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
+    tauP = max(c(nu, 0)) # max between nu and 0
+    A_star = as.numeric(blip > tauP)
+  }
+
+  # Outcome
+  Y_star = as.numeric(u<QAW_eff(A_star,W))
+
+  # Data and target parameter
+  O = data.frame(W, A, A_star, Y, Y_star)
+
+  return(O)
+
+}
+
+
+
+#' @name DGP_eff_obs
+#' @aliases DGP_eff_obs
+#' @title Simulate with eff
+#' @description Generate data according to eff with obs g
+#'
+#' @param n n
+#' @param dA rule type
+#' @param a static txt
+#' @param kappa for resource constraints
+#'
+#' @return
+#'
+#' @export
+#'
+
+DGP_eff_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+
+  # Covariates
+  W1 = rnorm(n)
+  W2 = rnorm(n)
+  W3 = rnorm(n)
+  W4 = rnorm(n)
+  W5 = rbinom(n, 1, .5)
+  W6 = rbinom(n, 1, .5)
+  W7 = rnorm(n, sd =20)
+  W8 = rnorm(n, sd =20)
+  W9 = rnorm(n, sd =20)
+  W10 = rnorm(n, sd =20)
+  W = data.frame(W1, W2, W3, W4, W5, W6, W7, W8, W9, W10)
+
+  #A = rbinom(n, size = 1, prob = 0.5)
+  A = rbinom(n, size = 1, prob = plogis(W1 + W2))
+
+  u = runif(n)
+  Y = as.numeric(u<QAW_eff(A,W))
+
+  # Blip function
+  QAW1 = QAW_eff(A = 1, W)
+  QAW0 = QAW_eff(A = 0, W)
+  blip = QAW1 - QAW0
+
+  # Treatment under rule
+  if (!is.null(dA) & !is.null(a)){
+    stop("Can only have dA or a")
+  } else if (is.null(a) & is.null(dA)) {
+    A_star = A
+  } else if (!is.null(a)){
+    A_star = a
+  } else if (dA == "simple dynamic") {
+    A_star = ifelse(W2 > 0, 1, 0)
+  } else if (dA == "ODTR"){
+    A_star = as.numeric(blip <= 0)
+  } else if (dA == "ODTR-RC" & is.null(kappa)){
+    stop("If you have dA as ODTR-RC you must specify a kappa")
+  } else if (dA == "ODTR-RC"){
+    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
+    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
+    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
+    tauP = max(c(nu, 0)) # max between nu and 0
+    A_star = as.numeric(blip > tauP)
+  }
+
+  # Outcome
+  Y_star = as.numeric(u<QAW_eff(A_star,W))
+
+  # Data and target parameter
+  O = data.frame(W, A, A_star, Y, Y_star)
+
+  return(O)
+
+}
+
+
+
 #' @name QAW_bin_complex
 #' @aliases QAW_bin_complex
 #' @title Simulate with AL bin DGP

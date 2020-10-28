@@ -5,7 +5,7 @@ W = data.frame(W1 = rnorm(10e7))
 d0 = as.numeric(QAW_bin_simple(A = 1, W) - QAW_bin_simple(A = 0, W) <= 0)
 truth = mean(QAW_bin_simple(A = d0, W))
 
-load("simulations/EYgstar/psi_SL_simple.RData")
+load("simulations/EYgstar/psi_SL_simple_obs.RData")
 alpha = alpha_psi_SL
 c = c_psi_SL
 dn = dn_psi_SL
@@ -56,7 +56,7 @@ table_simple = data.frame(Estimator = c(rep("TMLE", times = 3), rep("CV-TMLE", t
                           CI_width = c(CIwidth_EnYgstar_alpha, CIwidth_EnYgstar_c, CIwidth_EnYgstar_dn,
                                        CIwidth_CV.EnYgstar_alpha, CIwidth_CV.EnYgstar_c, CIwidth_CV.EnYgstar_dn))
 table_simple = data.frame(table_simple[,1:2], sapply(table_simple[,3:6], round, 4))
-write.csv(table_simple, file = "simulations/EYgstar/table_simple.csv", )
+write.csv(table_simple, file = "simulations/EYgstar/table_simple_obs.csv", )
 
 
 
@@ -71,7 +71,7 @@ W = data.frame(W1 = rnorm(10e7), W2 = rnorm(10e7), W3 = rnorm(10e7))
 d0 = as.numeric(QAW_bin_complex(A = 1, W) - QAW_bin_complex(A = 0, W) <= 0)
 truth = mean(QAW_bin_complex(A = d0, W))
 
-load("simulations/EYgstar/psi_SL_complex.RData")
+load("simulations/EYgstar/psi_SL_complex_obs.RData")
 alpha = alpha_psi_SL
 c = c_psi_SL
 dn = dn_psi_SL
@@ -130,7 +130,7 @@ table_complex = data.frame(Estimator = c(rep("TMLE", times = 3), rep("CV-TMLE", 
                            CI_width = c(CIwidth_EnYgstar_alpha, CIwidth_EnYgstar_c, CIwidth_EnYgstar_dn,
                                         CIwidth_CV.EnYgstar_alpha, CIwidth_CV.EnYgstar_c, CIwidth_CV.EnYgstar_dn))
 table_complex = data.frame(table_complex[,1:2], sapply(table_complex[,3:6], round, 4))
-write.csv(table_complex, file = "simulations/EYgstar/table_complex.csv", )
+write.csv(table_complex, file = "simulations/EYgstar/table_complex_obs.csv", )
 
 
 
@@ -145,7 +145,7 @@ W = data.frame(W1 = rnorm(10e7), W4 = rnorm(10e7))
 d0 = as.numeric(QAW_null(A = 1, W) - QAW_null(A = 0, W) <= 0)
 truth = mean(QAW_null(A = d0, W))
 
-load("simulations/EYgstar/psi_SL_null.RData")
+load("simulations/EYgstar/psi_SL_null_obs.RData")
 alpha = alpha_psi_SL
 c = c_psi_SL
 dn = dn_psi_SL
@@ -204,7 +204,7 @@ table_null = data.frame(Estimator = c(rep("TMLE", times = 3), rep("CV-TMLE", tim
                         CI_width = c(CIwidth_EnYgstar_alpha, CIwidth_EnYgstar_c, CIwidth_EnYgstar_dn,
                                      CIwidth_CV.EnYgstar_alpha, CIwidth_CV.EnYgstar_c, CIwidth_CV.EnYgstar_dn))
 table_null = data.frame(table_null[,1:2], sapply(table_null[,3:6], round, 4))
-write.csv(table_null, file = "simulations/EYgstar/table_null.csv", )
+write.csv(table_null, file = "simulations/EYgstar/table_null_obs.csv", )
 
 
 
