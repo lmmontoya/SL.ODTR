@@ -515,3 +515,118 @@ SL.blip.correct_cont = function (Y, X, newX, family, obsWeights, model = TRUE, .
   return(out)
 }
 
+
+
+
+#' @name SL.HAL1
+#' @aliases SL.HAL1
+#' @title HAL1
+#' @description HAL1
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+SL.HAL1 = function (Y, X, newX = NULL, max_degree = 1, fit_type = c("glmnet", "lassi"),
+                        n_folds = 10, use_min = TRUE, family,
+                        obsWeights = rep(1, length(Y)), ...)
+{
+  if (!is.matrix(X)) {
+    X_in <- as.matrix(X)
+  }
+  else {
+    X_in <- X
+  }
+  if (!is.null(newX) & !is.matrix(newX)) {
+    newX_in <- as.matrix(newX)
+  }
+  else {
+    newX_in <- newX
+  }
+  if (family$family == "gaussian") {
+    hal_out <- fit_hal(Y = Y, X = X_in, max_degree = max_degree,
+                       fit_type = fit_type, n_folds = n_folds, use_min = use_min,
+                       family = "gaussian", weights = obsWeights, yolo = FALSE)
+  }
+  if (family$family == "binomial") {
+    hal_out <- fit_hal(Y = Y, X = X_in, max_degree = max_degree,
+                       fit_type = fit_type, n_folds = n_folds, use_min = use_min,
+                       family = "binomial", weights = obsWeights, yolo = FALSE)
+  }
+  if (!is.null(newX)) {
+    pred <- stats::predict(hal_out, new_data = newX_in)
+  }
+  else {
+    pred <- stats::predict(hal_out, new_data = X_in)
+  }
+  fit <- list(object = hal_out)
+  out <- list(pred = pred, fit = fit)
+  class(out$fit) <- "SL.hal9001"
+  return(out)
+}
+
+
+#' @name SL.HAL2
+#' @aliases SL.HAL2
+#' @title HAL2
+#' @description HAL2
+#'
+#' @param Y outcome
+#' @param X predictors
+#' @param newX new X
+#' @param family family
+#' @param SL.library SL library
+#' @param obsWeights obsWeights
+#' @param model model
+#' @param ... other
+#'
+#' @return
+#'
+#' @export
+#'
+SL.HAL2 = function (Y, X, newX = NULL, max_degree = 2, fit_type = c("glmnet", "lassi"),
+                        n_folds = 10, use_min = TRUE, family,
+                        obsWeights = rep(1, length(Y)), ...)
+{
+  if (!is.matrix(X)) {
+    X_in <- as.matrix(X)
+  }
+  else {
+    X_in <- X
+  }
+  if (!is.null(newX) & !is.matrix(newX)) {
+    newX_in <- as.matrix(newX)
+  }
+  else {
+    newX_in <- newX
+  }
+  if (family$family == "gaussian") {
+    hal_out <- fit_hal(Y = Y, X = X_in, max_degree = max_degree,
+                       fit_type = fit_type, n_folds = n_folds, use_min = use_min,
+                       family = "gaussian", weights = obsWeights, yolo = FALSE)
+  }
+  if (family$family == "binomial") {
+    hal_out <- fit_hal(Y = Y, X = X_in, max_degree = max_degree,
+                       fit_type = fit_type, n_folds = n_folds, use_min = use_min,
+                       family = "binomial", weights = obsWeights, yolo = FALSE)
+  }
+  if (!is.null(newX)) {
+    pred <- stats::predict(hal_out, new_data = newX_in)
+  }
+  else {
+    pred <- stats::predict(hal_out, new_data = X_in)
+  }
+  fit <- list(object = hal_out)
+  out <- list(pred = pred, fit = fit)
+  class(out$fit) <- "SL.hal9001"
+  return(out)
+}

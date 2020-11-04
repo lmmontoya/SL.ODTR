@@ -81,3 +81,7 @@ save(DGP_cont_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.O
 ##### DGP null######
 DGP_null_true_values = get_true_vals(DGP_fun = DGP_null)
 save(DGP_null_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_null_true_values.RData")
+
+##### DGP eff######
+DGP_eff_true_values = get_true_vals(DGP_fun = DGP_eff)
+save(DGP_eff_true_values, file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_eff_true_values.RData")
