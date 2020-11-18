@@ -630,3 +630,108 @@ SL.HAL2 = function (Y, X, newX = NULL, max_degree = 2, fit_type = c("glmnet", "l
   class(out$fit) <- "SL.hal9001"
   return(out)
 }
+
+
+
+#' @name SL.hal9001
+#' @aliases SL.hal9001
+#' @title HAL with binning
+#' @description HAL with binning
+#'
+#' @param Y Y
+#' @param X X
+#' @param newX newX
+#' @param max_degree max_degree
+#' @param fit_type fit_type
+#' @param n_folds n_folds
+#' @param family family
+#' @param use_min use_min
+#' @param obsWeights obsWeights
+#' @param bins bins
+#'
+#' @return
+#'
+#' @export
+#'
+SL.hal9001 <- function(Y,
+                       X,
+                       newX = NULL,
+                       max_degree = 2,
+                       fit_type = c("glmnet", "lassi"),
+                       n_folds = 10,
+                       use_min = TRUE,
+                       family, #= stats::gaussian(),
+                       obsWeights = rep(1, length(Y)),
+                       bins = 75,
+                       ...) {
+  # create matrix version of X and newX for use with hal9001::fit_hal
+  if (!is.matrix(X)) {
+    X_in <- as.matrix(X)
+  } else {
+    X_in <- X
+  }
+
+  ## This function discretizes a matrix
+  quantizer = function(X, bins) {
+    if (is.null(bins)) {
+      return(X)
+    }
+    X = as.matrix(X)
+
+    convertColumn = function(x) {
+      quants = seq(0, 0.97, length.out = bins)
+      q = quantile(x, quants)
+
+      nearest <- findInterval(x, q)
+      x <- q[nearest]
+      return(x)
+    }
+    quantizer = function(X) {
+      as.matrix(apply(X, MARGIN = 2, FUN = convertColumn))
+    }
+    return(quantizer(X))
+  }
+
+  # Discretizing matrix into “bins” bins
+  X_in <- quantizer(X_in, bins)
+
+
+  if (!is.null(newX) & !is.matrix(newX)) {
+    newX_in <- as.matrix(newX)
+  } else {
+    newX_in <- newX
+  }
+
+
+
+  if (family$family == "gaussian") {
+    # fit HAL
+    hal_out <- fit_hal(
+      Y = Y, X = X_in, max_degree = max_degree, fit_type = fit_type,
+      n_folds = n_folds, use_min = use_min, family = "gaussian",
+      weights = obsWeights, yolo = FALSE
+    )
+  }
+
+  if (family$family == "binomial") {
+    # fit HAL with logistic regression
+    hal_out <- fit_hal(
+      Y = Y, X = X_in, max_degree = max_degree, fit_type = fit_type,
+      n_folds = n_folds, use_min = use_min, family = "binomial",
+      weights = obsWeights, yolo = FALSE
+    )
+  }
+
+  # compute predictions based on `newX` or input `X`
+  if (!is.null(newX)) {
+    pred <- stats::predict(hal_out, new_data = newX_in)
+  } else {
+    pred <- stats::predict(hal_out, new_data = X_in)
+  }
+
+  # build output object
+  fit <- list(object = hal_out)
+  out <- list(pred = pred, fit = fit)
+  class(out$fit) <- "SL.hal9001"
+  return(out)
+}
