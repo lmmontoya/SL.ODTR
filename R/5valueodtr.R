@@ -60,8 +60,8 @@
 
 
 
-EYdopt = function(W, V, A, Y, g.SL.library, QAW.SL.library, blip.SL.library, dopt.SL.library = NULL,
-                  metalearner, risk.type, rule.output,
+EYdopt = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.library, dopt.SL.library = NULL,
+                  metalearner = "blip", risk.type = "CV TMLE",
                   grid.size = 100, VFolds = 10, kappa = NULL, QAW.fun = NULL,
                   family = NULL, contrast = NULL){
 

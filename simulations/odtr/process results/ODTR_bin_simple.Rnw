@@ -32,7 +32,7 @@ library(ggplot2)
 library(xtable)
 require(gridExtra)
 library('latex2exp')
-source("/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/showResults.R")
+source("/Users/linamontoya/Box Sync/SL.ODTR/simulations/showResults.R")
 @
 
 
@@ -46,24 +46,24 @@ BIN - simple blip - n = 1000
 
 <<DGP_bin, echo = F>>=
 # load DGP_bin stuff
-load(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/true values/DGP_bin_simple_true_values.RData")
+load(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/true values/DGP_bin_simple_true_values.RData")
 @
 
 <<echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
-bin = list(ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n1000.RData"),
-ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n1000.RData"),
-ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n1000.RData"),
-ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n1000.RData"),
-ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n1000.RData"),
-ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n1000.RData"),
-ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n1000.RData"),
-ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n1000.RData"),
-ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n1000.RData"),
-ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n1000.RData"),
-ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n1000.RData"),
-ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n1000.RData"),
-ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n1000.RData"),
-ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n1000.RData"))
+bin = list(ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n1000.RData"),
+ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n1000.RData"),
+ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n1000.RData"),
+ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n1000.RData"),
+ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n1000.RData"),
+ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n1000.RData"),
+ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n1000.RData"),
+ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n1000.RData"),
+ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n1000.RData"),
+ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n1000.RData"),
+ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n1000.RData"))
 
 
 odtr = do.call('rbind', lapply(1:length(bin), function(x) do.call("rbind", lapply(1:length(bin[[x]]), makeplotdf_ODTR, ODTR = bin[[x]], truevalues = DGP_bin_simple_true_values))))
@@ -194,6 +194,73 @@ odtr_n1000 = odtr
 
 
 
+BIN - simple blip - n = 1000 - for presentation
+
+
+<<echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+bin_pres = list(#ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n1000.RData"),
+#ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n1000.RData"),
+ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n1000.RData"),
+#ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n1000.RData"),
+ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n1000.RData"),
+#ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n1000.RData"),
+ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n1000.RData"),
+#ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n1000.RData"),
+ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n1000.RData"),
+#ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n1000.RData"),
+ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n1000.RData"))
+
+
+odtr_pres = do.call('rbind', lapply(1:length(bin_pres), function(x) do.call("rbind", lapply(1:length(bin_pres[[x]]), makeplotdf_ODTR, ODTR = bin_pres[[x]], truevalues = DGP_bin_simple_true_values))))
+
+odtr_pres$Risk = factor(odtr_pres$Risk, labels = c("CV MSE", "CV TMLE"), levels = c("CVMSE", "CVTMLE"))
+odtr_pres$Metalearner = factor(odtr_pres$Metalearner, labels = c("Blip-based", "Vote-based"), levels = c("blipmeta", "votemeta"))
+odtr_pres$Library = factor(odtr_pres$Library,
+                      labels = c("Parametric blip models", "ML blip models", "Parametric + ML blip models", "ML blip models and EYd maximizers", "All blip models and EYd maximizers"),
+                      levels = c("bliponlyparam", "bliponlyMLonly", "bliponlyML", "MLonlyEYd", "all"))
+
+truevalues = DGP_bin_simple_true_values
+
+odtr_pres$ALL = factor(paste(odtr_pres$Risk, odtr_pres$Metalearner, odtr_pres$Library))
+
+pd <- position_dodge(width = 0.7)
+
+odtr_plot_simple_n1000_pres =odtr_pres %>%
+  ggplot(aes(x = Metalearner, y = Estimates, group = ALL, shape = Risk, col = Library)) +
+  geom_point(size = 4, position = pd) +
+  geom_errorbar(aes(ymin = minQ, ymax = maxQ, col = Library), width = .4, position = pd) +
+  geom_hline(yintercept = (truevalues$EYd_star), colour = "black") +
+#  geom_hline(yintercept = (truevalues$EY1), colour = "red") +
+#  geom_hline(yintercept = (truevalues$EY0), colour = "blue") +
+  scale_shape_manual(name = "Risk", values = c(5,15,17), labels = c(
+                                                 "CV MSE" = parse(text = TeX('$R_{MSE}$')),
+                                                 "CV TMLE" = parse(text = TeX('$R_{E\\[Y_d\\]}$'))))  +
+  scale_colour_manual(values = c("dark gray", "blue", "red", "purple", "orange", "dark green")) + # this is for library
+  scale_x_discrete(limits=levels(odtr_pres$Metalearner),
+                   name = "Metalearner")+
+  geom_line(key_glyph = draw_key_label)+
+  ylab("Expected outcome under the estimated ODTR \n (Black Line = Expected Outcome Under True ODTR)") +
+  ggtitle("\"Simple\" Blip") +
+  ylim(min(odtr_pres$minQ)-.005, max(odtr_pres$maxQ, truevalues$EYd_star)+.005) +
+  theme_bw() +
+  theme(panel.border = element_blank())
+
+
+odtr_plot_simple_n1000_pres
+
+
+
+#odtr_n1000 = odtr
+
+@
+
+
+
+
+
 
 
 
@@ -219,20 +286,20 @@ bin -simple blip- n = 300
 
 
 <<echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
-bin_n300 = list(ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n300.RData"),
-ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n300.RData"),
-ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n300.RData"),
-ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n300.RData"),
-ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n300.RData"),
-ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n300.RData"),
-ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n300.RData"),
-ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n300.RData"),
-ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n300.RData"),
-ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n300.RData"),
-ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n300.RData"),
-ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n300.RData"),
-ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n300.RData"),
-ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n300.RData"))
+bin_n300 = list(ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n300.RData"),
+ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n300.RData"),
+ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n300.RData"),
+ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n300.RData"),
+ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n300.RData"),
+ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n300.RData"),
+ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n300.RData"),
+ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n300.RData"),
+ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n300.RData"),
+ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n300.RData"),
+ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n300.RData"),
+ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n300.RData"),
+ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n300.RData"),
+ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n300.RData"))
 
 
 
@@ -372,13 +439,13 @@ tableforpaper$Bias = format(round(tableforpaper$Bias, 4), scientific = F)
 tableforpaper$RelVar = format(round(tableforpaper$RelVar, 4), scientific = F)
 tableforpaper[,"match_dopt"] = as.character(format(round(tableforpaper[,"match_dopt"], 3)*100, scientific = F))
 colnames(tableforpaper) = c("N", "General Library", "Specific Library", "General Metalearner", "Metalearner", "Risk", "Avg. Regret", "Var. Relative to GLM", "% Match")
-write.csv(tableforpaper, "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/tables/bin_simple_tableforpaper.csv", row.names = F)
+write.csv(tableforpaper, "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/tables/bin_simple_tableforpaper.csv", row.names = F)
 
 @
 
 
 <<echo = F>>=
-save(odtr_plot_simple_n1000, odtr_plot_simple_n300, file = "/Users/linamontoya/Box Sync/Dissertation/SL.ODTR/simulations/odtr/figs/ODTR_simple_figs.RData")
+save(odtr_plot_simple_n1000, odtr_plot_simple_n300, odtr_plot_simple_n1000_pres, file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/figs/ODTR_simple_figs.RData")
 @
 
 

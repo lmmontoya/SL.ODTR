@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  23 AUG 2020 10:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  12 JAN 2021 09:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -775,22 +775,41 @@ Package pdftex.def Info: figure/unnamed-chunk-1-1.pdf used on input line 95.
 (pdftex.def)             Requested size: 480.59505pt x 220.2732pt.
 
 
-Package xcolor Warning: Incompatible color definition on input line 128.
+Package xcolor Warning: Incompatible color definition on input line 117.
 
 
-Package xcolor Warning: Incompatible color definition on input line 131.
+Package xcolor Warning: Incompatible color definition on input line 120.
 
 
-Package xcolor Warning: Incompatible color definition on input line 131.
+Package xcolor Warning: Incompatible color definition on input line 120.
 
 
-Package xcolor Warning: Incompatible color definition on input line 131.
+Package xcolor Warning: Incompatible color definition on input line 120.
 
 <figure/unnamed-chunk-2-1.pdf, id=5, 867.24pt x 397.485pt>
 File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 
 <use figure/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf used on input line 132.
+Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf used on input line 121.
+(pdftex.def)             Requested size: 480.59505pt x 220.2732pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 138.
+
+
+Package xcolor Warning: Incompatible color definition on input line 141.
+
+
+Package xcolor Warning: Incompatible color definition on input line 141.
+
+
+Package xcolor Warning: Incompatible color definition on input line 141.
+
+<figure/unnamed-chunk-3-1.pdf, id=6, 867.24pt x 397.485pt>
+File: figure/unnamed-chunk-3-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-3-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-3-1.pdf used on input line 142.
 (pdftex.def)             Requested size: 480.59505pt x 220.2732pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
@@ -807,22 +826,26 @@ Non-PDF special ignored!
 Non-PDF special ignored!
 Non-PDF special ignored!{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/upd
 map/pdftex.map} <./figure/unnamed-chunk-1-1.pdf> <./figure/unnamed-chunk-2-1.pd
-f>] (./ODTR_bin_complex.aux) ) 
+f>]
+Overfull \vbox (43.36243pt too high) has occurred while \output is active []
+
+
+[2 <./figure/unnamed-chunk-3-1.pdf>] (./ODTR_bin_complex.aux) ) 
 Here is how much of TeX's memory you used:
- 15688 strings out of 493089
- 290190 string characters out of 6134842
- 361035 words of memory out of 5000000
- 18861 multiletter control sequences out of 15000+600000
+ 15693 strings out of 493089
+ 290342 string characters out of 6134842
+ 362035 words of memory out of 5000000
+ 18865 multiletter control sequences out of 15000+600000
  4894 words of font info for 19 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  53i,5n,73p,854b,165s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2015/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmitt10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmss10.pfb>
-Output written on ODTR_bin_complex.pdf (1 page, 30823 bytes).
+</usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb>
+Output written on ODTR_bin_complex.pdf (2 pages, 37210 bytes).
 PDF statistics:
- 33 PDF objects out of 1000 (max. 8388607)
- 23 compressed objects within 1 object stream
+ 42 PDF objects out of 1000 (max. 8388607)
+ 29 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 23 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 28 words of extra memory for PDF output out of 10000 (max. 10000000)
 
