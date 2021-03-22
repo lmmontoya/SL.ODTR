@@ -62,7 +62,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
     dopt.combos.test = apply(candidates.blipsXalpha.test > 0, 2, as.numeric)
     Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
     if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
-      tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW.pred[test_ind], ab = ab))
+      tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.d.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW.pred[test_ind], ab = ab))
       risk.combos.test = -unlist(lapply(tmle.obj.test, function(x) x$psi))
       risk.var.combos.test = unlist(lapply(tmle.obj.test, function(x) var(x$IC)))
       toreturn = list(risk.combos.test = risk.combos.test, risk.var.combos.test = risk.var.combos.test)
@@ -183,7 +183,7 @@ SL.vote = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
     candidates.doptsXalpha.test = as.matrix(candidate.dopts.test$library.predict)%*%t(simplex.grid)
     dopt.combos.test = apply(candidates.doptsXalpha.test > .5, 2, as.numeric)
     Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
-    tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW.pred[test_ind], ab = ab))
+    tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.d.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW.pred[test_ind], ab = ab))
     risk.combos.test = -unlist(lapply(tmle.obj.test, function(x) x$psi))
     risk.var.combos.test = unlist(lapply(tmle.obj.test, function(x) var(x$IC)))
     toreturn = list(risk.combos.test = risk.combos.test, risk.var.combos.test = risk.var.combos.test)
