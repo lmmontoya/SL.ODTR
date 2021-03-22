@@ -54,7 +54,7 @@ EYdopt(
 
 \item{family}{either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian}
 
-\item{contrast}{An integer to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.}
+\item{contrast}{A dim = (n, num contrasts) matrix or dataframe (with columns preferably named) to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, contrast = data.frame("EY0" = rep(0,n)) will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.}
 
 \item{odtr.obj}{An object from the odtr function that estimates the odtr.}
 }

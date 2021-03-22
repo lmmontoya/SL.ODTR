@@ -20,7 +20,7 @@
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
 #' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
 #' @param family either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
-#' @param contrast An integer to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, 0 will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.
+#' @param contrast A dim = (n, num contrasts) matrix or dataframe (with columns preferably named) to contrast Psi = E[Ydopt]-E[Ycontrast] for CV-TMLE. For example, contrast = data.frame("EY0" = rep(0,n)) will contrast Psi = E[Ydopt]-E[Y0]. Default is \code{NULL}.
 #' @param odtr.obj An object from the odtr function that estimates the odtr.
 #'
 #' @importFrom stats predict var qnorm
@@ -180,6 +180,7 @@ EYdopt = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.
                     E0Ydn = rbind(E0Ydn.nonCVTMLE, E0Ydn.CVTMLE))
 
   } else {
+    colnames(EnYdn.CVTMLE) = colnames(EnYdn.nonCVTMLE)
     toreturn = list(EYdopt_estimates = rbind(EnYdn.nonCVTMLE, EnYdn.CVTMLE),
                     SL.odtr = SL.odtr)
   }
