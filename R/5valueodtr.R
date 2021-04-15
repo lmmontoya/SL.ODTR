@@ -71,9 +71,9 @@ EYdopt = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.
 
   #### All things non-CV ####
   SL.odtr = odtr(V=V, W=W, A=A, Y=Y, ab = ab, g.SL.library = g.SL.library, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library,
-                   dopt.SL.library = dopt.SL.library, metalearner = metalearner,
-                   risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW.fun = NULL, newV = NULL,
-                   kappa = kappa, family = family, rule.output = "d")
+                 dopt.SL.library = dopt.SL.library, metalearner = metalearner,
+                 risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW.fun = NULL, newV = NULL,
+                 kappa = kappa, family = family, rule.output = "d")
   QAW.reg = SL.odtr$QAW.reg
   g.reg = SL.odtr$g.reg
   dopt = SL.odtr$dopt
@@ -149,6 +149,7 @@ EYdopt = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.
       names(toreturn_contrast) = names(toreturn)
       toreturn = toreturn_contrast
     }
+    print(paste("CV TMLE finished fold", i, "of", VFolds))
 
     return(toreturn)
 
