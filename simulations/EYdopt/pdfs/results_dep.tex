@@ -1,0 +1,240 @@
+\documentclass[11pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+%\usepackage[showframe]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{lscape,verbatim,mathrsfs}
+\usepackage{graphics,amsmath,pstricks}
+\usepackage{amssymb,enumerate}
+\usepackage{amsbsy,amsmath,amsthm,amsfonts, amssymb}
+\usepackage{graphicx, rotate, array}
+\usepackage{geometry,multirow}
+\usepackage{color,soul}
+\usepackage{bm}
+\usepackage{float}
+%\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+%\renewcommand{\baselinestretch}{1.9}
+\usepackage{tcolorbox}
+\renewcommand{\familydefault}{cmss}
+\textwidth=6.65in \textheight=9.7in
+\parskip=.025in
+\parindent=0in
+\oddsidemargin=-0.1in \evensidemargin=-.1in \headheight=-.6in
+\footskip=0.5in \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+
+
+
+
+
+
+
+
+
+
+\section{Description of DGP}
+
+\begin{align*}
+W_1 &\sim Normal(\mu=0,\sigma^2=1) \\
+W_2,W_3,W_4 &\sim \mathcal{N}(\bm{\mu} = \begin{bmatrix}
+0\\
+0
+\end{bmatrix}, \bm{\Sigma} = \begin{bmatrix}
+1.0 & 0.3 & 0.7\\
+0.3 & 1.0 & 0.8\\
+0.7 & 0.8 & 1.0
+\end{bmatrix}) \\
+A &\sim Bernoulli(p=0.5) \\
+Y &\sim Bernoulli(p) \text{ .}\\
+\end{align*}
+\begin{align*}
+p &= logit^{-1} (W1 + 0.1*A + W1*A) \text{ ,}
+\end{align*}
+True blip function is:
+\begin{align*}
+B_0 (W)= & logit^{-1} (W1 + 0.1 + W1)\\
+& - logit^{-1} (W1) \text{ .}
+\end{align*}
+
+\section{Library legend}
+
+\begin{itemize}
+\item Simple - GLMs
+\begin{itemize}
+\item QAW.SL.library = linear model with $W_j$ and A as main terms and $W_j$*A interaction for each $j$
+\item blip.SL.library = linear model with main terms $W_j$ for each $j$
+\end{itemize}
+\item Medium - ML + GLMs not aggressive
+\begin{itemize}
+\item QAW.SL.library = GLMs library AND SL.glm, SL.mean, SL.glm.interaction, SL.earth, SL.nnet, SL.svm, SL.rpart
+\item blip.SL.library = GLMs library AND SL.glm, SL.mean, SL.glm.interaction, SL.earth, SL.nnet, SL.svm, SL.rpart
+\end{itemize}
+\item Aggressive - ML + GLMs not aggressive
+\begin{itemize}
+\item QAW.SL.library = ML + GLMs aggressive library AND SL.randomForest
+\item blip.SL.library = ML + GLMs aggressive library AND SL.randomForest
+\end{itemize}
+\end{itemize}
+
+
+
+
+
+
+\subsection{Table Simple Library}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## $table_EnYdn_for_E0Yd0
+##                Bias Variance   MSE Coverage
+## Psi_gcomp   -0.0022    4e-04 4e-04        -
+## Psi_IPTW     0.0010    7e-04 7e-04    96.6%
+## Psi_IPTW_DR  0.0018    4e-04 4e-04    95.9%
+## Psi_TMLE     0.0018    4e-04 4e-04    95.9%
+## Psi_CV.TMLE -0.0076    5e-04 5e-04    91.5%
+## 
+## $table_EnYd0_for_E0Yd0
+##               Bias Variance   MSE Coverage
+## Psi_gcomp   -4e-04    3e-04 3e-04        -
+## Psi_IPTW    -1e-03    7e-04 7e-04    96.4%
+## Psi_IPTW_DR  0e+00    4e-04 4e-04    95.4%
+## Psi_TMLE     0e+00    4e-04 4e-04    95.2%
+## Psi_CV.TMLE  0e+00    4e-04 4e-04    94.8%
+## 
+## $table_EnYdn_for_E0Ydn
+##               Bias Variance   MSE Coverage
+## Psi_gcomp   0.0060    4e-04 4e-04        -
+## Psi_IPTW    0.0092    7e-04 8e-04    96.5%
+## Psi_IPTW_DR 0.0100    4e-04 5e-04    94.8%
+## Psi_TMLE    0.0100    4e-04 5e-04    94.9%
+## Psi_CV.TMLE 0.0018    5e-04 5e-04    95.8%
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\subsection{Table Medium Library}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## $table_EnYdn_for_E0Yd0
+##                Bias Variance    MSE Coverage
+## Psi_gcomp   -0.0123    4e-04 0.0006        -
+## Psi_IPTW     0.0196    8e-04 0.0012    89.1%
+## Psi_IPTW_DR  0.0196    5e-04 0.0009    81.3%
+## Psi_TMLE     0.0196    5e-04 0.0009    80.8%
+## Psi_CV.TMLE -0.0092    5e-04 0.0006    89.6%
+## 
+## $table_EnYd0_for_E0Yd0
+##                Bias Variance   MSE Coverage
+## Psi_gcomp   -0.0087    4e-04 5e-04        -
+## Psi_IPTW     0.0002    8e-04 8e-04    95.6%
+## Psi_IPTW_DR  0.0000    4e-04 4e-04    94.6%
+## Psi_TMLE     0.0000    5e-04 5e-04    94.6%
+## Psi_CV.TMLE  0.0001    5e-04 5e-04    94.5%
+## 
+## $table_EnYdn_for_E0Ydn
+##                Bias Variance    MSE Coverage
+## Psi_gcomp   -0.0036    4e-04 0.0004        -
+## Psi_IPTW     0.0283    8e-04 0.0016    83.6%
+## Psi_IPTW_DR  0.0283    5e-04 0.0013    69.3%
+## Psi_TMLE     0.0283    5e-04 0.0013    68.9%
+## Psi_CV.TMLE  0.0007    5e-04 0.0005    95.8%
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\subsection{Table Aggressive Library}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## $table_EnYdn_for_E0Yd0
+##                Bias Variance    MSE Coverage
+## Psi_gcomp   -0.0140   0.0005 0.0007        -
+## Psi_IPTW     0.0707   0.0083 0.0133    57.9%
+## Psi_IPTW_DR  0.0673   0.0067 0.0112    51.1%
+## Psi_TMLE     0.0705   0.0080 0.0129    50.9%
+## Psi_CV.TMLE -0.0107   0.0006 0.0007    87.2%
+## 
+## $table_EnYd0_for_E0Yd0
+##                Bias Variance   MSE Coverage
+## Psi_gcomp   -0.0089    4e-04 5e-04        -
+## Psi_IPTW     0.0002    8e-04 8e-04    96.3%
+## Psi_IPTW_DR -0.0008    4e-04 4e-04    94.8%
+## Psi_TMLE    -0.0008    4e-04 4e-04    94.7%
+## Psi_CV.TMLE -0.0002    4e-04 4e-04    94.4%
+## 
+## $table_EnYdn_for_E0Ydn
+##                Bias Variance    MSE Coverage
+## Psi_gcomp   -0.0032   0.0005 0.0005        -
+## Psi_IPTW     0.0815   0.0083 0.0150    53.7%
+## Psi_IPTW_DR  0.0781   0.0067 0.0128    44.9%
+## Psi_TMLE     0.0813   0.0080 0.0146      45%
+## Psi_CV.TMLE  0.0000   0.0006 0.0006    95.6%
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+
+\section{Results}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## pdf 
+##   2
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\end{document}

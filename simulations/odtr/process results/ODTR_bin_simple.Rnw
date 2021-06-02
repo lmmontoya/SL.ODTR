@@ -1,0 +1,452 @@
+\documentclass[11pt]{article}
+%\usepackage[showframe]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{lscape,verbatim,mathrsfs}
+\usepackage{graphics,amsmath,pstricks}
+\usepackage{amssymb,enumerate}
+\usepackage{amsbsy,amsmath,amsthm,amsfonts, amssymb}
+\usepackage{graphicx, rotate, array}
+\usepackage{geometry,multirow}
+\usepackage{color,soul}
+\usepackage{float}
+%\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+%\renewcommand{\baselinestretch}{1.9}
+\usepackage{tcolorbox}
+\renewcommand{\familydefault}{cmss}
+\textwidth=6.65in \textheight=9.7in
+\parskip=.025in
+\parindent=0in
+\oddsidemargin=-0.1in \evensidemargin=-.1in \headheight=-.6in
+\footskip=0.5in \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\begin{document}
+
+
+<<libs_and_funs, echo = F, message = F,warning = F>>=
+library(dplyr)
+library(ggplot2)
+library(xtable)
+require(gridExtra)
+library('latex2exp')
+source("/Users/linamontoya/Box Sync/SL.ODTR/simulations/showResults.R")
+@
+
+
+
+
+
+
+
+
+BIN - simple blip - n = 1000
+
+<<DGP_bin, echo = F>>=
+# load DGP_bin stuff
+load(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/true values/DGP_bin_simple_true_values.RData")
+@
+
+<<echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+bin = list(ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n1000.RData"),
+ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n1000.RData"),
+ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n1000.RData"),
+ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n1000.RData"),
+ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n1000.RData"),
+ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n1000.RData"),
+ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n1000.RData"),
+ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n1000.RData"),
+ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n1000.RData"),
+ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n1000.RData"),
+ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n1000.RData"))
+
+
+odtr = do.call('rbind', lapply(1:length(bin), function(x) do.call("rbind", lapply(1:length(bin[[x]]), makeplotdf_ODTR, ODTR = bin[[x]], truevalues = DGP_bin_simple_true_values))))
+
+#odtr = odtr[odtr$Risk != "CVTMLECI",]
+#odtr$Risk = factor(odtr$Risk)
+
+odtr$Risk = factor(odtr$Risk, labels = c("N/A", "CV MSE", "CV TMLE"), levels = c("NA", "CVMSE", "CVTMLE"))
+odtr$Metalearner = factor(odtr$Metalearner, labels = c("N/A", "Discrete", "Blip-based", "Vote-based"), levels = c("NA", "discrete", "blipmeta", "votemeta"))
+odtr$Library = factor(odtr$Library,
+                      labels = c("GLM", "Parametric blip models", "ML blip models", "Parametric + ML blip models", "ML blip models and EYd maximizers", "All blip models and EYd maximizers"),
+                      levels = c("incorrectglm", "bliponlyparam", "bliponlyMLonly", "bliponlyML", "MLonlyEYd", "all")) #need to add
+
+truevalues = DGP_bin_simple_true_values
+
+odtr$ALL = factor(paste(odtr$Risk, odtr$Metalearner, odtr$Library))
+
+pd <- position_dodge(width = 0.7)
+
+odtr_plot_simple_n1000 = odtr %>%
+  ggplot(aes(x = Metalearner, y = Estimates, group = ALL, shape = Risk, col = Library)) +
+  geom_point(size = 4, position = pd) +
+  geom_errorbar(aes(ymin = minQ, ymax = maxQ, col = Library), width = .4, position = pd) +
+  geom_hline(yintercept = (truevalues$EYd_star), colour = "black") +
+  geom_hline(yintercept = (truevalues$EY1), colour = "red") +
+  geom_hline(yintercept = (truevalues$EY0), colour = "blue") +
+  scale_shape_manual(name = "Risk", values = c(5,15,17), labels = c("N/A" = "N/A",
+                                                 "CV MSE" = parse(text = TeX('$R_{MSE}$')),
+                                                 "CV TMLE" = parse(text = TeX('$R_{E\\[Y_d\\]}$'))))  +
+  scale_colour_manual(values = c("dark gray", "blue", "red", "purple", "orange", "dark green")) + # this is for library
+#    scale_x_discrete(limits=levels(odtr$Metalearner),
+#                  name = "Metalearner")+
+  scale_x_discrete(limits=levels(odtr$Metalearner),
+                  # labels=c("N/A" = "N/A",
+                  #          'Discrete' = parse(text = TeX('Discrete')),
+                  #          'Blip-based' = parse(text = TeX('Blip-based $d^*_{n,B}$')),
+                  #          'Vote-based' = parse(text = TeX('Vote-based $d^*_{n,d}$'))),
+                   name = "Metalearner")+
+  geom_line(key_glyph = draw_key_label)+
+#  ylab(parse(text = TeX('$E_{n}[Q_{0}(Y|A=d_{n},W)]$'))) +
+ # ylab(expression(paste(E[n],"[",Q[0], "(", Y, "|", A, "=", d[n]^{"*"},", ", W, ")]"))) +
+  ylab("Expected outcome under the estimated ODTR") +
+  ggtitle("DGP 2; \"Simple\" Blip; n = 1,000") +
+  ylim(min(odtr$minQ, unlist(truevalues))-.005, max(odtr$maxQ, truevalues$EYd_star)+.03) +
+  theme_bw() +
+  theme(panel.border = element_blank()) +
+  annotate("text", x = 1, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "N/A N/A GLM"])*100, 1, format = "f"),"%"),
+           colour = "dark gray") +
+  annotate("text", x = 2-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Discrete Parametric blip models"])*100, 1, format = "f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 2+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete Parametric blip models"])*100, 1, format = "f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 2-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Discrete ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "red") +
+  annotate("text", x = 2+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "red") +
+  annotate("text", x = 2-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Discrete Parametric + ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 2+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete Parametric + ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 2, y = max(odtr$maxQ, truevalues$EYd_star)+.025,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete ML blip models and EYd maximizers"])*100, 1, format = "f"),"%"),
+           colour = "orange") +
+  annotate("text", x = 2, y = max(odtr$maxQ, truevalues$EYd_star)+.03,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete All blip models and EYd maximizers"])*100, 1, format = "f"),"%"),
+           colour = "dark green") +
+
+  annotate("text", x = 3-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Blip-based Parametric blip models"])*100, 1, format = "f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 3+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Blip-based Parametric blip models"])*100, 1, format = "f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 3-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Blip-based ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "red") +
+  annotate("text", x = 3+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Blip-based ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "red") +
+  annotate("text", x = 3-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Blip-based Parametric + ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 3+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Blip-based Parametric + ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "purple") +
+
+
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based Parametric blip models"])*100, 1, format = "f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "red") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based Parametric + ML blip models"])*100, 1, format = "f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.025,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based ML blip models and EYd maximizers"])*100, 1, format = "f"),"%"),
+           colour = "orange") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.03,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based All blip models and EYd maximizers"])*100, 1, format = "f"),"%"),
+           colour = "dark green") +
+
+
+  annotate("text", x = .5, y = max(odtr$maxQ, truevalues$EYd_star) + .01, xmin = -0.5,
+           label = "~underline('% match:')",
+           colour = "black", parse = TRUE)
+
+
+odtr_plot_simple_n1000
+
+
+
+odtr_n1000 = odtr
+
+@
+
+
+
+
+
+
+
+BIN - simple blip - n = 1000 - for presentation
+
+
+<<echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+bin_pres = list(#ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n1000.RData"),
+#ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n1000.RData"),
+ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n1000.RData"),
+#ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n1000.RData"),
+ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n1000.RData"),
+#ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n1000.RData"),
+ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n1000.RData"),
+ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n1000.RData"),
+#ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n1000.RData"),
+ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n1000.RData"),
+#ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n1000.RData"),
+ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n1000.RData"))
+
+
+odtr_pres = do.call('rbind', lapply(1:length(bin_pres), function(x) do.call("rbind", lapply(1:length(bin_pres[[x]]), makeplotdf_ODTR, ODTR = bin_pres[[x]], truevalues = DGP_bin_simple_true_values))))
+
+odtr_pres$Risk = factor(odtr_pres$Risk, labels = c("CV MSE", "CV TMLE"), levels = c("CVMSE", "CVTMLE"))
+odtr_pres$Metalearner = factor(odtr_pres$Metalearner, labels = c("Blip-based", "Vote-based"), levels = c("blipmeta", "votemeta"))
+odtr_pres$Library = factor(odtr_pres$Library,
+                      labels = c("Parametric blip models", "ML blip models", "Parametric + ML blip models", "ML blip models and EYd maximizers", "All blip models and EYd maximizers"),
+                      levels = c("bliponlyparam", "bliponlyMLonly", "bliponlyML", "MLonlyEYd", "all"))
+
+truevalues = DGP_bin_simple_true_values
+
+odtr_pres$ALL = factor(paste(odtr_pres$Risk, odtr_pres$Metalearner, odtr_pres$Library))
+
+pd <- position_dodge(width = 0.7)
+
+odtr_plot_simple_n1000_pres =odtr_pres %>%
+  ggplot(aes(x = Metalearner, y = Estimates, group = ALL, shape = Risk, col = Library)) +
+  geom_point(size = 4, position = pd) +
+  geom_errorbar(aes(ymin = minQ, ymax = maxQ, col = Library), width = .4, position = pd) +
+  geom_hline(yintercept = (truevalues$EYd_star), colour = "black") +
+#  geom_hline(yintercept = (truevalues$EY1), colour = "red") +
+#  geom_hline(yintercept = (truevalues$EY0), colour = "blue") +
+  scale_shape_manual(name = "Risk", values = c(5,15,17), labels = c(
+                                                 "CV MSE" = parse(text = TeX('$R_{MSE}$')),
+                                                 "CV TMLE" = parse(text = TeX('$R_{E\\[Y_d\\]}$'))))  +
+  scale_colour_manual(values = c("dark gray", "blue", "red", "purple", "orange", "dark green")) + # this is for library
+  scale_x_discrete(limits=levels(odtr_pres$Metalearner),
+                   name = "Metalearner")+
+  geom_line(key_glyph = draw_key_label)+
+  ylab("Expected outcome under the estimated ODTR \n (Black Line = Expected Outcome Under True ODTR)") +
+  ggtitle("\"Simple\" Blip") +
+  ylim(min(odtr_pres$minQ)-.005, max(odtr_pres$maxQ, truevalues$EYd_star)+.005) +
+  theme_bw() +
+  theme(panel.border = element_blank())
+
+
+odtr_plot_simple_n1000_pres
+
+
+
+#odtr_n1000 = odtr
+
+@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bin -simple blip- n = 300
+
+
+<<echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+bin_n300 = list(ODTRsimple_GLM = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_GLM_n300.RData"),
+ODTRsimple_bliponlyparam_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_discrete_n300.RData"),
+ODTRsimple_bliponlyparam_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_blipmeta_n300.RData"),
+ODTRsimple_bliponlyparam_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyparam_votemeta_n300.RData"),
+ODTRsimple_bliponlyMLonly_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_discrete_n300.RData"),
+ODTRsimple_bliponlyMLonly_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_blipmeta_n300.RData"),
+ODTRsimple_bliponlyMLonly_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyMLonly_votemeta_n300.RData"),
+ODTRsimple_bliponlyML_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_discrete_n300.RData"),
+ODTRsimple_bliponlyML_blipmeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_blipmeta_n300.RData"),
+ODTRsimple_bliponlyML_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_bliponlyML_votemeta_n300.RData"),
+ODTRsimple_MLonlyEYd_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_discrete_n300.RData"),
+ODTRsimple_MLonlyEYd_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_MLonlyEYd_votemeta_n300.RData"),
+ODTRsimple_all_discrete = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_discrete_n300.RData"),
+ODTRsimple_all_votemeta = load_object(file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/results/ODTRsimple_all_votemeta_n300.RData"))
+
+
+
+odtr = do.call('rbind', lapply(1:length(bin_n300), function(x) do.call("rbind", lapply(1:length(bin_n300[[x]]), makeplotdf_ODTR, ODTR = bin_n300[[x]], truevalues = DGP_bin_simple_true_values))))
+
+#odtr = odtr[odtr$Risk != "CVTMLECI",]
+#odtr$Risk = factor(odtr$Risk)
+
+odtr$Risk = factor(odtr$Risk, labels = c("N/A", "CV MSE", "CV TMLE"), levels = c("NA", "CVMSE", "CVTMLE"))
+odtr$Metalearner = factor(odtr$Metalearner, labels = c("N/A", "Discrete", "Blip-based", "Vote-based"), levels = c("NA", "discrete", "blipmeta", "votemeta"))
+odtr$Library = factor(odtr$Library,
+                      labels = c("GLM", "Parametric blip models", "ML blip models", "Parametric + ML blip models", "ML blip models and EYd maximizers", "All blip models and EYd maximizers"),
+                      levels = c("incorrectglm", "bliponlyparam", "bliponlyMLonly", "bliponlyML", "MLonlyEYd", "all")) #need to add
+
+truevalues = DGP_bin_simple_true_values
+
+odtr$ALL = factor(paste(odtr$Risk, odtr$Metalearner, odtr$Library))
+
+pd <- position_dodge(width = 0.7)
+
+odtr_plot_simple_n300 = odtr %>%
+  ggplot(aes(x = Metalearner, y = Estimates, group = ALL, shape = Risk, col = Library)) +
+  geom_point(size = 4, position = pd) +
+  geom_errorbar(aes(ymin = minQ, ymax = maxQ, col = Library), width = .4, position = pd) +
+  geom_hline(yintercept = (truevalues$EYd_star), colour = "black") +
+  geom_hline(yintercept = (truevalues$EY1), colour = "red") +
+  geom_hline(yintercept = (truevalues$EY0), colour = "blue") +
+  scale_shape_manual(name = "Risk", values = c(5,15,17), labels = c("N/A" = "N/A",
+                                                 "CV MSE" = parse(text = TeX('$R_{MSE}$')),
+                                                 "CV TMLE" = parse(text = TeX('$R_{E\\[Y_d\\]}$'))))  +
+
+  scale_colour_manual(values = c("dark gray", "blue", "red", "purple", "orange", "dark green")) + # this is for library
+  scale_x_discrete(limits=levels(odtr$Metalearner),
+                   name = "Metalearner")+
+  geom_line(key_glyph = draw_key_label)+
+  ylab("Expected outcome under the estimated ODTR") +
+  ggtitle("DGP 2; \"Simple\" Blip; n = 300") +
+  ylim(min(odtr$minQ, unlist(truevalues))-.005, max(odtr$maxQ, truevalues$EYd_star)+.03) +
+  theme_bw() +
+  theme(panel.border = element_blank()) +
+  annotate("text", x = 1, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "N/A N/A GLM"])*100, 1, format="f"),"%"),
+           colour = "dark gray") +
+  annotate("text", x = 2-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Discrete Parametric blip models"])*100, 1, format="f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 2+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete Parametric blip models"])*100, 1, format="f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 2-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Discrete ML blip models"])*100, 1, format="f"),"%"),
+           colour = "red") +
+  annotate("text", x = 2+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete ML blip models"])*100, 1, format="f"),"%"),
+           colour = "red") +
+  annotate("text", x = 2-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Discrete Parametric + ML blip models"])*100, 1, format="f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 2+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete Parametric + ML blip models"])*100, 1, format="f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 2, y = max(odtr$maxQ, truevalues$EYd_star)+.025,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete ML blip models and EYd maximizers"])*100, 1, format="f"),"%"),
+           colour = "orange") +
+  annotate("text", x = 2, y = max(odtr$maxQ, truevalues$EYd_star)+.03,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Discrete All blip models and EYd maximizers"])*100, 1, format="f"),"%"),
+           colour = "dark green") +
+
+  annotate("text", x = 3-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Blip-based Parametric blip models"])*100, 1, format="f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 3+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Blip-based Parametric blip models"])*100, 1, format="f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 3-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Blip-based ML blip models"])*100, 1, format="f"),"%"),
+           colour = "red") +
+  annotate("text", x = 3+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Blip-based ML blip models"])*100, 1, format="f"),"%"),
+           colour = "red") +
+  annotate("text", x = 3-.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV MSE Blip-based Parametric + ML blip models"])*100, 1, format="f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 3+.15, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Blip-based Parametric + ML blip models"])*100, 1, format="f"),"%"),
+           colour = "purple") +
+
+
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.01,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based Parametric blip models"])*100, 1, format="f"),"%"),
+           colour = "blue") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.015,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based ML blip models"])*100, 1, format="f"),"%"),
+           colour = "red") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.02,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based Parametric + ML blip models"])*100, 1, format="f"),"%"),
+           colour = "purple") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.025,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based ML blip models and EYd maximizers"])*100, 1, format="f"),"%"),
+           colour = "orange") +
+  annotate("text", x = 4, y = max(odtr$maxQ, truevalues$EYd_star)+.03,
+           label = paste0(formatC(unique(odtr$match_dopt[odtr$ALL == "CV TMLE Vote-based All blip models and EYd maximizers"])*100, 1, format="f"),"%"),
+           colour = "dark green") +
+
+
+  annotate("text", x = .5, y = max(odtr$maxQ, truevalues$EYd_star) + .01, xmin = -0.5,
+           label = "~underline('% match:')",
+           colour = "black", parse = TRUE)
+
+
+odtr_plot_simple_n300
+
+
+
+
+@
+
+
+
+
+<<echo = F>>=
+odtr$N = 300
+odtr_n1000$N = 1000
+tableforpaper = rbind(odtr_n1000, odtr)
+var_glm1000 = tableforpaper$Variance[tableforpaper$Library == "GLM" & tableforpaper$N == 1000]
+var_glm300 = tableforpaper$Variance[tableforpaper$Library == "GLM" & tableforpaper$N == 300]
+tableforpaper$RelVar = NA
+tableforpaper$RelVar[tableforpaper$N == 1000] = tableforpaper$Variance[tableforpaper$N == 1000]/var_glm1000
+tableforpaper$RelVar[tableforpaper$N == 300] = tableforpaper$Variance[tableforpaper$N == 300]/var_glm300
+tableforpaper$GeneralLibrary = "Blip only"
+tableforpaper$GeneralLibrary[grep("EYd", tableforpaper$Library)] = "Full"
+tableforpaper$GeneralMetalearner = "Discrete"
+tableforpaper$GeneralMetalearner[-grep("Discrete", tableforpaper$Metalearner)] = "Continuous"
+tableforpaper$GeneralMetalearner[grep("N/A", tableforpaper$Metalearner)] = "N/A"
+tableforpaper = subset(tableforpaper, select = c("N", "GeneralLibrary", "Library", "GeneralMetalearner", "Metalearner", "Risk", "Bias", "RelVar", "match_dopt"))
+tableforpaper$Bias = format(round(tableforpaper$Bias, 4), scientific = F)
+tableforpaper$RelVar = format(round(tableforpaper$RelVar, 4), scientific = F)
+tableforpaper[,"match_dopt"] = as.character(format(round(tableforpaper[,"match_dopt"], 3)*100, scientific = F))
+colnames(tableforpaper) = c("N", "General Library", "Specific Library", "General Metalearner", "Metalearner", "Risk", "Avg. Regret", "Var. Relative to GLM", "% Match")
+write.csv(tableforpaper, "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/tables/bin_simple_tableforpaper.csv", row.names = F)
+
+@
+
+
+<<echo = F>>=
+save(odtr_plot_simple_n1000, odtr_plot_simple_n300, odtr_plot_simple_n1000_pres, file = "/Users/linamontoya/Box Sync/SL.ODTR/simulations/odtr/figs/ODTR_simple_figs.RData")
+@
+
+
+\end{document}
