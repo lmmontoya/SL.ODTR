@@ -1,0 +1,16 @@
+Library,Estimator,Bias,Variance,MSE,Coverage
+GLMs,G-comp.,-0.0917,0.0002,0.0086,-
+GLMs,IPTW,0.0032,0.0007,0.0007,95.40%
+GLMs,IPTW-DR,0.0029,0.0004,0.0004,97.10%
+GLMs,TMLE,0.0030,0.0004,0.0004,96.80%
+GLMs,CV-TMLE,0.0031,0.0004,0.0004,96.20%
+ML + GLMs not aggressive,G-comp.,-0.0954,0.0012,0.0103,-
+ML + GLMs not aggressive,IPTW,0.0037,0.0008,0.0008,94.80%
+ML + GLMs not aggressive,IPTW-DR,0.0035,0.0005,0.0005,95.20%
+ML + GLMs not aggressive,TMLE,0.0034,0.0005,0.0005,95.90%
+ML + GLMs not aggressive,CV-TMLE,0.0037,0.0005,0.0005,95.20%
+ML + GLMs aggressive,G-comp.,-0.0875,0.0008,0.0085,-
+ML + GLMs aggressive,IPTW,0.0031,0.0008,0.0008,94.30%
+ML + GLMs aggressive,IPTW-DR,-0.0041,0.0005,0.0005,92.70%
+ML + GLMs aggressive,TMLE,-0.0033,0.0005,0.0005,92.90%
+ML + GLMs aggressive,CV-TMLE,0.0034,0.0005,0.0005,94.20%

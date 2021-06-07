@@ -60,12 +60,12 @@ A &\sim Bernoulli(p=0.5) \\
 Y &\sim Bernoulli(p) \text{ .}\\
 \end{align*}
 \begin{align*}
-p &= logit^{-1} (W1 + 0.1*A + W1*A) \text{ ,}
+p &= logit^{-1} (0.5*plogis(1-W1^2 + 3*W2 + 5*W3^2*A - 4.45*A)+0.5*plogis(-0.5- W3 + 2*W1*W2 + 3*abs(W2)*A - 1.5*A) \text{ ,}
 \end{align*}
 True blip function is:
 \begin{align*}
-B_0 (W)= & logit^{-1} (W1 + 0.1 + W1)\\
-& - logit^{-1} (W1) \text{ .}
+B_0 (W)= & 0.5[logit^{-1} (1-W_1^2  + 3W_2  + 5W_3^2  - 4.45)+logit^{-1} (-0.5- W_3  + 2W_1 W_2  + 3|W2|  - 1.5)\\
+& - logit^{-1} (1-W_1^2  + 3W_2 )+logit^{-1} (-0.5- W_3  + 2W_1 W_2 )] \text{ .}
 \end{align*}
 
 \section{Library legend}
@@ -185,18 +185,43 @@ make_table_fun = function(results) {
               table_EnYdn_for_E0Ydn = table_EnYdn_for_E0Ydn))
 }
 @
-\subsection{Table Simple Library}
 <<echo = F, eval = T>>=
-make_table_fun(results = EYdopt_dep_simple)
+simple = make_table_fun(results = EYdopt_dep_simple)
+medium = make_table_fun(results = EYdopt_dep_medium)
+most = make_table_fun(results = EYdopt_dep_most)
 @
-\subsection{Table Medium Library}
+
+\subsection{Table EnYd0 for E0Yd0}
 <<echo = F, eval = T>>=
-make_table_fun(results = EYdopt_dep_medium)
+table_EnYd0_for_E0Yd0 = data.frame(Library = rep(c("GLMs", "ML + GLMs not aggressive", "ML + GLMs aggressive"), each = 5),
+                                   Estimator = c("G-comp.", "IPTW", "IPTW-DR", "TMLE", "CV-TMLE"),
+                                   rbind(simple$table_EnYd0_for_E0Yd0,
+                                         medium$table_EnYd0_for_E0Yd0,
+                                         most$table_EnYd0_for_E0Yd0))
+table_EnYd0_for_E0Yd0
+write.csv(table_EnYd0_for_E0Yd0, file = "/Users/lmontoya/Box/SL.ODTR/simulations/EYdopt/results/EnYd0_for_E0Yd0_dep.csv", row.names = F)
 @
-\subsection{Table Aggressive Library}
+\subsection{Table EnYdn for E0Yd0}
 <<echo = F, eval = T>>=
-make_table_fun(results = EYdopt_dep_most)
+table_EnYdn_for_E0Yd0 = data.frame(Library = rep(c("GLMs", "ML + GLMs not aggressive", "ML + GLMs aggressive"), each = 5),
+                                   Estimator = c("G-comp.", "IPTW", "IPTW-DR", "TMLE", "CV-TMLE"),
+                                   rbind(simple$table_EnYdn_for_E0Yd0,
+                                         medium$table_EnYdn_for_E0Yd0,
+                                         most$table_EnYdn_for_E0Yd0))
+table_EnYdn_for_E0Yd0
+write.csv(table_EnYdn_for_E0Yd0, file = "/Users/lmontoya/Box/SL.ODTR/simulations/EYdopt/results/EnYdn_for_E0Yd0_dep.csv", row.names = F)
 @
+\subsection{Table EnYdn for E0Ydn}
+<<echo = F, eval = T>>=
+table_EnYdn_for_E0Ydn = data.frame(Library = rep(c("GLMs", "ML + GLMs not aggressive", "ML + GLMs aggressive"), each = 5),
+                                   Estimator = c("G-comp.", "IPTW", "IPTW-DR", "TMLE", "CV-TMLE"),
+                                   rbind(simple$table_EnYdn_for_E0Ydn,
+                                         medium$table_EnYdn_for_E0Ydn,
+                                         most$table_EnYdn_for_E0Ydn))
+table_EnYdn_for_E0Ydn
+write.csv(table_EnYdn_for_E0Ydn, file = "/Users/lmontoya/Box/SL.ODTR/simulations/EYdopt/results/EnYdn_for_E0Ydn_dep.csv", row.names = F)
+@
+
 
 
 

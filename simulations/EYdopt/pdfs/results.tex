@@ -125,97 +125,126 @@ B_0 (W)= & 0.5[logit^{-1} (1-W_1^2  + 3W_2  + 5W_3^2  - 4.45)+logit^{-1} (-0.5- 
 
 
 
-\subsection{Table Simple Library}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## $table_EnYdn_for_E0Yd0
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.0765    3e-04 0.0062        -
-## Psi_IPTW    -0.0569    8e-04 0.0041    45.7%
-## Psi_IPTW_DR -0.0565    7e-04 0.0038    29.8%
-## Psi_TMLE    -0.0563    7e-04 0.0038    29.4%
-## Psi_CV.TMLE -0.0752    9e-04 0.0066      14%
-## 
-## $table_EnYd0_for_E0Yd0
-##                Bias Variance   MSE Coverage
-## Psi_gcomp   -0.0935    2e-04 9e-03        -
-## Psi_IPTW    -0.0004    8e-04 8e-04    95.8%
-## Psi_IPTW_DR  0.0002    4e-04 4e-04    95.8%
-## Psi_TMLE     0.0004    4e-04 4e-04    95.8%
-## Psi_CV.TMLE  0.0007    5e-04 5e-04    95.3%
-## 
-## $table_EnYdn_for_E0Ydn
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.0035    3e-04 0.0004        -
-## Psi_IPTW     0.0162    8e-04 0.0011    94.9%
-## Psi_IPTW_DR  0.0166    7e-04 0.0009    90.6%
-## Psi_TMLE     0.0167    7e-04 0.0009    90.5%
-## Psi_CV.TMLE  0.0002    9e-04 0.0009    93.9%
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-\subsection{Table Medium Library}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## $table_EnYdn_for_E0Yd0
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.1325    7e-04 0.0182        -
-## Psi_IPTW     0.0300    1e-03 0.0019    79.5%
-## Psi_IPTW_DR  0.0295    8e-04 0.0016    69.9%
-## Psi_TMLE     0.0268    7e-04 0.0014    72.2%
-## Psi_CV.TMLE -0.0310    7e-04 0.0017    70.3%
-## 
-## $table_EnYd0_for_E0Yd0
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.1313    6e-04 0.0179        -
-## Psi_IPTW    -0.0009    7e-04 0.0007    96.3%
-## Psi_IPTW_DR -0.0009    5e-04 0.0005      95%
-## Psi_TMLE    -0.0008    5e-04 0.0005    94.8%
-## Psi_CV.TMLE -0.0004    5e-04 0.0005    94.9%
-## 
-## $table_EnYdn_for_E0Ydn
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.1048    7e-04 0.0117        -
-## Psi_IPTW     0.0577    1e-03 0.0043      48%
-## Psi_IPTW_DR  0.0572    8e-04 0.0041      33%
-## Psi_TMLE     0.0545    7e-04 0.0037    33.9%
-## Psi_CV.TMLE -0.0008    7e-04 0.0007    93.9%
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-\subsection{Table Aggressive Library}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## $table_EnYdn_for_E0Yd0
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.1152   0.0007 0.0140        -
-## Psi_IPTW     0.1131   0.0114 0.0242    38.3%
-## Psi_IPTW_DR  0.0925   0.0096 0.0181    38.9%
-## Psi_TMLE     0.0963   0.0118 0.0211    38.5%
-## Psi_CV.TMLE -0.0281   0.0007 0.0015    71.9%
-## 
-## $table_EnYd0_for_E0Yd0
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.1165    6e-04 0.0142        -
-## Psi_IPTW     0.0007    8e-04 0.0008    95.2%
-## Psi_IPTW_DR -0.0074    5e-04 0.0006    90.5%
-## Psi_TMLE    -0.0067    5e-04 0.0006      91%
-## Psi_CV.TMLE  0.0007    5e-04 0.0005    94.7%
-## 
-## $table_EnYdn_for_E0Ydn
-##                Bias Variance    MSE Coverage
-## Psi_gcomp   -0.0842   0.0007 0.0078        -
-## Psi_IPTW     0.1442   0.0114 0.0322      25%
-## Psi_IPTW_DR  0.1236   0.0096 0.0248    22.6%
-## Psi_TMLE     0.1274   0.0118 0.0280    22.5%
-## Psi_CV.TMLE  0.0013   0.0007 0.0007    93.9%
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
+
+
+\subsection{Table EnYd0 for E0Yd0}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+##                               Library Estimator    Bias Variance    MSE
+## Psi_gcomp                        GLMs   G-comp. -0.0935    2e-04 0.0090
+## Psi_IPTW                         GLMs      IPTW -0.0004    8e-04 0.0008
+## Psi_IPTW_DR                      GLMs   IPTW-DR  0.0002    4e-04 0.0004
+## Psi_TMLE                         GLMs      TMLE  0.0004    4e-04 0.0004
+## Psi_CV.TMLE                      GLMs   CV-TMLE  0.0007    5e-04 0.0005
+## Psi_gcomp1   ML + GLMs not aggressive   G-comp. -0.1313    6e-04 0.0179
+## Psi_IPTW1    ML + GLMs not aggressive      IPTW -0.0009    7e-04 0.0007
+## Psi_IPTW_DR1 ML + GLMs not aggressive   IPTW-DR -0.0009    5e-04 0.0005
+## Psi_TMLE1    ML + GLMs not aggressive      TMLE -0.0008    5e-04 0.0005
+## Psi_CV.TMLE1 ML + GLMs not aggressive   CV-TMLE -0.0004    5e-04 0.0005
+## Psi_gcomp2       ML + GLMs aggressive   G-comp. -0.1165    6e-04 0.0142
+## Psi_IPTW2        ML + GLMs aggressive      IPTW  0.0007    8e-04 0.0008
+## Psi_IPTW_DR2     ML + GLMs aggressive   IPTW-DR -0.0074    5e-04 0.0006
+## Psi_TMLE2        ML + GLMs aggressive      TMLE -0.0067    5e-04 0.0006
+## Psi_CV.TMLE2     ML + GLMs aggressive   CV-TMLE  0.0007    5e-04 0.0005
+##              Coverage
+## Psi_gcomp           -
+## Psi_IPTW        95.8%
+## Psi_IPTW_DR     95.8%
+## Psi_TMLE        95.8%
+## Psi_CV.TMLE     95.3%
+## Psi_gcomp1          -
+## Psi_IPTW1       96.3%
+## Psi_IPTW_DR1      95%
+## Psi_TMLE1       94.8%
+## Psi_CV.TMLE1    94.9%
+## Psi_gcomp2          -
+## Psi_IPTW2       95.2%
+## Psi_IPTW_DR2    90.5%
+## Psi_TMLE2         91%
+## Psi_CV.TMLE2    94.7%
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\subsection{Table EnYdn for E0Yd0}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+##                               Library Estimator    Bias Variance    MSE
+## Psi_gcomp                        GLMs   G-comp. -0.0765   0.0003 0.0062
+## Psi_IPTW                         GLMs      IPTW -0.0569   0.0008 0.0041
+## Psi_IPTW_DR                      GLMs   IPTW-DR -0.0565   0.0007 0.0038
+## Psi_TMLE                         GLMs      TMLE -0.0563   0.0007 0.0038
+## Psi_CV.TMLE                      GLMs   CV-TMLE -0.0752   0.0009 0.0066
+## Psi_gcomp1   ML + GLMs not aggressive   G-comp. -0.1325   0.0007 0.0182
+## Psi_IPTW1    ML + GLMs not aggressive      IPTW  0.0300   0.0010 0.0019
+## Psi_IPTW_DR1 ML + GLMs not aggressive   IPTW-DR  0.0295   0.0008 0.0016
+## Psi_TMLE1    ML + GLMs not aggressive      TMLE  0.0268   0.0007 0.0014
+## Psi_CV.TMLE1 ML + GLMs not aggressive   CV-TMLE -0.0310   0.0007 0.0017
+## Psi_gcomp2       ML + GLMs aggressive   G-comp. -0.1152   0.0007 0.0140
+## Psi_IPTW2        ML + GLMs aggressive      IPTW  0.1131   0.0114 0.0242
+## Psi_IPTW_DR2     ML + GLMs aggressive   IPTW-DR  0.0925   0.0096 0.0181
+## Psi_TMLE2        ML + GLMs aggressive      TMLE  0.0963   0.0118 0.0211
+## Psi_CV.TMLE2     ML + GLMs aggressive   CV-TMLE -0.0281   0.0007 0.0015
+##              Coverage
+## Psi_gcomp           -
+## Psi_IPTW        45.7%
+## Psi_IPTW_DR     29.8%
+## Psi_TMLE        29.4%
+## Psi_CV.TMLE       14%
+## Psi_gcomp1          -
+## Psi_IPTW1       79.5%
+## Psi_IPTW_DR1    69.9%
+## Psi_TMLE1       72.2%
+## Psi_CV.TMLE1    70.3%
+## Psi_gcomp2          -
+## Psi_IPTW2       38.3%
+## Psi_IPTW_DR2    38.9%
+## Psi_TMLE2       38.5%
+## Psi_CV.TMLE2    71.9%
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\subsection{Table EnYdn for E0Ydn}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+##                               Library Estimator    Bias Variance    MSE
+## Psi_gcomp                        GLMs   G-comp. -0.0035   0.0003 0.0004
+## Psi_IPTW                         GLMs      IPTW  0.0162   0.0008 0.0011
+## Psi_IPTW_DR                      GLMs   IPTW-DR  0.0166   0.0007 0.0009
+## Psi_TMLE                         GLMs      TMLE  0.0167   0.0007 0.0009
+## Psi_CV.TMLE                      GLMs   CV-TMLE  0.0002   0.0009 0.0009
+## Psi_gcomp1   ML + GLMs not aggressive   G-comp. -0.1048   0.0007 0.0117
+## Psi_IPTW1    ML + GLMs not aggressive      IPTW  0.0577   0.0010 0.0043
+## Psi_IPTW_DR1 ML + GLMs not aggressive   IPTW-DR  0.0572   0.0008 0.0041
+## Psi_TMLE1    ML + GLMs not aggressive      TMLE  0.0545   0.0007 0.0037
+## Psi_CV.TMLE1 ML + GLMs not aggressive   CV-TMLE -0.0008   0.0007 0.0007
+## Psi_gcomp2       ML + GLMs aggressive   G-comp. -0.0842   0.0007 0.0078
+## Psi_IPTW2        ML + GLMs aggressive      IPTW  0.1442   0.0114 0.0322
+## Psi_IPTW_DR2     ML + GLMs aggressive   IPTW-DR  0.1236   0.0096 0.0248
+## Psi_TMLE2        ML + GLMs aggressive      TMLE  0.1274   0.0118 0.0280
+## Psi_CV.TMLE2     ML + GLMs aggressive   CV-TMLE  0.0013   0.0007 0.0007
+##              Coverage
+## Psi_gcomp           -
+## Psi_IPTW        94.9%
+## Psi_IPTW_DR     90.6%
+## Psi_TMLE        90.5%
+## Psi_CV.TMLE     93.9%
+## Psi_gcomp1          -
+## Psi_IPTW1         48%
+## Psi_IPTW_DR1      33%
+## Psi_TMLE1       33.9%
+## Psi_CV.TMLE1    93.9%
+## Psi_gcomp2          -
+## Psi_IPTW2         25%
+## Psi_IPTW_DR2    22.6%
+## Psi_TMLE2       22.5%
+## Psi_CV.TMLE2    93.9%
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
 
 
 \section{Results}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  2 JUN 2021 10:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  7 JUN 2021 12:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -756,14 +756,17 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 90.
 (/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
+Overfull \hbox (192.01424pt too wide) detected at line 105
+[]
+ []
+
 LaTeX Font Info:    Trying to load font information for TS1+cmss on input line 
 115.
-
 (/usr/local/texlive/2020/texmf-dist/tex/latex/base/ts1cmss.fd
 File: ts1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 
-Package xcolor Warning: Incompatible color definition on input line 139.
+Package xcolor Warning: Incompatible color definition on input line 141.
 
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
@@ -787,10 +790,7 @@ Non-PDF special ignored!
 <special> ps:tx@Dict begin  gsave STV CP T /ps@refangle 0.  def grestore  e...
 {/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
-Package xcolor Warning: Incompatible color definition on input line 169.
-
-
-Package xcolor Warning: Incompatible color definition on input line 199.
+Package xcolor Warning: Incompatible color definition on input line 180.
 
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
@@ -798,17 +798,24 @@ Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 [2]
 
-Package xcolor Warning: Incompatible color definition on input line 232.
+Package xcolor Warning: Incompatible color definition on input line 219.
+
+
+Package xcolor Warning: Incompatible color definition on input line 262.
 
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[3] (./results_dep.aux) ) 
+[3]
+Overfull \vbox (43.36243pt too high) has occurred while \output is active []
+
+
+[4] (./results_dep.aux) ) 
 Here is how much of TeX's memory you used:
  16852 strings out of 479916
  316601 string characters out of 5882710
- 614249 words of memory out of 5000000
+ 617249 words of memory out of 5000000
  33102 multiletter control sequences out of 15000+600000
  546227 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -828,10 +835,10 @@ m/cmsy10.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmsy8.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mtt10.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/cm-super/sfss1
 095.pfb>
-Output written on results_dep.pdf (3 pages, 121934 bytes).
+Output written on results_dep.pdf (4 pages, 123515 bytes).
 PDF statistics:
- 70 PDF objects out of 1000 (max. 8388607)
- 51 compressed objects within 1 object stream
+ 73 PDF objects out of 1000 (max. 8388607)
+ 53 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
