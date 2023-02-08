@@ -68,9 +68,6 @@ odtr(
 
 \item{alphas_to_try}{Convex combination alphas for SL.blip.alpha}
 }
-\value{
-
-}
 \description{
 Given a W, A, Y dataset, this function will compute the estimated ODTR using SuperLearner. If a QAW function is provided that computes the true E[Y|A,W] (e.g., if simulating), the function will also return the true treatment under the optimal rule and other metrics of evaluating the estimated optimal rule's performance.
 }

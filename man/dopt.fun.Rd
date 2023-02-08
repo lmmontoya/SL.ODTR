@@ -11,9 +11,6 @@ dopt.fun(blip, kappa)
 
 \item{kappa}{proportion of people who can be treated in population}
 }
-\value{
-
-}
 \description{
 Compute dopt given blip
 }

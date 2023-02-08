@@ -19,9 +19,6 @@ tmle.d.fun(A, Y, d, Qd, gAW, ab)
 
 \item{ab}{range of Y}
 }
-\value{
-
-}
 \description{
 Compute E[Yd] using TMLE
 }

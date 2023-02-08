@@ -15,9 +15,6 @@ DGP_bin_simple_obs(n, dA = NULL, a = NULL, kappa = NULL)
 
 \item{kappa}{for resource constraints}
 }
-\value{
-
-}
 \description{
 Generate data according to AL bin DGP with influential variable obs g
 }

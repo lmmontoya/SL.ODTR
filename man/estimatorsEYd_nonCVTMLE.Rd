@@ -23,9 +23,6 @@ estimatorsEYd_nonCVTMLE(W, A, Y, d, QAW.reg, g.reg, ab, contrast)
 
 \item{gAW.reg}{g(A|W) regression object}
 }
-\value{
-
-}
 \description{
 Estimators of E[Yd] that are not CV-TMLE
 }

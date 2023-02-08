@@ -23,9 +23,6 @@ SL.blip.HTEepi(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 \item{SL.library}{SL library}
 }
-\value{
-
-}
 \description{
 Standard HTE GLM used in Epi analyses.
 }

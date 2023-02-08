@@ -25,6 +25,7 @@
 
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 
 
@@ -268,9 +269,9 @@ make_plot_fun = function(results, title) {
                                                              "d0" = "True ODTR")) +
     scale_colour_manual(name = "         Statistical Estimand:",
                         values = c("black", "blue", "red"),
-                        labels = c("red" = parse(text = TeX('$\\psi_{d^*_{n,CV}}$')),
-                                   "blue" = parse(text = TeX('$\\psi_{d^*_n}$')),
-                                   "black" = parse(text = TeX('$\\psi_{d^*_0}$'))))+
+                        labels = c("red" = parse(text = TeX('$\\psi_{0,d^*_{n,v}}$')),
+                                   "blue" = parse(text = TeX('$\\psi_{0,d^*_n}$')),
+                                   "black" = parse(text = TeX('$\\psi_{0,d^*_0}$'))))+
     ylim(c(.38,.97)) +
     geom_errorbar(aes(ymin = minQ, ymax = maxQ), width = .4, position = pd) +
     geom_hline(yintercept = mean(E0Ydn[,"E0Ydn.CVTMLE"]), colour = "red")+#, alpha=I(0.1)) +

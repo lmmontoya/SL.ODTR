@@ -32,9 +32,6 @@ performance_EYdopt(
 
 \item{VFolds}{CV Folds}
 }
-\value{
-
-}
 \description{
 performance function for EYdopt
 }

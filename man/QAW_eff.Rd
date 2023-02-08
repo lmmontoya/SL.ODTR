@@ -11,9 +11,6 @@ QAW_eff(A, W)
 
 \item{W}{Data frame of observed baseline covariates}
 }
-\value{
-
-}
 \description{
 Generate QAW according to eff
 }

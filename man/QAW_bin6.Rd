@@ -11,9 +11,6 @@ QAW_bin6(A, W)
 
 \item{W}{Data frame of observed baseline covariates}
 }
-\value{
-
-}
 \description{
 Generate QAW according to AL bin DGP6 treat all optimal
 }

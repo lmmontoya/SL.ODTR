@@ -1,14 +1,14 @@
-﻿,,Conditions for Asymptotic Linearity,,,
-Estimands,Estimators,$Q_n = Q_0$ or $Q_n \overset{p}{\to} Q_0$,$d^*_n \overset{p}{\to} d^*_0$,$Q_n$ smooth,$d_n$ smooth
-$\Psi_{d^*_0}$ if $d_0^*$ known,IPTW,Not required,"N/A, $d_0^*$ known",Not required,"N/A, $d_0^*$ known"
-,IPTW-DR,,,Required,
-,TMLE,,,Required,
-,CV-TMLE,,,Not required,
-$\Psi_{d^*_0}$ if $d_0^*$ unknown,IPTW,Not required,Required,Not required,Required
-,IPTW-DR,,,Required,
-,TMLE,,,Required,
-,CV-TMLE,,,Not required,Not required
-$\Psi_{d^*_n}$,IPTW,Not required,Not required; require $d^*_n \overset{p}{\to} d \in \mathcal{D}$,Not required,Required
-,IPTW-DR,,,Required,
-,TMLE,,,Required,
-"$\Psi_{d^*_{n,CV}}$",CV-TMLE,Not required,,Not required,Not required
+﻿,,Minimum Conditions for Asymptotic Linearity,,,
+Estimands,Estimators,$g_n = g_0$ or $g_n$ is MLE of $g_0$ according to correctly specified parametric model,Fast enough convergence of $d_n^*$ to $d^*_0$,$Q_n$ not overfit,$d_n$ not overfit
+"Value of known rule $\psi_{0,d}$","$\hat{\Psi}_{IPTW,d}$",Satisfied by randomized experiment,"Not required, $d$ known",Not required,"Not required, $d$ known"
+,"$\hat{\Psi}_{IPTW-DR,d}$",,,Required,
+,"$\hat{\Psi}_{TMLE,d}$",,,Required,
+,"$\hat{\Psi}_{CV-TMLE,d}$",,,Not required,
+"Value of true ODTR $\psi_{0,d_0^*}$","$\hat{\Psi}_{IPTW,d^*_n}$",,Required,Not required,Required
+,"$\hat{\Psi}_{IPTW-DR,d^*_n}$",,,Required,
+,"$\hat{\Psi}_{TMLE,d^*_n}$",,,Required,
+,"$\hat{\Psi}_{CV-TMLE,d^*_{n,v}}$",,,Not required,Not required
+"Value of sample-specific ODTR estimate $\psi_{0,d_n^*}$","$\hat{\Psi}_{IPTW,d^*_n}$",,Not required; require $d^*_n \overset{p}{\to} d \in \mathcal{D}$,Not required,Required
+,"$\hat{\Psi}_{IPTW-DR,d^*_n}$",,,Required,
+,"$\hat{\Psi}_{TMLE,d^*_n}$",,,Required,
+"Value of sample-split-specific ODTR estimate $\psi_{0,d_{n,v}^*}$","$\hat{\Psi}_{CV-TMLE,d^*_{n,v}}$",,Not required; require $d^*_n \overset{p}{\to} d \in \mathcal{D}$,Not required,Not required

@@ -15,9 +15,6 @@ DGP_eff_obs(n, dA = NULL, a = NULL, kappa = NULL)
 
 \item{kappa}{for resource constraints}
 }
-\value{
-
-}
 \description{
 Generate data according to eff with obs g
 }

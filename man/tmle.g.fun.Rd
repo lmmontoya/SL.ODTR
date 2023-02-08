@@ -27,9 +27,6 @@ tmle.g.fun(A, Y, gstarAW, gstar1W, gstar0W, gAW, QAW, Q1W, Q0W, ab)
 
 \item{ab}{range of Y}
 }
-\value{
-
-}
 \description{
 Compute E[Yg] using TMLE
 }

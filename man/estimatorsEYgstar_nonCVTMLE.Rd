@@ -35,9 +35,6 @@ estimatorsEYgstar_nonCVTMLE(
 
 \item{gAW.reg}{g(A|W) regression object}
 }
-\value{
-
-}
 \description{
 Estimators of E[Ygstar] that are not CV-TMLE
 }

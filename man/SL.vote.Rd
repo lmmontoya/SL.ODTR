@@ -53,9 +53,6 @@ SL.vote(
 
 \item{grid}{size}
 }
-\value{
-
-}
 \description{
 SuperLearner for ODTR that returns estimated txts under rule
 }

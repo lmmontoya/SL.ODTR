@@ -11,9 +11,6 @@ predict_odtr(odtr_obj, newV)
 
 \item{newV}{new covariates to predict from}
 }
-\value{
-
-}
 \description{
 Function that, given an odtr object, predicts the treatment under the ODTR for a new V.
 }
