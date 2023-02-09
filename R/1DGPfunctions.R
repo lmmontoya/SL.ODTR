@@ -352,13 +352,15 @@ QAW_bin_complex = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
+#' @param kappa kappa
+#' @param QAW.fun QAW.fun
 #'
 #' @return data for DGP_bin_complex
 #'
 #' @export
 #'
 
-DGP_bin_complex = function(n, dA = NULL, a = NULL){
+DGP_bin_complex = function(n, dA = NULL, a = NULL, kappa = NULL, QAW.fun = QAW_bin_complex){
 
   # Covariates
   W1 = rnorm(n)
@@ -381,13 +383,16 @@ DGP_bin_complex = function(n, dA = NULL, a = NULL){
   # Treatment under rule
   if (!is.null(dA) & !is.null(a)){
     stop("Can only have dA or a")
-  } else if (is.null(a) & is.null(dA)) {
+  } else if (is.null(a) & is.null(dA) & is.null(kappa)) {
     A_star = A
-  } else if (!is.null(a)){
+  } else if (!is.null(a) & is.null(dA) & is.null(kappa)){
     A_star = a
-  } else if (dA == "simple dynamic") {
+  } else if (!is.null(kappa) & is.null(dA) & is.null(a)) {
+      rc.out = dopt.fun(blip = blip, kappa = kappa)
+      A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
+  } else if (!is.null(dA) & is.null(a) & is.null(kappa) & dA == "simple dynamic") {
     A_star = ifelse(W2 > 0, 1, 0)
-  } else if (dA == "ODTR"){
+  } else if (!is.null(dA) & is.null(a) & is.null(kappa) & dA == "ODTR"){
     A_star = as.numeric(blip > 0)
   }
 
@@ -401,6 +406,97 @@ DGP_bin_complex = function(n, dA = NULL, a = NULL){
 
 }
 
+
+
+
+#' @name QAW_AL_RC
+#' @aliases QAW_AL_RC
+#' @title Simulate with AL bin DGP RC
+#' @description Generate QAW according to AL bin DGP RC
+#'
+#' @param W Data frame of observed baseline covariates
+#' @param A Vector of treatment
+#'
+#' @return conditional mean of Y given A and W
+#'
+#' @export
+#'
+###############################################
+### AL DGP binary outcome2 (RC) #####################
+###############################################
+# QAW
+QAW_AL_RC = function(A, W) {
+
+  Wtilde = W+5/6
+  QAW = rep(NA, times = length(A))
+  QAW[A == 1 & W <= 1/3 & W >= -1/2] = 0
+  QAW[A == 1 & W < -1/2] = (-Wtilde^3 + Wtilde^2 - (1/3)*Wtilde + 1/27)[A == 1 & W < -1/2]
+  QAW[A == 1 & W > 1/3] = (-W^3 + W^2 - (1/3)*W + 1/27)[A == 1 & W > 1/3]
+  QAW[is.na(QAW)] = -(3/10)
+
+  QAW = QAW + (6/10)
+
+  return(QAW)
+
+}
+
+
+
+#' @name DGP_AL_RC
+#' @aliases DGP_AL_RC
+#' @title Simulate with AL bin DGP RC
+#' @description Generate data according to AL bin DGP RC
+#'
+#' @param n n
+#' @param dA rule type
+#' @param a static txt
+#' @param kappa kappa
+#' @param QAW.fun QAW.fun
+#'
+#' @return data for DGP_AL_RC
+#'
+#' @export
+#'
+
+DGP_AL_RC = function(n, dA = NULL, a = NULL, kappa = NULL, QAW.fun = QAW_AL_RC){
+
+  # Covariates
+  W = runif(n)
+  A = rbinom(n, size = 1, prob = 0.5)
+
+  u = runif(n)
+  Y = rbinom(n, 1, p = QAW_AL_RC(A,W))
+
+  # Blip function
+  QAW1 = QAW_AL_RC(A = 1, W = W)
+  QAW0 = QAW_AL_RC(A = 0, W = W)
+  blip = QAW1 - QAW0
+
+  # Treatment under rule
+  if (!is.null(dA) & !is.null(a)){
+    stop("Can only have dA or a")
+  } else if (is.null(a) & is.null(dA) & is.null(kappa)) {
+    A_star = A
+  } else if (!is.null(a) & is.null(dA) & is.null(kappa)){
+    A_star = a
+  } else if (!is.null(kappa) & is.null(dA) & is.null(a)) {
+    rc.out = dopt.fun(blip = blip, kappa = kappa)
+    A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
+  } else if (!is.null(dA) & is.null(a) & is.null(kappa) & dA == "simple dynamic") {
+    A_star = ifelse(W2 > 0, 1, 0)
+  } else if (!is.null(dA) & is.null(a) & is.null(kappa) & dA == "ODTR"){
+    A_star = as.numeric(blip > 0)
+  }
+
+  # Outcome
+  Y_star = rbinom(n, 1, p = QAW_AL_RC(A_star,W))
+
+  # Data and target parameter
+  O = data.frame(W, A, A_star, Y, Y_star)
+
+  return(O)
+
+}
 
 
 #' @name DGP_bin_complex_obs
@@ -1118,7 +1214,8 @@ DGP.rc.contW = function(n, a = NULL, kappa = NULL, QAW.fun){
 
   W = rnorm(n)
   A = rbinom(n, 1, 0.5)
-  Y = rnorm(n, mean = QAW.fun(A, W))
+  U = rnorm(n)
+  Y = U + QAW.fun(A, W)
   blip = QAW.fun(A = 1, W = W) - QAW.fun(A = 0,W = W)
 
   # Treatment under rule
@@ -1127,11 +1224,11 @@ DGP.rc.contW = function(n, a = NULL, kappa = NULL, QAW.fun){
   } else if (is.null(a) & !is.null(kappa)) {
     rc.out = dopt.fun(blip = blip, kappa = kappa)
     A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
-    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    Y_star = U + QAW.fun(A_star, W)
     toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
   } else if (!is.null(a) & is.null(kappa)) {
     A_star = a
-    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    Y_star = U + QAW.fun(A_star, W)
     toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star)
   }
 
@@ -1163,7 +1260,8 @@ DGP.rc.discreteW = function(n, a = NULL, kappa = NULL, QAW.fun){
 
   W = rbinom(n, 1, 0.5)
   A = rbinom(n, 1, 0.5)
-  Y = rnorm(n, mean = QAW.fun(A, W))
+  U = rnorm(n)
+  Y = U + QAW.fun(A, W)
   blip = QAW.fun(A = 1, W = W) - QAW.fun(A = 0,W = W)
 
   # Treatment under rule
@@ -1172,11 +1270,11 @@ DGP.rc.discreteW = function(n, a = NULL, kappa = NULL, QAW.fun){
   } else if (is.null(a) & !is.null(kappa)) {
     rc.out = dopt.fun(blip = blip, kappa = kappa)
     A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
-    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    Y_star = U + QAW.fun(A_star, W)
     toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
   } else if (!is.null(a) & is.null(kappa)) {
     A_star = a
-    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    Y_star = U + QAW.fun(A_star, W)
     toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star)
   }
 

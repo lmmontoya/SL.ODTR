@@ -150,7 +150,7 @@ performance_EYgstar = function(x, n, risk.type, cs_to_try, alphas_to_try, QAW.SL
 performance_EYgRC = function(x, n, kappa, DGP_fun, QAW.fun, QAW.SL.library, blip.SL.library, grid.size, contrast = NULL){
 
   ObsData = DGP_fun(n, QAW.fun = QAW.fun)
-  W = subset(ObsData, select = -c(A, Y))
+  W = data.frame(ObsData[,grep("W", colnames(ObsData))])
   V = W
   A = ObsData$A
   Y = ObsData$Y
@@ -160,8 +160,8 @@ performance_EYgRC = function(x, n, kappa, DGP_fun, QAW.fun, QAW.SL.library, blip
   grid.size = 100
   risk.type = "CV TMLE"
 
-  results = EYgRC(V=V, W=W, A=A, Y=Y, g.SL.library = g.SL.library, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library, kappa = kappa,
-                  metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW.fun = QAW.fun, contrast = contrast)
+  results = suppressMessages(EYgRC(V=V, W=W, A=A, Y=Y, g.SL.library = g.SL.library, QAW.SL.library = QAW.SL.library, blip.SL.library=blip.SL.library, kappa = kappa,
+                  metalearner = metalearner, risk.type=risk.type, grid.size=grid.size, VFolds=VFolds, QAW.fun = QAW.fun, contrast = contrast))
   print(x)
   return(results)
 }
