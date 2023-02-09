@@ -17,7 +17,6 @@ EYdopt(
   risk.type = "CV TMLE",
   grid.size = 100,
   VFolds = 10,
-  kappa = NULL,
   QAW.fun = NULL,
   family = NULL,
   contrast = NULL
@@ -47,8 +46,6 @@ EYdopt(
 \item{grid.size}{Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients}
 
 \item{VFolds}{Number of folds to use in cross-validation. Default is 10.}
-
-\item{kappa}{For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.}
 
 \item{QAW.fun}{True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.}
 

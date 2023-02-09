@@ -4,7 +4,7 @@
 \alias{DGP_bin_complex_min}
 \title{Simulate with AL bin DGP}
 \usage{
-DGP_bin_complex_min(n, dA = NULL, a = NULL, kappa = NULL)
+DGP_bin_complex_min(n, dA = NULL, a = NULL)
 }
 \arguments{
 \item{n}{n}
@@ -12,8 +12,9 @@ DGP_bin_complex_min(n, dA = NULL, a = NULL, kappa = NULL)
 \item{dA}{rule type}
 
 \item{a}{static txt}
-
-\item{kappa}{for resource constraints}
+}
+\value{
+data for DGP_bin_complex_min
 }
 \description{
 Generate data according to AL bin DGP - want lower outcomes

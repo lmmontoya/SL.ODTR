@@ -18,7 +18,7 @@
 #' @param family family for outcome
 #' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
 #'
-#' @return
+#' @return SL blip object
 #'
 #' @export
 #'
@@ -46,7 +46,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
   CV.risk_fun = function(i) {
     train_ind = folds != i
     test_ind = folds == i
-    g.reg.train = SuperLearner(Y = A[train_ind], X = W[train_ind,], SL.library = g.reg$SL.library$library$predAlgorithm, family = "binomial")
+    g.reg.train = SuperLearner(Y = A[train_ind], X = W[train_ind, , drop = F], SL.library = g.reg$SL.library$library$predAlgorithm, family = "binomial")
     g1W.pred = predict(g.reg.train, data.frame(W), type = "response")$pred
     gAW.pred = ifelse(A == 1, g1W.pred, 1 - g1W.pred)
     QAW.reg.train = SuperLearner(Y = Y[train_ind], X = data.frame(A, W)[train_ind,], SL.library = QAW.reg$SL.library$library$predAlgorithm, family = family)
@@ -54,13 +54,13 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
     Q1W.pred = predict(QAW.reg.train, newdata = data.frame(W, A = 1), type = "response")$pred
     Q0W.pred = predict(QAW.reg.train, newdata = data.frame(W, A = 0), type = "response")$pred
     D = (2*A-1)/gAW.pred * (Y-QAW.pred) + Q1W.pred - Q0W.pred
-    SL.init.train = getpreds.blip.fun(Y = D[train_ind], X = V[train_ind,],
+    SL.init.train = getpreds.blip.fun(Y = D[train_ind], X = V[train_ind,,drop = F],
                                       SL.library = blip.SL.library,
-                                      newX = V[test_ind,], family = 'gaussian')
+                                      newX = V[test_ind,,drop = F], family = 'gaussian')
     candidate.blips.test = SL.init.train$library.predict
     candidates.blipsXalpha.test = candidate.blips.test%*%t(simplex.grid)
     dopt.combos.test = apply(candidates.blipsXalpha.test > 0, 2, as.numeric)
-    Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
+    Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,,drop = F], A = dopt.combos.test[,x]), type = "response")$pred)
     if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
       tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.d.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW.pred[test_ind], ab = ab))
       risk.combos.test = -unlist(lapply(tmle.obj.test, function(x) x$psi))
@@ -89,7 +89,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
     SL.out$coef = simplex.grid[which.min(CV.risk),]
   }
 
-  g1W.pred = predict(g.reg, W, type = "response")$pred
+  g1W.pred = predict(g.reg, data.frame(W), type = "response")$pred
   gAW.pred = ifelse(A == 1, g1W.pred, 1 - g1W.pred)
   QAW.pred = predict(QAW.reg, newdata = data.frame(W, A = A), type = "response")$pred
   Q1W.pred = predict(QAW.reg, newdata = data.frame(W, A = 1), type = "response")$pred
@@ -142,7 +142,7 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
 #' @param family family for outcome
 #' @param discrete.SL whether discrete SL (choose one algorithm) or continuous SL (weighted combination of algorithms)
 #'
-#' @return
+#' @return SL vote object
 #'
 #' @export
 #'
@@ -172,17 +172,17 @@ SL.vote = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
   CV.risk_fun = function(i){
     train_ind = folds != i
     test_ind = folds == i
-    g.reg.train = SuperLearner(Y = A[train_ind], X = W[train_ind,], SL.library = g.reg$SL.library$library$predAlgorithm, family = "binomial")
+    g.reg.train = SuperLearner(Y = A[train_ind], X = W[train_ind,,drop=F], SL.library = g.reg$SL.library$library$predAlgorithm, family = "binomial")
     g1W.pred = predict(g.reg.train, data.frame(W), type = "response")$pred
     gAW.pred = ifelse(A == 1, g1W.pred, 1 - g1W.pred)
     QAW.reg.train = SuperLearner(Y = Y[train_ind], X = data.frame(A, W)[train_ind,], SL.library = QAW.reg$SL.library$library$predAlgorithm, family = family)
     candidate.dopts.test = getpreds.dopt.fun(dopt.SL.library = dopt.SL.library, blip.SL.library = blip.SL.library,
-                                             W = W[train_ind,], V = V[train_ind,], A = A[train_ind], Y = Y[train_ind],
+                                             W = W[train_ind,,drop=F], V = V[train_ind,,drop=F], A = A[train_ind], Y = Y[train_ind],
                                              newV = V[test_ind,], QAW.reg = QAW.reg.train, g.reg = g.reg.train,
                                              family = family)
     candidates.doptsXalpha.test = as.matrix(candidate.dopts.test$library.predict)%*%t(simplex.grid)
     dopt.combos.test = apply(candidates.doptsXalpha.test > .5, 2, as.numeric)
-    Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,], A = dopt.combos.test[,x]), type = "response")$pred)
+    Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,,drop=F], A = dopt.combos.test[,x]), type = "response")$pred)
     tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.d.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW.pred[test_ind], ab = ab))
     risk.combos.test = -unlist(lapply(tmle.obj.test, function(x) x$psi))
     risk.var.combos.test = unlist(lapply(tmle.obj.test, function(x) var(x$IC)))
@@ -259,7 +259,7 @@ SL.vote = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
 #'
 #' @import dplyr
 #'
-#' @return
+#' @return SL blip c object
 #'
 #' @export
 #'
@@ -393,7 +393,7 @@ SL.blip.c = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
 #' @param alphas_to_try constants to try for blip
 #'
 #' @import dplyr
-#' @return
+#' @return SL blip alpha object
 #'
 #' @export
 #'

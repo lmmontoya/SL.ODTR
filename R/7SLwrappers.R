@@ -12,7 +12,7 @@
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.QAW.HTEepi
 #'
 #' @export
 #'
@@ -52,7 +52,7 @@ SL.QAW.HTEepi = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.blip.HTEepi
 #'
 #' @export
 #'
@@ -92,7 +92,7 @@ SL.blip.HTEepi = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.blip.W1
 #'
 #' @export
 #'
@@ -129,7 +129,7 @@ SL.blip.W1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.blip.W2
 #'
 #' @export
 #'
@@ -165,7 +165,7 @@ SL.blip.W2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.blip.W3
 #'
 #' @export
 #'
@@ -201,7 +201,7 @@ SL.blip.W3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.blip.W4
 #'
 #' @export
 #'
@@ -237,7 +237,7 @@ SL.blip.W4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.blip.W5
 #'
 #' @export
 #'
@@ -277,7 +277,7 @@ SL.blip.W5 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.QAW.W1
 #'
 #' @export
 #'
@@ -314,7 +314,7 @@ SL.QAW.W1 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.QAW.W2
 #'
 #' @export
 #'
@@ -350,7 +350,7 @@ SL.QAW.W2 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.QAW.W3
 #'
 #' @export
 #'
@@ -386,7 +386,7 @@ SL.QAW.W3 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.QAW.W4
 #'
 #' @export
 #'
@@ -425,7 +425,7 @@ SL.QAW.W4 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.QAW.W5
 #'
 #' @export
 #'
@@ -461,7 +461,7 @@ SL.QAW.W5 = function (Y, X, newX, family, obsWeights, model = TRUE, ...) {
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.QAW.correct_cont
 #'
 #' @export
 #'
@@ -495,7 +495,7 @@ SL.QAW.correct_cont = function (Y, X, newX, family, obsWeights, model = TRUE, ..
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.blip.correct_cont
 #'
 #' @export
 #'
@@ -532,7 +532,7 @@ SL.blip.correct_cont = function (Y, X, newX, family, obsWeights, model = TRUE, .
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.HAL1
 #'
 #' @export
 #'
@@ -589,7 +589,7 @@ SL.HAL1 = function (Y, X, newX = NULL, max_degree = 1, fit_type = c("glmnet", "l
 #' @param model model
 #' @param ... other
 #'
-#' @return
+#' @return SL.HAL2
 #'
 #' @export
 #'
@@ -649,7 +649,7 @@ SL.HAL2 = function (Y, X, newX = NULL, max_degree = 2, fit_type = c("glmnet", "l
 #' @param obsWeights obsWeights
 #' @param bins bins
 #'
-#' @return
+#' @return SL.hal9001
 #'
 #' @export
 #'

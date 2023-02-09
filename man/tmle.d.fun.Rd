@@ -19,6 +19,9 @@ tmle.d.fun(A, Y, d, Qd, gAW, ab)
 
 \item{ab}{range of Y}
 }
+\value{
+psi and IC of tmle d
+}
 \description{
 Compute E[Yd] using TMLE
 }

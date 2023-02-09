@@ -4,12 +4,15 @@
 \alias{dopt.fun}
 \title{dopt function}
 \usage{
-dopt.fun(blip, kappa)
+dopt.fun(blip, kappa = NULL)
 }
 \arguments{
 \item{blip}{predicted blip}
 
 \item{kappa}{proportion of people who can be treated in population}
+}
+\value{
+dopt or rc (stochastic) dopt
 }
 \description{
 Compute dopt given blip

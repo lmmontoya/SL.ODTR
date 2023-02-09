@@ -53,6 +53,9 @@ SL.blip.alpha(
 
 \item{grid}{size}
 }
+\value{
+SL blip alpha object
+}
 \description{
 SuperLearner for ODTR that returns estimated blips. Note this minimizes EYd!
 }

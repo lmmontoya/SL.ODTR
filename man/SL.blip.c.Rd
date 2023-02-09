@@ -53,6 +53,9 @@ SL.blip.c(
 
 \item{grid}{size}
 }
+\value{
+SL blip c object
+}
 \description{
 SuperLearner for ODTR that returns estimated blips. Note this minimizes EYd!
 }

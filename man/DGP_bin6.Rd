@@ -4,7 +4,7 @@
 \alias{DGP_bin6}
 \title{Simulate with AL bin DGP6 with treat all optimal}
 \usage{
-DGP_bin6(n, dA = NULL, a = NULL, kappa = NULL)
+DGP_bin6(n, dA = NULL, a = NULL)
 }
 \arguments{
 \item{n}{n}
@@ -12,8 +12,9 @@ DGP_bin6(n, dA = NULL, a = NULL, kappa = NULL)
 \item{dA}{rule type}
 
 \item{a}{static txt}
-
-\item{kappa}{for resource constraints}
+}
+\value{
+data for DGP_bin6
 }
 \description{
 Generate data according to AL bin DGP6 with treat all optimal

@@ -38,6 +38,9 @@ getpreds.blip.fun(
 
 \item{env}{env}
 }
+\value{
+predicted blips
+}
 \description{
 Get library predictions (what would be library.predict) for blip. Code mostly from SuperLearner.
 }

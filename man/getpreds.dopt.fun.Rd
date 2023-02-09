@@ -38,6 +38,9 @@ getpreds.dopt.fun(
 
 \item{gform}{gform}
 }
+\value{
+predicted dopt
+}
 \description{
 Candidate dopt predictionsfor direct search algorithms
 }

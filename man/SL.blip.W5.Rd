@@ -23,6 +23,9 @@ SL.blip.W5(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 \item{SL.library}{SL library}
 }
+\value{
+SL.blip.W5
+}
 \description{
 Blip W5.
 }

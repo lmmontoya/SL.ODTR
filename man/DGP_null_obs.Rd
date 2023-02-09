@@ -4,7 +4,7 @@
 \alias{DGP_null_obs}
 \title{Simulate with null}
 \usage{
-DGP_null_obs(n, dA = NULL, a = NULL, kappa = NULL)
+DGP_null_obs(n, dA = NULL, a = NULL)
 }
 \arguments{
 \item{n}{n}
@@ -12,8 +12,9 @@ DGP_null_obs(n, dA = NULL, a = NULL, kappa = NULL)
 \item{dA}{rule type}
 
 \item{a}{static txt}
-
-\item{kappa}{for resource constraints}
+}
+\value{
+data for DGP_null_obs
 }
 \description{
 Generate data according to null with obs g

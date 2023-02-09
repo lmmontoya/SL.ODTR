@@ -50,6 +50,9 @@ SL.blip(
 
 \item{grid}{size}
 }
+\value{
+SL blip object
+}
 \description{
 SuperLearner for ODTR that returns estimated blips.
 }

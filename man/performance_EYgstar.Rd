@@ -27,6 +27,9 @@ performance_EYgstar(
 
 \item{VFolds}{CV Folds}
 }
+\value{
+performance metrics EYgstar
+}
 \description{
 performance function for EYgstar
 }

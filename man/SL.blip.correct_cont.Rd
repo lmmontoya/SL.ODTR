@@ -23,6 +23,9 @@ SL.blip.correct_cont(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 \item{SL.library}{SL library}
 }
+\value{
+SL.blip.correct_cont
+}
 \description{
 blip for cont. dist
 }

@@ -8,15 +8,15 @@
 #' @param A Vector of treatment
 #' @param Y Vector of treatment (continuous or binary)
 #' @param V Data frame of observed baseline covariates (subset of W) used to design the ODTR
-#' @param rule.output Either "d" for deterministic ODTR or "g" for stochastic ODTR. Default is "d."
+#' @param rule.output Either "d" for deterministic ODTR or "g" for stochastic ODTR or "rc" for (stochastic) resource-constrained ODTR. Default is "d."
 #' @param g.SL.library Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).
 #' @param QAW.SL.library SuperLearner library for estimating the outcome regression
 #' @param blip.SL.library SuperLearner library for estimating blip
 #' @param dopt.SL.library SuperLearner library for estimating dopt directly. Default is \code{NULL}. Could be "DonV", "Qlearn", "OWL", "EARL", "optclass", "RWL", "treatall", "treatnone". Could also be "all" for all algorithms.
 #' @param risk.type Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"
 #' @param grid.size Grid size for \code{\link[hitandrun:simplex.sample]{simplex.sample()}} function to create possible combinations of coefficients
-#' @param metalearner Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.
-#' @param kappa For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
+#' @param metalearner Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in resource constraints (kappa).
+#' @param kappa For ODTR with resource constraints, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.
 #' @param QAW.fun True outcome regression E[Y|A,W]. Useful for simulations. Default is \code{NULL}.
 #' @param VFolds Number of folds to use in cross-validation. Default is 10.
 #' @param family Either "gaussian" or "binomial". Default is null, if outcome is between 0 and 1 it will change to binomial, otherwise gaussian
@@ -25,7 +25,7 @@
 #' @param cs_to_try Constants for SL.blip.c
 #' @param alphas_to_try Convex combination alphas for SL.blip.alpha
 #'
-#' @return
+#' @return odtr object
 #'
 #' @export
 #'
@@ -92,7 +92,7 @@ odtr = function(W, A, Y, V, rule.output = "d", g.SL.library, QAW.SL.library, bli
       # get estimate of optimal rule based on blip estimate
       blip = SL.fit$SL.predict
       # get dopt
-      dopt = dopt.fun(blip = blip, kappa = kappa)
+      dopt = dopt.fun(blip = blip, kappa = NULL)
     }
 
 
@@ -128,8 +128,34 @@ odtr = function(W, A, Y, V, rule.output = "d", g.SL.library, QAW.SL.library, bli
                       rule.output = "d")
     }
 
+  } else if (rule.output == "rc") {
 
 
+    if (discrete.SL) {
+      SL.type = "blip"
+    } else {
+      SL.type = metalearner
+    }
+
+    if (SL.type == "vote") {
+      stop("Can't use vote-based metalearner with optimal RC")
+    } else if (SL.type == "blip") {
+      # get estimate of blip based on risk type (CV TMLE, MSE, CV TMLE CI)
+      SL.fit = SL.blip(V = V, W = W, A = A, Y = Y, ab = ab, QAW.reg = QAW.reg, g.reg = g.reg,
+                       blip.SL.library = blip.SL.library, risk.type = risk.type,
+                       grid.size = grid.size, VFolds = VFolds, newV = newV, family = family,
+                       discrete.SL = discrete.SL)
+      # get estimate of optimal rule based on blip estimate
+      blip = SL.fit$SL.predict
+      # get prob d is 1, dn, and tauP
+      rc.out = dopt.fun(blip = blip, kappa = kappa)
+    }
+
+      toreturn = list(rc.out = rc.out,
+                      QAW.reg = QAW.reg,
+                      g.reg = g.reg,
+                      SL.fit = SL.fit,
+                      rule.output = "rc")
 
 
   } else if (rule.output == "g") {
@@ -238,7 +264,7 @@ odtr = function(W, A, Y, V, rule.output = "d", g.SL.library, QAW.SL.library, bli
 #' @param odtr_obj ODTR object from odtr function
 #' @param newV new covariates to predict from
 #'
-#' @return
+#' @return predict odtr object
 #'
 #' @export
 #'

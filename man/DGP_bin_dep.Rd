@@ -4,7 +4,7 @@
 \alias{DGP_bin_dep}
 \title{Simulate with AL bin DGP with influential variable}
 \usage{
-DGP_bin_dep(n, dA = NULL, a = NULL, kappa = NULL)
+DGP_bin_dep(n, dA = NULL, a = NULL)
 }
 \arguments{
 \item{n}{n}
@@ -12,8 +12,9 @@ DGP_bin_dep(n, dA = NULL, a = NULL, kappa = NULL)
 \item{dA}{rule type}
 
 \item{a}{static txt}
-
-\item{kappa}{for resource constraints}
+}
+\value{
+data for DGP_bin_dep
 }
 \description{
 Generate data according to AL bin DGP with influential variable

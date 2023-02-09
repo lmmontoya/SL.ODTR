@@ -6,7 +6,7 @@
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -34,14 +34,13 @@ QAW_null = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_null
 #'
 #' @export
 #'
 
-DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_null = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -78,14 +77,6 @@ DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip <= 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -108,14 +99,13 @@ DGP_null = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_null_obs
 #'
 #' @export
 #'
 
-DGP_null_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_null_obs = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -152,14 +142,6 @@ DGP_null_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip <= 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -182,7 +164,7 @@ DGP_null_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -209,14 +191,13 @@ QAW_eff = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_eff
 #'
 #' @export
 #'
 
-DGP_eff = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_eff = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -253,15 +234,7 @@ DGP_eff = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip <= 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
-  }
+    }
 
   # Outcome
   Y_star = as.numeric(u<QAW_eff(A_star,W))
@@ -283,14 +256,13 @@ DGP_eff = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_eff_obs
 #'
 #' @export
 #'
 
-DGP_eff_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_eff_obs = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -327,14 +299,6 @@ DGP_eff_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip <= 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -357,7 +321,7 @@ DGP_eff_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -388,14 +352,13 @@ QAW_bin_complex = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin_complex
 #'
 #' @export
 #'
 
-DGP_bin_complex = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_complex = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -426,14 +389,6 @@ DGP_bin_complex = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip > 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -456,14 +411,13 @@ DGP_bin_complex = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin_complex_obs
 #'
 #' @export
 #'
 
-DGP_bin_complex_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_complex_obs = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -495,14 +449,6 @@ DGP_bin_complex_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip > 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -526,14 +472,13 @@ DGP_bin_complex_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin_complex_min
 #'
 #' @export
 #'
 
-DGP_bin_complex_min = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_complex_min = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -564,14 +509,6 @@ DGP_bin_complex_min = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip < 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -595,7 +532,7 @@ DGP_bin_complex_min = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -622,14 +559,13 @@ QAW_bin_dep = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin_dep
 #'
 #' @export
 #'
 
-DGP_bin_dep = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_dep = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -660,14 +596,6 @@ DGP_bin_dep = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip > 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -690,7 +618,7 @@ DGP_bin_dep = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -721,14 +649,13 @@ QAW_bin_simple = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin_simple
 #'
 #' @export
 #'
 
-DGP_bin_simple = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_simple = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -759,14 +686,6 @@ DGP_bin_simple = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip > 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -788,14 +707,13 @@ DGP_bin_simple = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin_simple_obs
 #'
 #' @export
 #'
 
-DGP_bin_simple_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_simple_obs = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -827,14 +745,6 @@ DGP_bin_simple_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip > 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -869,7 +779,7 @@ DGP_bin_simple_obs = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -894,13 +804,12 @@ QAW_bin6 = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin6
 #'
 #' @export
 #'
-DGP_bin6 = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin6 = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -937,14 +846,6 @@ DGP_bin6 = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip > 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -982,7 +883,7 @@ DGP_bin6 = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -1013,14 +914,13 @@ QAW_bin_complex_3tx = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_bin_complex_3tx
 #'
 #' @export
 #'
 
-DGP_bin_complex_3tx = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_bin_complex_3tx = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 = rnorm(n)
@@ -1049,14 +949,6 @@ DGP_bin_complex_3tx = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = apply(QAW, 1, which.max)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -1083,7 +975,7 @@ DGP_bin_complex_3tx = function(n, dA = NULL, a = NULL, kappa = NULL){
 #' @param W Data frame of observed baseline covariates
 #' @param A Vector of treatment
 #'
-#' @return
+#' @return conditional mean of Y given A and W
 #'
 #' @export
 #'
@@ -1106,14 +998,13 @@ QAW_cont = function(A, W) {
 #' @param n n
 #' @param dA rule type
 #' @param a static txt
-#' @param kappa for resource constraints
 #'
-#' @return
+#' @return data for DGP_cont
 #'
 #' @export
 #'
 #'
-DGP_cont = function(n, dA = NULL, a = NULL, kappa = NULL){
+DGP_cont = function(n, dA = NULL, a = NULL){
 
   # Covariates
   W1 <- runif(n,-4,4)
@@ -1143,14 +1034,6 @@ DGP_cont = function(n, dA = NULL, a = NULL, kappa = NULL){
     A_star = ifelse(W2 > 0, 1, 0)
   } else if (dA == "ODTR"){
     A_star = as.numeric(blip > 0)
-  } else if (dA == "ODTR-RC" & is.null(kappa)){
-    stop("If you have dA as ODTR-RC you must specify a kappa")
-  } else if (dA == "ODTR-RC"){
-    tau = seq(from = min(blip), to = max(blip), length.out = 500) # let tau vary from min blip to max blip
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    nu = min(tau[which(surv <= kappa)]) #the biggest tau such that the survival prob is <= kappa
-    tauP = max(c(nu, 0)) # max between nu and 0
-    A_star = as.numeric(blip > tauP)
   }
 
   # Outcome
@@ -1163,3 +1046,140 @@ DGP_cont = function(n, dA = NULL, a = NULL, kappa = NULL){
 
 }
 
+
+
+
+
+
+
+
+
+#' @name QAW.rc.allpos
+#' @aliases QAW.rc.allpos
+#' @title QAW RC all pos
+#' @description Generate QAW according to DGP RC - all positive
+#'
+#' @param W Data frame of observed baseline covariates
+#' @param A Vector of treatment
+#'
+#' @return conditional mean of Y given A and W
+#'
+#' @export
+#'
+QAW.rc.allpos = function(A, W) {A + W + A*(W+10)}
+
+#' @name QAW.rc.somepos
+#' @aliases QAW.rc.somepos
+#' @title QAW RC some pos
+#' @description Generate QAW according to DGP RC - some positive
+#'
+#' @param W Data frame of observed baseline covariates
+#' @param A Vector of treatment
+#'
+#' @return conditional mean of Y given A and W
+#'
+#' @export
+#'
+QAW.rc.somepos = function(A, W) {A + W + (-2)*A*W}
+
+#' @name QAW.rc.nopos
+#' @aliases QAW.rc.nopos
+#' @title QAW RC no pos
+#' @description Generate QAW according to DGP RC - no positive
+#'
+#' @param W Data frame of observed baseline covariates
+#' @param A Vector of treatment
+#'
+#' @return conditional mean of Y given A and W
+#'
+#' @export
+#'
+QAW.rc.nopos = function(A, W) {A - W + A*(W-10)}
+
+
+
+
+#' @name DGP.rc.contW
+#' @aliases DGP.rc.contW
+#' @title DGP.rc.contW
+#' @description Generate data according to DGP RC - cont W
+#'
+#' @param n n
+#' @param a static txt
+#' @param kappa prop can be treated in population
+#' @param QAW.fun QAW function
+#'
+#' @return data for DGP.rc.contW
+#'
+#' @export
+#'
+#'
+DGP.rc.contW = function(n, a = NULL, kappa = NULL, QAW.fun){
+
+  W = rnorm(n)
+  A = rbinom(n, 1, 0.5)
+  Y = rnorm(n, mean = QAW.fun(A, W))
+  blip = QAW.fun(A = 1, W = W) - QAW.fun(A = 0,W = W)
+
+  # Treatment under rule
+  if (is.null(kappa) & is.null(a)){
+    toreturn = data.frame(W = W, A = A, Y = Y)
+  } else if (is.null(a) & !is.null(kappa)) {
+    rc.out = dopt.fun(blip = blip, kappa = kappa)
+    A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
+    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
+  } else if (!is.null(a) & is.null(kappa)) {
+    A_star = a
+    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star)
+  }
+
+  return(toreturn)
+
+}
+
+
+
+
+
+
+#' @name DGP.rc.discreteW
+#' @aliases DGP.rc.discreteW
+#' @title DGP.rc.discreteW
+#' @description Generate data according to DGP RC - discrete W
+#'
+#' @param n n
+#' @param a static txt
+#' @param kappa prop can be treated in population
+#' @param QAW.fun QAW function
+#'
+#' @return data for DGP.rc.discreteW
+#'
+#' @export
+#'
+#'
+DGP.rc.discreteW = function(n, a = NULL, kappa = NULL, QAW.fun){
+
+  W = rbinom(n, 1, 0.5)
+  A = rbinom(n, 1, 0.5)
+  Y = rnorm(n, mean = QAW.fun(A, W))
+  blip = QAW.fun(A = 1, W = W) - QAW.fun(A = 0,W = W)
+
+  # Treatment under rule
+  if (is.null(kappa) & is.null(a)){
+    toreturn = data.frame(W = W, A = A, Y = Y)
+  } else if (is.null(a) & !is.null(kappa)) {
+    rc.out = dopt.fun(blip = blip, kappa = kappa)
+    A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
+    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
+  } else if (!is.null(a) & is.null(kappa)) {
+    A_star = a
+    Y_star = rnorm(n, mean = QAW.fun(A_star, W))
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star)
+  }
+
+  return(toreturn)
+
+}

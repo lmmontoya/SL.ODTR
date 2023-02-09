@@ -34,6 +34,9 @@ SL.HAL1(
 
 \item{model}{model}
 }
+\value{
+SL.HAL1
+}
 \description{
 HAL1
 }

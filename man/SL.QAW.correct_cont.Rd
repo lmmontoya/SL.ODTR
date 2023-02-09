@@ -23,6 +23,9 @@ SL.QAW.correct_cont(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 \item{SL.library}{SL library}
 }
+\value{
+SL.QAW.correct_cont
+}
 \description{
 QAW for cont. dist
 }

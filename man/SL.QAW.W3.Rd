@@ -23,6 +23,9 @@ SL.QAW.W3(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 \item{SL.library}{SL library}
 }
+\value{
+SL.QAW.W3
+}
 \description{
 QAW for W3.
 }

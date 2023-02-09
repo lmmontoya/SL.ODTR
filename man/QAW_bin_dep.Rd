@@ -11,6 +11,9 @@ QAW_bin_dep(A, W)
 
 \item{W}{Data frame of observed baseline covariates}
 }
+\value{
+conditional mean of Y given A and W
+}
 \description{
 Generate QAW according to AL bin dep W
 }

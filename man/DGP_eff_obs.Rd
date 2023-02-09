@@ -4,7 +4,7 @@
 \alias{DGP_eff_obs}
 \title{Simulate with eff}
 \usage{
-DGP_eff_obs(n, dA = NULL, a = NULL, kappa = NULL)
+DGP_eff_obs(n, dA = NULL, a = NULL)
 }
 \arguments{
 \item{n}{n}
@@ -12,8 +12,9 @@ DGP_eff_obs(n, dA = NULL, a = NULL, kappa = NULL)
 \item{dA}{rule type}
 
 \item{a}{static txt}
-
-\item{kappa}{for resource constraints}
+}
+\value{
+data for DGP_eff_obs
 }
 \description{
 Generate data according to eff with obs g

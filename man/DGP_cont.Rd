@@ -4,7 +4,7 @@
 \alias{DGP_cont}
 \title{Simulate with DB DGP}
 \usage{
-DGP_cont(n, dA = NULL, a = NULL, kappa = NULL)
+DGP_cont(n, dA = NULL, a = NULL)
 }
 \arguments{
 \item{n}{n}
@@ -12,8 +12,9 @@ DGP_cont(n, dA = NULL, a = NULL, kappa = NULL)
 \item{dA}{rule type}
 
 \item{a}{static txt}
-
-\item{kappa}{for resource constraints}
+}
+\value{
+data for DGP_cont
 }
 \description{
 Generate data according to DB DGP

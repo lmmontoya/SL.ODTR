@@ -14,7 +14,7 @@
 #' @param obsWeights obsWeights
 #' @param env env
 #'
-#' @return
+#' @return predicted blips
 #'
 #' @export
 #'
@@ -207,7 +207,7 @@ getpreds.blip.fun <- function(Y, X, newX = NULL, family = gaussian(), SL.library
 #' @param Q0W outcome regression A = 0
 #' @param ab range of Y
 #'
-#' @return
+#' @return psi and IC of tmle g
 #'
 #' @export
 #'
@@ -248,6 +248,63 @@ tmle.g.fun = function(A, Y, gstarAW, gstar1W, gstar0W, gAW, QAW, Q1W, Q0W, ab){
 
 
 
+#' @name tmle.rc.fun
+#' @aliases tmle.rc.fun
+#' @title TMLE function
+#' @description Compute E[YgRC] using TMLE
+#'
+#' @param A txt
+#' @param Y outcome
+#' @param gstarAW Prd.is.A
+#' @param gstar1W Prd.is.1
+#' @param gstar0W Prd.is.0
+#' @param gAW probability observed txt predictions
+#' @param QAW outcome regression A = A
+#' @param Q1W outcome regression A = 1
+#' @param Q0W outcome regression A = 0
+#' @param ab range of Y
+#' @param tauP tauP
+#' @param kappa kappa
+#'
+#' @return psi and IC of tmle rc
+#'
+#' @export
+#'
+tmle.rc.fun = function(A, Y, gstarAW, gstar1W, gstar0W, gAW, QAW, Q1W, Q0W, ab, tauP, kappa){
+
+  HdW = gstarAW/gAW
+
+  Y01 = (Y-min(ab))/diff(ab)
+  QAW01 = (QAW-min(ab))/diff(ab)
+  QAW01[QAW01>0.999] <- 0.999
+  QAW01[QAW01<0.001] <- 0.001
+
+  Q1W01 = (Q1W-min(ab))/diff(ab)
+  Q1W01[Q1W01>0.999] <- 0.999
+  Q1W01[Q1W01<0.001] <- 0.001
+
+  Q0W01 = (Q0W-min(ab))/diff(ab)
+  Q0W01[Q0W01>0.999] <- 0.999
+  Q0W01[Q0W01<0.001] <- 0.001
+
+  qlogisQAW01 = qlogis(QAW01)
+  qlogisQ1W01 = qlogis(Q1W01)
+  qlogisQ0W01 = qlogis(Q0W01)
+
+  logitUpdateHAW <- glm(Y01 ~ offset(qlogisQAW01), weights = HdW, family='quasibinomial')
+  epsilon = logitUpdateHAW$coef # get intercept coefficient
+
+  QAW.star<- plogis(qlogisQAW01+ epsilon)*diff(ab) + min(ab)
+  Q1W.star<- plogis(qlogisQ1W01+ epsilon)*diff(ab) + min(ab)
+  Q0W.star<- plogis(qlogisQ0W01+ epsilon)*diff(ab) + min(ab)
+
+  psi = mean(Q1W.star*gstar1W + Q0W.star*gstar0W)
+  IC = HdW*(Y - QAW.star) + (Q1W.star*gstar1W + Q0W.star*gstar0W) - psi - tauP*((1*gstar1W + 0*gstar0W) - kappa)
+  return(list(psi = psi, IC = IC))
+
+}
+
+
 
 #' @name tmle.d.fun
 #' @aliases tmle.d.fun
@@ -261,7 +318,7 @@ tmle.g.fun = function(A, Y, gstarAW, gstar1W, gstar0W, gAW, QAW, Q1W, Q0W, ab){
 #' @param gAW probability observed txt predictions
 #' @param ab range of Y
 #'
-#' @return
+#' @return psi and IC of tmle d
 #'
 #' @export
 #'
@@ -295,38 +352,28 @@ tmle.d.fun = function(A, Y, d, Qd, gAW, ab){
 #' @param blip predicted blip
 #' @param kappa proportion of people who can be treated in population
 #'
-#' @return
+#' @return dopt or rc (stochastic) dopt
 #'
 #' @export
 #'
 # dopt.fun
 # function that takes as input blip and kappa
 # outputs dopt. If kappa is present, computes dopt with resource
-# constraints according to kappa = proportion of poeple who can get treatment.
-dopt.fun = function(blip, kappa){
+# constraints according to kappa = proportion of people who can get treatment.
+dopt.fun = function(blip, kappa = NULL){
   n = length(blip)
   if (is.null(kappa)) {
-    dopt = as.numeric(blip > 0)
+    toreturn = as.numeric(blip > 0)
   } else {
-    # estimate S0
-    tau = seq(from = min(blip)-1, to = max(blip)+1, length.out = 500) # let tau vary from min(blip) to max(blip)
-    surv = sapply(tau, function(x) mean(blip > x)) #probability that the blip is greater than some varying tau
-    # estimate nu
-    nu = ifelse(sum(surv<=kappa)==0, 0, min(tau[which(surv <= kappa)])) #the biggest tau such that the survival prob is <= kappa
-    # estimate tau0
-    tauP = max(c(nu, 0)) # max between nu and 0
-    # estimate dopt with RC
-    if (sum(!(blip == tauP & tauP > 0)) == 0) {
-      prob.d.is.1 = dopt = rep(NA, n)
-      for (i in 1:n) {
-        prob.d.is.1[i] = kappa - mean(blip > tauP)
-        dopt[i] = rbinom(n = 1, size = 1, prob = prob.d.is.1[i])
-      }
-    } else {
-      dopt = as.numeric(blip > tauP)
-    }
+    midtaus = data.frame(x = sort(unique(blip))[1:length(unique(blip))-1], y = sort(unique(blip))[2:length(unique(blip))])
+    tau = sort(unique(c(min(blip), blip, rowMeans(midtaus), max(blip)))) # let tau vary from min(blip) to max(blip)
+    surv = sapply(tau, function(x) mean(blip > x)) # proportion of blips greater than each tau
+    eta = min(tau[which(surv <= kappa)]) #the smallest tau such that the survival prob is <= kappa
+    tauP = max(c(eta, 0)) # max between nu and 0
+    Prd.is.1 = ifelse(blip == tauP & tauP > 0, round((kappa - mean(blip > tauP)), 10)/round(mean(blip == tauP), 10), as.numeric(blip > tauP))
+    toreturn = list(Prd.is.1 = Prd.is.1, tauP = tauP)
   }
-  return(dopt)
+  return(toreturn)
 }
 
 
@@ -347,7 +394,7 @@ dopt.fun = function(blip, kappa){
 #' @param ab range of Y
 #' @param contrast contrast
 #'
-#' @return
+#' @return psi and CI non CVTMLE estimates
 #'
 #' @export
 #'
@@ -486,7 +533,7 @@ estimatorsEYd_nonCVTMLE = function(W, A, Y, d, QAW.reg, g.reg, ab, contrast) {
 #' @param ab range of Y
 #' @param contrast contrast
 #'
-#' @return
+#' @return psi and CI for non CVTMLE estimates
 #'
 #' @export
 #'
@@ -533,7 +580,85 @@ estimatorsEYgstar_nonCVTMLE = function(W, A, Y, gstar1W, gstar0W, QAW.reg, g.reg
       return(toreturn_contrast)
     }
 
-    toreturn = cbind(EYd = toreturn, apply(contrast, 2, contrast_fun))
+    toreturn = cbind(EYgstar = toreturn, apply(contrast, 2, contrast_fun))
+
+
+  }
+
+  return(toreturn)
+
+}
+
+
+
+#' @name estimatorsEYgRC_nonCVTMLE
+#' @aliases estimatorsEYgRC_nonCVTMLE
+#' @title Estimators of E[YgRC] that are not CV-TMLE
+#' @description Estimators of E[YgRC] that are not CV-TMLE
+#'
+#' @param W covariates
+#' @param A treatment
+#' @param Y outcome
+#' @param rc.out rc.out
+#' @param kappa kappa
+#' @param QAW.reg Q(A,W) regression object
+#' @param gAW.reg g(A|W) regression object
+#' @param ab range of Y
+#' @param contrast contrast
+#'
+#' @return psi and CI for non CVTMLE estimates
+#'
+#' @export
+#'
+estimatorsEYgRC_nonCVTMLE = function(W, A, Y, rc.out, kappa, QAW.reg, g.reg, ab, contrast) {
+
+  n = length(Y)
+  family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian")
+
+  Q1W = predict(QAW.reg, newdata = data.frame(W, A = 1), type = "response")$pred
+  Q0W = predict(QAW.reg, newdata = data.frame(W, A = 0), type = "response")$pred
+  QAW = predict(QAW.reg, newdata = data.frame(W, A = A), type = "response")$pred
+  g1W = predict(g.reg, data.frame(W), type = "response")$pred
+  gAW = ifelse(A == 1, g1W, 1 - g1W)
+  Prd.is.1 = rc.out$Prd.is.1
+  Prd.is.0 = 1 - Prd.is.1
+  Prd.is.A = ifelse(A == 1, Prd.is.1, Prd.is.0)
+
+  # TMLE handcoded
+  tmle_objects.rc = tmle.rc.fun(A = A, Y = Y,
+                                gstarAW = Prd.is.A, gstar1W = Prd.is.1, gstar0W = Prd.is.0,
+                                gAW = gAW,
+                                QAW = QAW, Q1W = Q1W, Q0W = Q0W,
+                                ab = ab,
+                                tauP = rc.out$tauP,
+                                kappa = kappa)
+
+  Psi_TMLE = tmle_objects.rc$psi
+  varIC_TMLE = var(tmle_objects.rc$IC)/n
+  CI_TMLE = Psi_TMLE + c(-1,1)*qnorm(0.975)*sqrt(as.numeric(varIC_TMLE))
+
+  toreturn = data.frame(EYgRC = c(Psi_TMLE = Psi_TMLE,
+                                  CI_TMLE = CI_TMLE))
+
+  if (!is.null(contrast)) {
+
+    # contrast_i = contrast[,i]
+    contrast_fun = function(contrast_i) {
+
+      Qcontrast_i = predict(QAW.reg, newdata = data.frame(W, A = contrast_i), type = "response")$pred
+
+      # TMLE handcoded
+      tmle_objects.contrast_i = tmle.d.fun(A = A, d = contrast_i, Y = Y, Qd = Qcontrast_i, gAW = gAW, ab = ab)
+      Psi_TMLE_i = Psi_TMLE - tmle_objects.contrast_i$psi
+      varIC_TMLE_i = var(tmle_objects.rc$IC - tmle_objects.contrast_i$IC)/n
+      CI_TMLE_i = Psi_TMLE_i + c(-1,1)*qnorm(0.975)*sqrt(as.numeric(varIC_TMLE_i))
+
+      toreturn_contrast = c(Psi_TMLE = Psi_TMLE_i,
+                            CI_TMLE = CI_TMLE_i)
+      return(toreturn_contrast)
+    }
+
+    toreturn = cbind(EYgRC = toreturn, apply(contrast, 2, contrast_fun))
 
 
   }
@@ -560,7 +685,7 @@ estimatorsEYgstar_nonCVTMLE = function(W, A, Y, gstar1W, gstar0W, QAW.reg, g.reg
 #' @param g.reg regression object for g(A|W)
 #' @param family family
 #'
-#' @return
+#' @return predicted dopt
 #'
 #' @export
 #'

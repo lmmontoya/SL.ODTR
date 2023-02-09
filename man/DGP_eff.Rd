@@ -4,7 +4,7 @@
 \alias{DGP_eff}
 \title{Simulate with eff}
 \usage{
-DGP_eff(n, dA = NULL, a = NULL, kappa = NULL)
+DGP_eff(n, dA = NULL, a = NULL)
 }
 \arguments{
 \item{n}{n}
@@ -12,8 +12,9 @@ DGP_eff(n, dA = NULL, a = NULL, kappa = NULL)
 \item{dA}{rule type}
 
 \item{a}{static txt}
-
-\item{kappa}{for resource constraints}
+}
+\value{
+data for DGP_eff
 }
 \description{
 Generate data according to eff

@@ -39,6 +39,9 @@ SL.hal9001(
 
 \item{bins}{bins}
 }
+\value{
+SL.hal9001
+}
 \description{
 HAL with binning
 }

@@ -36,7 +36,7 @@ odtr(
 
 \item{V}{Data frame of observed baseline covariates (subset of W) used to design the ODTR}
 
-\item{rule.output}{Either "d" for deterministic ODTR or "g" for stochastic ODTR. Default is "d."}
+\item{rule.output}{Either "d" for deterministic ODTR or "g" for stochastic ODTR or "rc" for (stochastic) resource-constrained ODTR. Default is "d."}
 
 \item{g.SL.library}{Character vector for logistic regression modeling the treatment mechanism. Default is 1 (i.e., using mean of A as estimate of g1W).}
 
@@ -48,9 +48,9 @@ odtr(
 
 \item{risk.type}{Risk type in order to pick optimal combination of coefficients to combine the candidate algorithms. For (1) MSE risk use "CV MSE"; for (2) -E[Ydopt] risk use "CV IPCWDR" (for -E[Ydopt] estimated using double-robust IPTW) or "CV TMLE" (for -E[Ydopt] estimates using TMLE); (3) For the upper bound of the CI of -E[Ydopt] use "CV TMLE CI"}
 
-\item{metalearner}{Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in kappa.}
+\item{metalearner}{Discrete ("discrete"), blip-based ("blip"), vote-based SuperLearner ("vote"). Note that if metalearner is "vote" then cannot put in resource constraints (kappa).}
 
-\item{kappa}{For ODTR with resource constriants, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.}
+\item{kappa}{For ODTR with resource constraints, kappa is the proportion of people in the population who are allowed to receive treatment. Default is \code{NULL}.}
 
 \item{newV}{New V for prediction}
 
@@ -67,6 +67,9 @@ odtr(
 \item{cs_to_try}{Constants for SL.blip.c}
 
 \item{alphas_to_try}{Convex combination alphas for SL.blip.alpha}
+}
+\value{
+odtr object
 }
 \description{
 Given a W, A, Y dataset, this function will compute the estimated ODTR using SuperLearner. If a QAW function is provided that computes the true E[Y|A,W] (e.g., if simulating), the function will also return the true treatment under the optimal rule and other metrics of evaluating the estimated optimal rule's performance.

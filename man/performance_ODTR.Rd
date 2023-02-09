@@ -35,6 +35,9 @@ performance_ODTR(
 
 \item{metalearner}{SL type}
 }
+\value{
+performance metrics odtr
+}
 \description{
 performance function for the ODTR
 }

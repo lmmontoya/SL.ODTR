@@ -23,6 +23,9 @@ SL.QAW.HTEepi(Y, X, newX, family, obsWeights, model = TRUE, ...)
 
 \item{SL.library}{SL library}
 }
+\value{
+SL.QAW.HTEepi
+}
 \description{
 Standard HTE GLM used in Epi analyses.
 }
