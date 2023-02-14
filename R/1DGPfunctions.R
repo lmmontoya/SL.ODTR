@@ -1225,11 +1225,11 @@ DGP.rc.contW = function(n, a = NULL, kappa = NULL, QAW.fun){
     rc.out = dopt.fun(blip = blip, kappa = kappa)
     A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
     Y_star = U + QAW.fun(A_star, W)
-    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y_star = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
   } else if (!is.null(a) & is.null(kappa)) {
     A_star = a
     Y_star = U + QAW.fun(A_star, W)
-    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star)
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y_star = Y_star)
   }
 
   return(toreturn)
@@ -1271,11 +1271,11 @@ DGP.rc.discreteW = function(n, a = NULL, kappa = NULL, QAW.fun){
     rc.out = dopt.fun(blip = blip, kappa = kappa)
     A_star = rbinom(n, 1, prob = rc.out$Prd.is.1)
     Y_star = U + QAW.fun(A_star, W)
-    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y_star = Y_star, Prd.is.1 = rc.out$Prd.is.1, tauP = rc.out$tauP)
   } else if (!is.null(a) & is.null(kappa)) {
     A_star = a
     Y_star = U + QAW.fun(A_star, W)
-    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y = Y_star)
+    toreturn = data.frame(W = W, A = A, Y = Y, A_star = A_star, Y_star = Y_star)
   }
 
   return(toreturn)

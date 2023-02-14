@@ -1,0 +1,55 @@
+\documentclass[11pt]{article}
+%\usepackage[showframe]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{lscape,verbatim,mathrsfs}
+\usepackage{graphics,amsmath,pstricks}
+\usepackage{amssymb,enumerate}
+\usepackage{amsbsy,amsmath,amsthm,amsfonts, amssymb}
+\usepackage{graphicx, rotate, array}
+\usepackage{geometry,multirow}
+\usepackage{color,soul}
+\usepackage{float}
+%\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+%\renewcommand{\baselinestretch}{1.9}
+\usepackage{tcolorbox}
+\renewcommand{\familydefault}{cmss}
+\textwidth=6.65in \textheight=9.7in
+\parskip=.025in
+\parindent=0in
+\oddsidemargin=-0.1in \evensidemargin=-.1in \headheight=-.6in
+\footskip=0.5in \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+
+
+<<echo = F, message = F,warning = F>>=
+library(dplyr)
+library(ggplot2)
+library(xtable)
+library(ggpubr)
+library(SL.ODTR)
+library('latex2exp')
+@
+
+<<echo = F>>=
+load("simulations/EYgRC/results_EYgRC_correct.RData")
+@
+
+<<echo = F>>=
+results = EYgRC_allpos_discreteW_k0.1
+DGP.rc.discreteW(10e4, kappa = .1, QAW.fun = QAW.rc.allpos)
+@
+
+
+
+
+
+
+
+\end{document}
