@@ -39,11 +39,59 @@ library('latex2exp')
 
 <<echo = F>>=
 load("simulations/EYgRC/results_EYgRC_correct.RData")
+load("simulations/EYgRC/results_EYgRC_incorrect.RData")
 @
 
 <<echo = F>>=
-results = EYgRC_allpos_discreteW_k0.1
-DGP.rc.discreteW(10e4, kappa = .1, QAW.fun = QAW.rc.allpos)
+#results = EYgRC_allpos_discreteW_k0.1
+#DGP_fun = DGP.rc.discreteW
+#QAW_fun = QAW.rc.allpos
+#desc = "All pos discrete W"
+
+res_fun = function(results, DGP_fun, QAW_fun, kappa, desc) {
+
+  sample_data = DGP_fun(10000, QAW.fun = QAW_fun)
+  W = sample_data[,grep("W", colnames(sample_data))]
+  hist(QAW_fun(1,W) - QAW_fun(0,W), main = desc, xlab = "blip")
+  truth = mean(DGP_fun(10e4, kappa = kappa, QAW.fun = QAW_fun)$Y_star)
+  psis = unlist(lapply(1:length(results), function(x) results[[x]]$EnYgRC["Psi_CV.TMLE",]))
+  CIs = do.call('rbind', (lapply(1:length(results), function(x) c(CI1 = results[[x]]$EnYgRC["CI_CV.TMLE1",], CI2 = results[[x]]$EnYgRC["CI_CV.TMLE2",]))))
+  bias = mean(psis) - truth
+  var = var(psis)
+  cov = mean(CIs[,"CI1"] < truth & truth < CIs[,"CI2"])
+  da = unlist(lapply(1:length(results), function(x) results[[x]]$E0YgRC["E0YgRC.CVTMLE",]))
+  cov_da = mean(CIs[,"CI1"] < da & da < CIs[,"CI2"])
+  mean_regret = mean(unlist(lapply(1:length(results), function(x) results[[x]]$SL.info["regret"])))
+  tauP0 = unlist(lapply(1:length(results), function(x) results[[x]]$SL.info["true_tauP"]))
+  tauPn = unlist(lapply(1:length(results), function(x) results[[x]]$SL.info["est_tauP"]))
+  mean_tauP0vtauPn = mean(tauP0 - tauPn)
+  toreturn = data.frame(desc = desc, bias = bias, var = var, cov = cov, cov_da = cov_da, regret = mean_regret, tauP0vtauPn = mean_tauP0vtauPn)
+  return(toreturn)
+
+}
+
+@
+
+
+<<echo = F, fig.height=4, fig.width=4>>=
+res_fun(results = EYgRC_allpos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.allpos, desc = "All pos discrete W k = 0.1")
+res_fun(results = EYgRC_allpos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.allpos, desc = "All pos discrete W k = 0.9")
+res_fun(results = EYgRC_somepos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.1")
+res_fun(results = EYgRC_somepos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.9")
+res_fun(results = EYgRC_nopos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.1")
+#res_fun(results = EYgRC_nopos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.9")
+
+res_fun(results = EYgRC_allpos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.1")
+res_fun(results = EYgRC_allpos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.9")
+res_fun(results = EYgRC_somepos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.1")
+res_fun(results = EYgRC_somepos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.9")
+res_fun(results = EYgRC_nopos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.1")
+#res_fun(results = EYgRC_nopos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.9")
+
+res_fun(results = EYgRC_AL1_k0.1, kappa = 0.1, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.1")
+res_fun(results = EYgRC_AL1_k0.9, kappa = 0.9, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.9")
+#res_fun(results = EYgRC_AL2_k0.1, kappa = 0.1, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.1")
+#res_fun(results = EYgRC_AL2_k0.9, kappa = 0.9, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.9")
 @
 
 

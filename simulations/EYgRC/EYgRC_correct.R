@@ -164,7 +164,7 @@ print("EYgRC_nopos_contW_k0.9 done")
 
 save(EYgRC_allpos_discreteW_k0.1, EYgRC_allpos_discreteW_k0.9,
      EYgRC_somepos_discreteW_k0.1, EYgRC_somepos_discreteW_k0.9,
-     EYgRC_nopos_discreteW_k0.1, EYgRC_nopos_discreteW_k0.1,
+     EYgRC_nopos_discreteW_k0.1, EYgRC_nopos_discreteW_k0.9,
      EYgRC_allpos_contW_k0.1, EYgRC_allpos_contW_k0.9,
      EYgRC_somepos_contW_k0.1, EYgRC_somepos_contW_k0.9,
-     EYgRC_nopos_contW_k0.1, EYgRC_nopos_contW_k0.1, file = "results_EYgRC_correct.RData")
+     EYgRC_nopos_contW_k0.1, EYgRC_nopos_contW_k0.9, file = "results_EYgRC_correct.RData")
