@@ -425,8 +425,8 @@ EYgstar = function(W, V, A, Y, g.SL.library, QAW.SL.library, blip.SL.library,
 
 
 
-EYgRC = function(W, V, A, Y, g.SL.library, QAW.SL.library, blip.SL.library,
-                 metalearner, risk.type, kappa,
+EYgRC = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.library,
+                 metalearner = "blip", risk.type = "CV TMLE", kappa,
                  grid.size = 100, VFolds = 10, QAW.fun = NULL,
                  family = NULL, contrast = NULL){
 

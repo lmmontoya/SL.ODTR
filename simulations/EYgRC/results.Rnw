@@ -24,7 +24,7 @@
 
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+%\SweaveOpts{concordance=TRUE}
 
 
 
@@ -35,6 +35,7 @@ library(xtable)
 library(ggpubr)
 library(SL.ODTR)
 library('latex2exp')
+knitr::opts_knit$set(root.dir = '../../')
 @
 
 <<echo = F>>=
@@ -49,7 +50,6 @@ load("simulations/EYgRC/results_EYgRC_incorrect.RData")
 #desc = "All pos discrete W"
 
 res_fun = function(results, DGP_fun, QAW_fun, kappa, desc) {
-
   sample_data = DGP_fun(10000, QAW.fun = QAW_fun)
   W = sample_data[,grep("W", colnames(sample_data))]
   hist(QAW_fun(1,W) - QAW_fun(0,W), main = desc, xlab = "blip")
