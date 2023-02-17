@@ -79,14 +79,14 @@ res_fun(results = EYgRC_allpos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.dis
 res_fun(results = EYgRC_somepos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.1")
 res_fun(results = EYgRC_somepos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.9")
 res_fun(results = EYgRC_nopos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.1")
-#res_fun(results = EYgRC_nopos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.9")
+res_fun(results = EYgRC_nopos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.9")
 
 res_fun(results = EYgRC_allpos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.1")
 res_fun(results = EYgRC_allpos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.9")
 res_fun(results = EYgRC_somepos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.1")
 res_fun(results = EYgRC_somepos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.9")
 res_fun(results = EYgRC_nopos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.1")
-#res_fun(results = EYgRC_nopos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.9")
+res_fun(results = EYgRC_nopos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.9")
 
 res_fun(results = EYgRC_AL1_k0.1, kappa = 0.1, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.1")
 res_fun(results = EYgRC_AL1_k0.9, kappa = 0.9, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.9")

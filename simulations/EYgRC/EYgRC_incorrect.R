@@ -36,7 +36,12 @@ EYgRC_AL1_k0.9 = mclapply(1:r, function(x) performance_EYgRC(x = x,
 print("EYgRC_AL1_k0.9 done")
 
 
+
 #### AL2 0.1 ####
+QAW.SL.library = c("SL.QAW.HTEepi",
+                   "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet", "SL.svm", "SL.rpart")
+blip.SL.library = c("SL.blip.HTEepi",
+                    "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet", "SL.svm", "SL.rpart")
 EYgRC_AL2_k0.1 = mclapply(1:r, function(x) performance_EYgRC(x = x,
                                                              kappa = 0.1,
                                                              n = n,

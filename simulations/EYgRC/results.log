@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  14 FEB 2023 10:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  15 FEB 2023 09:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -823,13 +823,7 @@ Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 <figure/unnamed-chunk-4-11.pdf, id=90, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-11.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-11.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-11.pdf  used on input line 167.
-
-(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-<figure/unnamed-chunk-4-12.pdf, id=91, 289.08pt x 289.08pt>
-File: figure/unnamed-chunk-4-12.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-4-12.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-12.pdf  used on input line 173.
+Package pdftex.def Info: figure/unnamed-chunk-4-11.pdf  used on input line 169.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
@@ -837,25 +831,49 @@ Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
 [7 <./figure/unnamed-chunk-4-10.pdf> <./figure/unnamed-chunk-4-11.pdf>]
+<figure/unnamed-chunk-4-12.pdf, id=107, 289.08pt x 289.08pt>
+File: figure/unnamed-chunk-4-12.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-12.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-12.pdf  used on input line 175.
+
+(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
+<figure/unnamed-chunk-4-13.pdf, id=108, 289.08pt x 289.08pt>
+File: figure/unnamed-chunk-4-13.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-13.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-13.pdf  used on input line 181.
+
+(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
+
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[8 <./figure/unnamed-chunk-4-12.pdf>] (./results.aux) ) 
+[8 <./figure/unnamed-chunk-4-12.pdf> <./figure/unnamed-chunk-4-13.pdf>]
+<figure/unnamed-chunk-4-14.pdf, id=124, 289.08pt x 289.08pt>
+File: figure/unnamed-chunk-4-14.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-14.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-14.pdf  used on input line 187.
+
+(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
+
+Overfull \vbox (43.36243pt too high) has occurred while \output is active []
+
+
+[9 <./figure/unnamed-chunk-4-14.pdf>] (./results.aux) ) 
 Here is how much of TeX's memory you used:
- 16753 strings out of 479916
- 316296 string characters out of 5882710
- 598690 words of memory out of 5000000
- 33036 multiletter control sequences out of 15000+600000
+ 16767 strings out of 479916
+ 316766 string characters out of 5882710
+ 599690 words of memory out of 5000000
+ 33048 multiletter control sequences out of 15000+600000
  536174 words of font info for 33 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  71i,5n,88p,455b,214s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2020
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2020/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on results.pdf (8 pages, 72141 bytes).
+Output written on results.pdf (9 pages, 80326 bytes).
 PDF statistics:
- 126 PDF objects out of 1000 (max. 8388607)
- 89 compressed objects within 1 object stream
+ 144 PDF objects out of 1000 (max. 8388607)
+ 101 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 83 words of extra memory for PDF output out of 10000 (max. 10000000)
 

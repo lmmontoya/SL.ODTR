@@ -365,7 +365,8 @@ dopt.fun = function(blip, kappa = NULL){
   if (is.null(kappa)) {
     toreturn = as.numeric(blip > 0)
   } else {
-    midtaus = data.frame(x = sort(unique(blip))[1:length(unique(blip))-1], y = sort(unique(blip))[2:length(unique(blip))])
+    poss_blip = c(blip, min(blip) - 1, max(blip) + 1)
+    midtaus = data.frame(x = sort(unique(poss_blip))[1:length(unique(poss_blip))-1], y = sort(unique(poss_blip))[2:length(unique(poss_blip))])
     tau = sort(unique(c(min(blip), blip, rowMeans(midtaus), max(blip)))) # let tau vary from min(blip) to max(blip)
     surv = sapply(tau, function(x) mean(blip > x)) # proportion of blips greater than each tau
     eta = min(tau[which(surv <= kappa)]) #the smallest tau such that the survival prob is <= kappa
