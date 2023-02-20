@@ -90,8 +90,8 @@ res_fun(results = EYgRC_nopos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, Q
 
 res_fun(results = EYgRC_AL1_k0.1, kappa = 0.1, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.1")
 res_fun(results = EYgRC_AL1_k0.9, kappa = 0.9, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.9")
-#res_fun(results = EYgRC_AL2_k0.1, kappa = 0.1, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.1")
-#res_fun(results = EYgRC_AL2_k0.9, kappa = 0.9, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.9")
+res_fun(results = EYgRC_AL2_k0.1, kappa = 0.1, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.1")
+res_fun(results = EYgRC_AL2_k0.9, kappa = 0.9, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.9")
 @
 
 

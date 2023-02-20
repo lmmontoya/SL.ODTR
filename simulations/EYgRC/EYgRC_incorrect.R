@@ -15,6 +15,8 @@ QAW.SL.library = c("SL.QAW.W1", "SL.QAW.W2", "SL.QAW.W3", "SL.QAW.W4",
 blip.SL.library = c("SL.blip.W1", "SL.blip.W2", "SL.blip.W3", "SL.blip.W4",
                     "SL.glm", "SL.mean", "SL.glm.interaction", "SL.earth", "SL.nnet", "SL.svm", "SL.rpart")
 
+contrast = data.frame(EY0 = rep(0, n),
+                      EY1 = rep(1, n))
 
 #### AL1 0.1 ####
 EYgRC_AL1_k0.1 = mclapply(1:r, function(x) performance_EYgRC(x = x,
@@ -23,7 +25,8 @@ EYgRC_AL1_k0.1 = mclapply(1:r, function(x) performance_EYgRC(x = x,
                                                              DGP_fun = DGP_bin_complex,
                                                              QAW.fun = QAW_bin_complex,
                                                              QAW.SL.library = QAW.SL.library,
-                                                             blip.SL.library = blip.SL.library), mc.cores = detectCores())
+                                                             blip.SL.library = blip.SL.library,
+                                                             contrast = contrast), mc.cores = detectCores())
 print("EYgRC_AL1_k0.1 done")
 
 EYgRC_AL1_k0.9 = mclapply(1:r, function(x) performance_EYgRC(x = x,
@@ -32,7 +35,8 @@ EYgRC_AL1_k0.9 = mclapply(1:r, function(x) performance_EYgRC(x = x,
                                                              DGP_fun = DGP_bin_complex,
                                                              QAW.fun = QAW_bin_complex,
                                                              QAW.SL.library = QAW.SL.library,
-                                                             blip.SL.library = blip.SL.library), mc.cores = detectCores())
+                                                             blip.SL.library = blip.SL.library,
+                                                             contrast = contrast), mc.cores = detectCores())
 print("EYgRC_AL1_k0.9 done")
 
 
@@ -48,7 +52,8 @@ EYgRC_AL2_k0.1 = mclapply(1:r, function(x) performance_EYgRC(x = x,
                                                              DGP_fun = DGP_AL_RC,
                                                              QAW.fun = QAW_AL_RC,
                                                              QAW.SL.library = QAW.SL.library,
-                                                             blip.SL.library = blip.SL.library), mc.cores = detectCores())
+                                                             blip.SL.library = blip.SL.library,
+                                                             contrast = contrast), mc.cores = detectCores())
 print("EYgRC_AL2_k0.1 done")
 
 EYgRC_AL2_k0.9 = mclapply(1:r, function(x) performance_EYgRC(x = x,
@@ -57,7 +62,8 @@ EYgRC_AL2_k0.9 = mclapply(1:r, function(x) performance_EYgRC(x = x,
                                                              DGP_fun = DGP_AL_RC,
                                                              QAW.fun = QAW_AL_RC,
                                                              QAW.SL.library = QAW.SL.library,
-                                                             blip.SL.library = blip.SL.library), mc.cores = detectCores())
+                                                             blip.SL.library = blip.SL.library,
+                                                             contrast = contrast), mc.cores = detectCores())
 print("EYgRC_AL2_k0.9 done")
 
 

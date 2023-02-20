@@ -134,7 +134,7 @@ EYdopt = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.
         varIC_EnYdn.test_i = var(tmle_objects.EnYdn.test$IC - tmle_objects.contrast.test_i$IC)
         toreturn_contrast = c(Psi_EnYdn.test_i = Psi_EnYdn.test_i, varIC_EnYdn.test_i = varIC_EnYdn.test_i)
         if (!is.null(QAW.fun)) {
-          E0Ydn.test_i = mean(QAW.fun(A = dopt.test, W = W[folds == i,,drop=F]) - QAW.fun(A = contrast.test_i, W = W[folds == i,,drop=F]))
+          E0Ydn.test_i = mean(unlist(QAW.fun(A = dopt.test, W = W[folds == i,,drop=F])) - unlist(QAW.fun(A = contrast.test_i, W = W[folds == i,,drop=F])))
           Psi_EnYd0.test_i = tmle_objects.EnYd0.test$psi - tmle_objects.contrast.test_i$psi
           varIC_EnYd0.test_i = var(tmle_objects.EnYd0.test$IC - tmle_objects.contrast.test_i$IC)
           toreturn_contrast = c(Psi_EnYdn.test = Psi_EnYdn.test_i, varIC_EnYdn.test = varIC_EnYdn.test_i,
@@ -449,8 +449,7 @@ EYgRC = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.l
     E0YgRC.nonCVTMLE = mean(unlist(QAW.fun(A = 1, W = W)*rc.out$Prd.is.1) + unlist(QAW.fun(A = 0, W = W)*(1-rc.out$Prd.is.1)))
     if (!is.null(contrast)) {
       contrastE0YgRC_fun = function(contrast_i) {
-        contrast_i = contrast_i
-        E0YgRC.nonCVTMLE_i = E0YgRC.nonCVTMLE - mean(QAW.fun(A = contrast_i, W = W))
+        E0YgRC.nonCVTMLE_i = E0YgRC.nonCVTMLE - mean(unlist(QAW.fun(A = contrast_i, W = W)))
         return(E0YgRC.nonCVTMLE_i)
       }
       contrastE0YgRC_df = apply(contrast, 2, contrastE0YgRC_fun)
@@ -497,7 +496,7 @@ EYgRC = function(W, V, A, Y, g.SL.library = "SL.mean", QAW.SL.library, blip.SL.l
         varIC_EnYgRC.test_i = var(tmle_objects.EnYgRC.test$IC - tmle_objects.contrast.test_i$IC)
         toreturn_contrast = c(Psi_EnYgRC.test_i = Psi_EnYgRC.test_i, varIC_EnYgRC.test_i = varIC_EnYgRC.test_i)
         if (!is.null(QAW.fun)) {
-          E0YgRC.test_i = mean(unlist(QAW.fun(A = 1, W = W[folds == i,,drop=F])*Prd.is.1.test) + unlist(QAW.fun(A = 0, W = W[folds == i,,drop=F])*Prd.is.0.test)) - mean(QAW.fun(A = contrast.test_i, W = W[folds == i,,drop=F]))
+          E0YgRC.test_i = mean(unlist(QAW.fun(A = 1, W = W[folds == i,,drop=F])*Prd.is.1.test) + unlist(QAW.fun(A = 0, W = W[folds == i,,drop=F])*Prd.is.0.test)) - mean(unlist(QAW.fun(A = contrast.test_i, W = W[folds == i,,drop=F])))
           toreturn_contrast = c(Psi_EnYgRC.test = Psi_EnYgRC.test_i, varIC_EnYgRC.test = varIC_EnYgRC.test_i,
                                 E0YgRC.test = E0YgRC.test_i)
         }

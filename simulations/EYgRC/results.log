@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  15 FEB 2023 09:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  20 FEB 2023 07:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -854,26 +854,43 @@ File: figure/unnamed-chunk-4-14.pdf Graphic file (type pdf)
 Package pdftex.def Info: figure/unnamed-chunk-4-14.pdf  used on input line 187.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
+<figure/unnamed-chunk-4-15.pdf, id=125, 289.08pt x 289.08pt>
+File: figure/unnamed-chunk-4-15.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-15.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-15.pdf  used on input line 193.
+
+(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[9 <./figure/unnamed-chunk-4-14.pdf>] (./results.aux) ) 
+[9 <./figure/unnamed-chunk-4-14.pdf> <./figure/unnamed-chunk-4-15.pdf>]
+<figure/unnamed-chunk-4-16.pdf, id=141, 289.08pt x 289.08pt>
+File: figure/unnamed-chunk-4-16.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-16.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-16.pdf  used on input line 199.
+
+(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
+
+Overfull \vbox (43.36243pt too high) has occurred while \output is active []
+
+
+[10 <./figure/unnamed-chunk-4-16.pdf>] (./results.aux) ) 
 Here is how much of TeX's memory you used:
- 16767 strings out of 479916
- 316766 string characters out of 5882710
- 599690 words of memory out of 5000000
- 33048 multiletter control sequences out of 15000+600000
+ 16781 strings out of 479916
+ 317236 string characters out of 5882710
+ 599691 words of memory out of 5000000
+ 33060 multiletter control sequences out of 15000+600000
  536174 words of font info for 33 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  71i,5n,88p,455b,214s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2020
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2020/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on results.pdf (9 pages, 80326 bytes).
+</usr/local/texlive/202
+0/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2020
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on results.pdf (10 pages, 88534 bytes).
 PDF statistics:
- 144 PDF objects out of 1000 (max. 8388607)
- 101 compressed objects within 2 object streams
+ 161 PDF objects out of 1000 (max. 8388607)
+ 113 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 83 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 93 words of extra memory for PDF output out of 10000 (max. 10000000)
 
