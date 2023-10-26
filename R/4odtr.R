@@ -55,7 +55,7 @@ odtr = function(W, A, Y, V, rule.output = "d", g.SL.library, QAW.SL.library, bli
   n = length(A)
   if (is.null(family)) { family = ifelse(max(Y) <= 1 & min(Y) >= 0, "binomial", "gaussian") }
   if (is.null(ab)) { ab = range(Y) }
-  if (is.null(newV)) { newV = W }
+  if (is.null(newV)) { newV = V } #formerly newV = W
 
   # E[Y|A,W]
   QAW.reg = SuperLearner(Y = Y, X = data.frame(A, W), SL.library = QAW.SL.library, family = family)

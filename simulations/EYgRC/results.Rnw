@@ -50,22 +50,57 @@ load("simulations/EYgRC/results_EYgRC_incorrect.RData")
 #desc = "All pos discrete W"
 
 res_fun = function(results, DGP_fun, QAW_fun, kappa, desc) {
+
+  #dist
   sample_data = DGP_fun(10000, QAW.fun = QAW_fun)
   W = sample_data[,grep("W", colnames(sample_data))]
   hist(QAW_fun(1,W) - QAW_fun(0,W), main = desc, xlab = "blip")
+
+  #truth
   truth = mean(DGP_fun(10e4, kappa = kappa, QAW.fun = QAW_fun)$Y_star)
-  psis = unlist(lapply(1:length(results), function(x) results[[x]]$EnYgRC["Psi_CV.TMLE",]))
+  truth_EY1 = mean(DGP_fun(10e4, a = 1, QAW.fun = QAW_fun)$Y_star)
+  truth_EY0 = mean(DGP_fun(10e4, a = 0, QAW.fun = QAW_fun)$Y_star)
+
+  #estimates and CIs
+  psis = do.call('rbind', (lapply(1:length(results), function(x) results[[x]]$EnYgRC["Psi_CV.TMLE",])))
   CIs = do.call('rbind', (lapply(1:length(results), function(x) c(CI1 = results[[x]]$EnYgRC["CI_CV.TMLE1",], CI2 = results[[x]]$EnYgRC["CI_CV.TMLE2",]))))
-  bias = mean(psis) - truth
-  var = var(psis)
-  cov = mean(CIs[,"CI1"] < truth & truth < CIs[,"CI2"])
-  da = unlist(lapply(1:length(results), function(x) results[[x]]$E0YgRC["E0YgRC.CVTMLE",]))
-  cov_da = mean(CIs[,"CI1"] < da & da < CIs[,"CI2"])
+  da = do.call('rbind', lapply(1:length(results), function(x) results[[x]]$E0YgRC["E0YgRC.CVTMLE",]))
+
+  #perf
+  bias_psi = mean(psis$EYgRC) - truth
+  bias_cont_EY0 = mean(psis$EY0) - (truth-truth_EY0)
+  bias_cont_EY1 = mean(psis$EY1) - (truth-truth_EY1)
+  var_psi = var(psis$EYgRC)
+  var_cont_EY0 = var(psis$EY0)
+  var_cont_EY1 = var(psis$EY1)
+  cov_psi = mean(CIs[,"CI1.EYgRC"] < truth & truth < CIs[,"CI2.EYgRC"])
+  cov_cont_EY0 = mean(CIs[,"CI1.EY0"] < (truth-truth_EY0) & (truth-truth_EY0) < CIs[,"CI2.EY0"])
+  cov_cont_EY1 = mean(CIs[,"CI1.EY1"] < (truth-truth_EY1) & (truth-truth_EY1) < CIs[,"CI2.EY1"])
+  cov_da_psi = mean(CIs[,"CI1.EYgRC"] < da[,"EYgRC"] & da[,"EYgRC"] < CIs[,"CI2.EYgRC"])
+  cov_da_cont_EY0 = mean(CIs[,"CI1.EY0"] < da[,"EY0"] & da[,"EY0"] < CIs[,"CI2.EY0"])
+  cov_da_cont_EY1 = mean(CIs[,"CI1.EY1"] < da[,"EY1"] & da[,"EY1"] < CIs[,"CI2.EY1"])
+
   mean_regret = mean(unlist(lapply(1:length(results), function(x) results[[x]]$SL.info["regret"])))
   tauP0 = unlist(lapply(1:length(results), function(x) results[[x]]$SL.info["true_tauP"]))
   tauPn = unlist(lapply(1:length(results), function(x) results[[x]]$SL.info["est_tauP"]))
   mean_tauP0vtauPn = mean(tauP0 - tauPn)
-  toreturn = data.frame(desc = desc, bias = bias, var = var, cov = cov, cov_da = cov_da, regret = mean_regret, tauP0vtauPn = mean_tauP0vtauPn)
+
+  toreturn = data.frame(desc = desc,
+                        bias_psi = bias_psi,
+                        bias_cont_EY0 = bias_cont_EY0,
+                        bias_cont_EY1 = bias_cont_EY0,
+                        var_psi = var_psi,
+                        var_cont_EY0 = var_cont_EY0,
+                        var_cont_EY1 = var_cont_EY1,
+                        cov_psi = cov_psi,
+                        cov_cont_EY0 = cov_cont_EY0,
+                        cov_cont_EY1 = cov_cont_EY1,
+                        cov_da_psi = cov_da_psi,
+                        cov_da_cont_EY0 = cov_da_cont_EY0,
+                        cov_da_cont_EY1 = cov_da_cont_EY1,
+                        regret = mean_regret,
+                        tauP0vtauPn = mean_tauP0vtauPn)
+
   return(toreturn)
 
 }

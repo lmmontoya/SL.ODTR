@@ -88,118 +88,162 @@
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-1} 
 \begin{kframe}\begin{verbatim}
-##                         desc        bias         var   cov cov_da regret
-## 1 All pos discrete W k = 0.1 0.006390396 0.001967655 0.942  0.962      0
-##   tauP0vtauPn
-## 1 0.001542919
+##                         desc    bias_psi bias_cont_EY0 bias_cont_EY1
+## 1 All pos discrete W k = 0.1 0.001288696  -0.004810103  -0.004810103
+##       var_psi var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1
+## 1 0.001967655 8.605428e-05   0.00347095    0.95        0.911        0.957
+##   cov_da_psi cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1      0.962           0.949            0.96      0 0.001542919
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-2} 
 \begin{kframe}\begin{verbatim}
-##                         desc       bias         var   cov cov_da regret
-## 1 All pos discrete W k = 0.9 0.01793872 0.002710646 0.926  0.982      0
-##   tauP0vtauPn
-## 1 0.001098835
+##                         desc    bias_psi bias_cont_EY0 bias_cont_EY1
+## 1 All pos discrete W k = 0.9 0.004662456   0.004545666   0.004545666
+##       var_psi var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1
+## 1 0.002710646  0.003493437 8.307476e-05   0.945        0.956        0.926
+##   cov_da_psi cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1      0.982           0.955           0.947      0 0.001098835
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-3} 
 \begin{kframe}\begin{verbatim}
-##                          desc        bias         var   cov cov_da regret
-## 1 Some pos discrete W k = 0.1 0.002689274 0.002012113 0.941   0.96      0
-##   tauP0vtauPn
-## 1 0.001098835
+##                          desc    bias_psi bias_cont_EY0 bias_cont_EY1
+## 1 Some pos discrete W k = 0.1 0.006094873   0.009036945   0.009036945
+##       var_psi var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1
+## 1 0.002012113 8.350379e-05  0.004515191   0.936        0.832        0.939
+##   cov_da_psi cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1       0.96            0.95           0.979      0 0.001098835
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-4} 
 \begin{kframe}\begin{verbatim}
-##                          desc         bias        var   cov cov_da regret
-## 1 Some pos discrete W k = 0.9 -0.001830116 0.00218299 0.934  0.933      0
-##   tauP0vtauPn
-## 1           0
+##                          desc     bias_psi bias_cont_EY0 bias_cont_EY1
+## 1 Some pos discrete W k = 0.9 -0.001149394  -0.002007521  -0.002007521
+##      var_psi var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1
+## 1 0.00218299  0.002325896  0.002416829   0.935        0.951        0.947
+##   cov_da_psi cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1      0.933           0.956            0.96      0           0
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-5} 
 \begin{kframe}\begin{verbatim}
-##                        desc          bias         var   cov cov_da regret
-## 1 No pos discrete W k = 0.1 -0.0008584002 0.002205179 0.947  0.961      0
-##   tauP0vtauPn
-## 1           0
+##                        desc     bias_psi bias_cont_EY0 bias_cont_EY1
+## 1 No pos discrete W k = 0.1 -0.002043563   0.001730347   0.001730347
+##       var_psi var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1
+## 1 0.002205179 6.224954e-32  0.004206451   0.945            0        0.955
+##   cov_da_psi cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1      0.961           0.206           0.957      0           0
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-6} 
 \begin{kframe}\begin{verbatim}
-##                        desc        bias         var   cov cov_da regret
-## 1 No pos discrete W k = 0.9 0.003985731 0.002205179 0.952  0.961      0
-##   tauP0vtauPn
-## 1           0
+##                        desc     bias_psi bias_cont_EY0 bias_cont_EY1
+## 1 No pos discrete W k = 0.9 0.0006449771  0.0002538227  0.0002538227
+##       var_psi var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1
+## 1 0.002205179 6.224954e-32  0.004206451   0.948            0        0.954
+##   cov_da_psi cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1      0.961           0.206           0.957      0           0
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-7} 
 \begin{kframe}\begin{verbatim}
-##                     desc        bias         var   cov cov_da regret
-## 1 All pos cont W k = 0.1 0.002016515 0.003586811 0.936  0.988      0
-##   tauP0vtauPn
-## 1 0.004620943
+##                     desc    bias_psi bias_cont_EY0 bias_cont_EY1     var_psi
+## 1 All pos cont W k = 0.1 -0.01046928  -0.003207263  -0.003207263 0.003586811
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1  0.000463368  0.004381832   0.929        0.934        0.954      0.988
+##   cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1           0.948           0.976      0 0.004620943
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-8} 
 \begin{kframe}\begin{verbatim}
-##                     desc        bias         var  cov cov_da regret
-## 1 All pos cont W k = 0.9 -0.00996784 0.005915347 0.94  0.996      0
-##    tauP0vtauPn
-## 1 -0.001170377
+##                     desc    bias_psi bias_cont_EY0 bias_cont_EY1     var_psi
+## 1 All pos cont W k = 0.9 0.003405452   -0.00432496   -0.00432496 0.005915347
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1  0.004566665 0.0004098842   0.941        0.937        0.896      0.996
+##   cov_da_cont_EY0 cov_da_cont_EY1 regret  tauP0vtauPn
+## 1           0.969           0.964      0 -0.001170377
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-9} 
 \begin{kframe}\begin{verbatim}
-##                      desc         bias        var   cov cov_da regret
-## 1 Some pos cont W k = 0.1 -0.008092793 0.00299759 0.944  0.978      0
-##    tauP0vtauPn
-## 1 -0.001144055
+##                      desc     bias_psi bias_cont_EY0 bias_cont_EY1    var_psi
+## 1 Some pos cont W k = 0.1 -0.003840838   0.004360377   0.004360377 0.00299759
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1 0.0005600421  0.007404762   0.945        0.953        0.938      0.978
+##   cov_da_cont_EY0 cov_da_cont_EY1 regret  tauP0vtauPn
+## 1           0.974            0.99      0 -0.001144055
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-10} 
 \begin{kframe}\begin{verbatim}
-##                      desc       bias         var   cov cov_da        regret
-## 1 Some pos cont W k = 0.9 0.00411956 0.002407114 0.945  0.968 -0.0004422375
-##   tauP0vtauPn
-## 1           0
+##                      desc    bias_psi bias_cont_EY0 bias_cont_EY1     var_psi
+## 1 Some pos cont W k = 0.9 0.001392494   0.005327546   0.005327546 0.002407114
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1  0.005180188  0.001924184   0.941        0.942        0.944      0.968
+##   cov_da_cont_EY0 cov_da_cont_EY1        regret tauP0vtauPn
+## 1           0.995           0.986 -0.0004422375           0
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-11} 
 \begin{kframe}\begin{verbatim}
-##                    desc        bias        var  cov cov_da regret tauP0vtauPn
-## 1 No pos cont W k = 0.1 0.002077621 0.00297045 0.95  0.984      0           0
+##                    desc    bias_psi bias_cont_EY0 bias_cont_EY1    var_psi
+## 1 No pos cont W k = 0.1 0.004423212    0.00855373    0.00855373 0.00297045
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1 1.300241e-33   0.00504797   0.951            0        0.946      0.984
+##   cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1            0.95           0.973      0           0
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-12} 
 \begin{kframe}\begin{verbatim}
-##                    desc         bias        var   cov cov_da regret tauP0vtauPn
-## 1 No pos cont W k = 0.9 -0.009386213 0.00297045 0.954  0.984      0           0
+##                    desc     bias_psi bias_cont_EY0 bias_cont_EY1    var_psi
+## 1 No pos cont W k = 0.9 -0.003828655  -0.004742516  -0.004742516 0.00297045
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1 1.300241e-33   0.00504797   0.954            0        0.942      0.984
+##   cov_da_cont_EY0 cov_da_cont_EY1 regret tauP0vtauPn
+## 1            0.95           0.973      0           0
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-13} 
 \begin{kframe}\begin{verbatim}
-##          desc        bias          var   cov cov_da      regret tauP0vtauPn
-## 1 AL1 k = 0.1 -0.02041401 0.0005120323 0.855  0.965 -0.01730605   0.1200004
+##          desc    bias_psi bias_cont_EY0 bias_cont_EY1      var_psi var_cont_EY0
+## 1 AL1 k = 0.1 -0.01802401   -0.01981226   -0.01981226 0.0005120323 0.0001434307
+##   var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi cov_da_cont_EY0
+## 1 0.0009067548   0.878        0.497        0.902      0.965           0.926
+##   cov_da_cont_EY1      regret tauP0vtauPn
+## 1           0.961 -0.01730605   0.1200004
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-14} 
 \begin{kframe}\begin{verbatim}
-##          desc        bias          var   cov cov_da      regret   tauP0vtauPn
-## 1 AL1 k = 0.9 -0.02913257 0.0007370152 0.701  0.943 -0.02706894 -4.341017e-06
+##          desc    bias_psi bias_cont_EY0 bias_cont_EY1      var_psi var_cont_EY0
+## 1 AL1 k = 0.9 -0.03105257   -0.03167082   -0.03167082 0.0007370152  0.000722881
+##   var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi cov_da_cont_EY0
+## 1 0.0007460663    0.68        0.656        0.694      0.943           0.948
+##   cov_da_cont_EY1      regret   tauP0vtauPn
+## 1           0.928 -0.02706894 -4.341017e-06
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-15} 
 \begin{kframe}\begin{verbatim}
-##          desc          bias          var   cov cov_da       regret  tauP0vtauPn
-## 1 AL2 k = 0.1 -0.0007649351 0.0004238784 0.944  0.945 -0.001463191 -0.006965769
+##          desc      bias_psi bias_cont_EY0 bias_cont_EY1      var_psi
+## 1 AL2 k = 0.1 -0.0001949351  0.0008555856  0.0008555856 0.0004238784
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1 9.876248e-05  0.000845078   0.943        0.932        0.943      0.945
+##   cov_da_cont_EY0 cov_da_cont_EY1       regret  tauP0vtauPn
+## 1           0.943           0.947 -0.001463191 -0.006965769
 \end{verbatim}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-16} 
 \begin{kframe}\begin{verbatim}
-##          desc        bias          var   cov cov_da       regret tauP0vtauPn
-## 1 AL2 k = 0.9 -0.00224446 0.0005255853 0.939  0.946 -0.002353075  -0.0278073
+##          desc      bias_psi bias_cont_EY0 bias_cont_EY1      var_psi
+## 1 AL2 k = 0.9 -0.0005044598  -0.002503939  -0.002503939 0.0005255853
+##   var_cont_EY0 var_cont_EY1 cov_psi cov_cont_EY0 cov_cont_EY1 cov_da_psi
+## 1 0.0008731405 0.0001151983   0.939        0.942        0.919      0.946
+##   cov_da_cont_EY0 cov_da_cont_EY1       regret tauP0vtauPn
+## 1           0.946           0.945 -0.002353075  -0.0278073
 \end{verbatim}
 \end{kframe}
 \end{knitrout}

@@ -1,0 +1,128 @@
+\documentclass[11pt]{article}
+%\usepackage[showframe]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{lscape,verbatim,mathrsfs}
+\usepackage{graphics,amsmath,pstricks}
+\usepackage{amssymb,enumerate}
+\usepackage{amsbsy,amsmath,amsthm,amsfonts, amssymb}
+\usepackage{graphicx, rotate, array}
+\usepackage{geometry,multirow}
+\usepackage{color,soul}
+\usepackage{float}
+%\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+%\renewcommand{\baselinestretch}{1.9}
+\usepackage{tcolorbox}
+\renewcommand{\familydefault}{cmss}
+\textwidth=6.65in \textheight=9.7in
+\parskip=.025in
+\parindent=0in
+\oddsidemargin=-0.1in \evensidemargin=-.1in \headheight=-.6in
+\footskip=0.5in \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\begin{document}
+
+
+<<libs_and_funs, echo = F, message = F,warning = F>>=
+library(dplyr)
+library(ggplot2)
+library(xtable)
+require(gridExtra)
+library('latex2exp')
+source("/Users/lmontoya/Box/SL.ODTR/simulations/showResults.R")
+@
+
+
+
+<<DGP_bin, echo = F>>=
+# load DGP_bin stuff
+load(file = "/Users/lmontoya/Box/SL.ODTR/simulations/true values/DGP_bin_complex_true_values.RData")
+@
+
+
+
+
+BIN - complex blip - n = 1000 - for presentation
+
+
+<<echo = F, results = 'asis', warning = F, fig.height=5.5, fig.width=12>>=
+bin_pres = list(#ODTRcomplex_GLM = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_GLM_n1000.RData"),
+#ODTRcomplex_bliponlyparam_discrete = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyparam_discrete_n1000.RData"),
+ODTRcomplex_bliponlyparam_blipmeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyparam_blipmeta_n1000.RData"),
+ODTRcomplex_bliponlyparam_votemeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyparam_votemeta_n1000.RData"),
+#ODTRcomplex_bliponlyMLonly_discrete = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyMLonly_discrete_n1000.RData"),
+ODTRcomplex_bliponlyMLonly_blipmeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyMLonly_blipmeta_n1000.RData"),
+ODTRcomplex_bliponlyMLonly_votemeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyMLonly_votemeta_n1000.RData"),
+#ODTRcomplex_bliponlyML_discrete = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyML_discrete_n1000.RData"),
+ODTRcomplex_bliponlyML_blipmeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyML_blipmeta_n1000.RData"),
+ODTRcomplex_bliponlyML_votemeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_bliponlyML_votemeta_n1000.RData"))#,
+#ODTRcomplex_MLonlyEYd_discrete = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_MLonlyEYd_discrete_n1000.RData"),
+#ODTRcomplex_MLonlyEYd_votemeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_MLonlyEYd_votemeta_n1000.RData"),
+#ODTRcomplex_all_discrete = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_all_discrete_n1000.RData"),
+#ODTRcomplex_all_votemeta = load_object(file = "/Users/lmontoya/Box/SL.ODTR/simulations/odtr/results/ODTRcomplex_all_votemeta_n1000.RData"))
+
+
+odtr_pres = do.call('rbind', lapply(1:length(bin_pres), function(x) do.call("rbind", lapply(1:length(bin_pres[[x]]), makeplotdf_ODTR, ODTR = bin_pres[[x]], truevalues = DGP_bin_complex_true_values))))
+
+odtr_pres$Risk = factor(odtr_pres$Risk, labels = c("CV MSE", "CV TMLE"), levels = c("CVMSE", "CVTMLE"))
+odtr_pres$Metalearner = factor(odtr_pres$Metalearner, labels = c("CATE-based", "Vote-based"), levels = c("blipmeta", "votemeta"))
+odtr_pres$Library = factor(odtr_pres$Library,
+                      labels = c("Parametric models only", "ML models only", "Parametric + ML models"),
+                      levels = c("bliponlyparam", "bliponlyMLonly", "bliponlyML"))
+
+truevalues = DGP_bin_complex_true_values
+
+odtr_pres$ALL = factor(paste(odtr_pres$Risk, odtr_pres$Metalearner, odtr_pres$Library))
+
+pd <- position_dodge(width = 0.7)
+
+odtr_plot_complex_n1000_pres =odtr_pres %>%
+  ggplot(aes(x = Metalearner, y = Estimates, group = ALL, shape = Risk, col = Library)) +
+  geom_point(size = 7, position = pd) +
+  #geom_errorbar(aes(ymin = minQ, ymax = maxQ, col = Library), width = .4, position = pd) +
+  geom_hline(yintercept = (truevalues$EYd_star), colour = "black") +
+  scale_shape_manual(name = "Risk", values = c(15,17), labels = c(
+                                                 "CV MSE" = 'MSE',
+                                                 "CV TMLE" = parse(text = TeX('$E\\[Y_d\\]$'))))  +
+  scale_colour_manual(values = c("dark gray", "blue", "red")) + # this is for library
+  scale_x_discrete(limits=levels(odtr_pres$Metalearner),
+                   name = "\nMetalearner")+
+  geom_line(key_glyph = draw_key_label)+
+  ylab("Expected outcome under the estimated optimal rule\n") +
+  ggtitle("\"Complex\" data generating process") +
+  geom_text(aes(label = "Truth", y = truevalues$EYd_star + .002, x = 2.5), size = 6.5, color = "black") +
+  ylim(min(odtr_pres$minQ)-.005, max(odtr_pres$maxQ, truevalues$EYd_star)+.005) +
+  theme_bw() +
+  theme(panel.border = element_blank(), text = element_text(size=25))
+
+
+odtr_plot_complex_n1000_pres
+
+
+
+#odtr_n1000 = odtr
+
+@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
