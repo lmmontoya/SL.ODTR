@@ -32,13 +32,15 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
   libraryNames = c(blip.SL.library) # will be trouble if screeners are used?
   numalgs = length(libraryNames)
 
-  if (discrete.SL) {
-    simplex.grid = diag(numalgs)
-  } else {
-    simplex.grid = rbind(diag(numalgs), simplex.sample(n = numalgs, N = grid.size)$samples)
+  if (risk.type != "CV MSE") {
+    if (discrete.SL) {
+      simplex.grid = diag(numalgs)
+      colnames(simplex.grid) = libraryNames
+    } else {
+      simplex.grid = rbind(diag(numalgs), simplex.sample(n = numalgs, N = grid.size)$samples)
+      colnames(simplex.grid) = libraryNames
+    }
   }
-
-  colnames(simplex.grid) = libraryNames
 
   SL.out = list()
 
@@ -58,35 +60,58 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
                                       SL.library = blip.SL.library,
                                       newX = V[test_ind,,drop = F], family = 'gaussian')
     candidate.blips.test = SL.init.train$library.predict
-    candidates.blipsXalpha.test = candidate.blips.test%*%t(simplex.grid)
+    D.test = D[test_ind]
     if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
+      candidates.blipsXalpha.test = candidate.blips.test%*%t(simplex.grid)
       dopt.combos.test = apply(candidates.blipsXalpha.test > 0, 2, as.numeric)
       Qdopt.combos.test = sapply(1:nrow(simplex.grid), function(x) predict(QAW.reg.train, newdata = data.frame(W[test_ind,,drop = F], A = dopt.combos.test[,x]), type = "response")$pred)
       tmle.obj.test = lapply(1:nrow(simplex.grid), function(x) tmle.d.fun(A = A[test_ind], Y = Y[test_ind], d = dopt.combos.test[,x], Qd = Qdopt.combos.test[,x], gAW = gAW.pred[test_ind], ab = ab))
       risk.combos.test = -unlist(lapply(tmle.obj.test, function(x) x$psi))
       risk.var.combos.test = unlist(lapply(tmle.obj.test, function(x) var(x$IC)))
-      toreturn = list(risk.combos.test = risk.combos.test, risk.var.combos.test = risk.var.combos.test)
+      toreturn = list(candidate.blips.test = candidate.blips.test, risk.combos.test = risk.combos.test, risk.var.combos.test = risk.var.combos.test)
     } else if (risk.type == "CV MSE") {
-      risk.combos.test = sapply(1:nrow(simplex.grid), function(x) mean((D[test_ind] - candidates.blipsXalpha.test[,x])^2))
-      toreturn = list(risk.combos.test = risk.combos.test)
+      #risk.combos.test = sapply(1:nrow(simplex.grid), function(x) mean((D[test_ind] - candidates.blipsXalpha.test[,x])^2))
+      toreturn = list(D.test = D.test, candidate.blips.test = candidate.blips.test)
     }
     return(toreturn)
   }
 
   CV.risk.obj = lapply(1:VFolds, CV.risk_fun)
-  CV.risk = colMeans(t(sapply(1:VFolds, function(i) CV.risk.obj[[i]]$risk.combos.test)))
+
   if (risk.type == "CV TMLE" | risk.type == "CV TMLE CI") {
+    CV.risk = colMeans(do.call('rbind', lapply(1:VFolds, function(i) CV.risk.obj[[i]]$risk.combos.test)))
     var_CV.TMLE = colMeans(t(sapply(1:VFolds, function(i) CV.risk.obj[[i]]$risk.var.combos.test)))/n
     CI_CV.TMLE_upper = CV.risk + qnorm(0.975)*sqrt(var_CV.TMLE)
     CI_CV.TMLE_lower = CV.risk - qnorm(0.975)*sqrt(var_CV.TMLE)
+  } else if (risk.type == "CV MSE") {
+    Z = do.call('rbind', lapply(1:VFolds, function(i) CV.risk.obj[[i]]$candidate.blips.test))
+    D.test = do.call('c', lapply(1:VFolds, function(i) CV.risk.obj[[i]]$D.test))
+    CV.risk = apply(Z, 2, function(x) mean((x - D.test) ^ 2))
   }
 
   if (risk.type == "CV TMLE CI") {
     SL.out$CV.risk_min = list(est = min(CI_CV.TMLE_upper))
     SL.out$coef = simplex.grid[which.min(CI_CV.TMLE_upper),]
-  } else {
+  } else if (risk.type == "CV TMLE") {
     SL.out$CV.risk_min = list(est = min(CV.risk))
     SL.out$coef = simplex.grid[which.min(CV.risk),]
+  } else if (risk.type == "CV MSE") {
+    if (discrete.SL) {
+      SL.out$CV.risk_min = list(est = min(CV.risk))
+      SL.out$coef = rep(0, length(CV.risk))
+      SL.out$coef[which.min(CV.risk)] = 1
+    } else {
+      fit.nnls <- nnls(Z, D.test)
+      initCoef <- coef(fit.nnls)
+      initCoef[is.na(initCoef)] <- 0
+      if (sum(initCoef) > 0) {
+        coef <- initCoef / sum(initCoef)
+      } else {
+        warning("All algorithms have zero weight", call. = FALSE)
+        coef <- initCoef
+      }
+      SL.out$coef = coef
+    }
   }
 
   g1W.pred = predict(g.reg, data.frame(W), type = "response")$pred
@@ -111,6 +136,9 @@ SL.blip = function(V, W, A, Y, ab, QAW.reg, g.reg, blip.SL.library,
   if (risk.type == "CV TMLE CI") {
     SL.out$CV.risk_min$CI = c(lowerCI = CI_CV.TMLE_lower[which.min(CI_CV.TMLE_upper)],
                               upperCI = CI_CV.TMLE_upper[which.min(CI_CV.TMLE_upper)])
+  }
+  if (risk.type == "CV MSE") {
+    SL.out$forCoef = list(Z = Z, D.test = D.test, D = D)
   }
 
   return(SL.out)

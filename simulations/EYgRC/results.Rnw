@@ -99,6 +99,7 @@ res_fun = function(results, DGP_fun, QAW_fun, kappa, desc) {
                         cov_da_cont_EY0 = cov_da_cont_EY0,
                         cov_da_cont_EY1 = cov_da_cont_EY1,
                         regret = mean_regret,
+                        tauPn = mean(tauPn),
                         tauP0vtauPn = mean_tauP0vtauPn)
 
   return(toreturn)
@@ -108,28 +109,35 @@ res_fun = function(results, DGP_fun, QAW_fun, kappa, desc) {
 @
 
 
-<<echo = F, fig.height=4, fig.width=4>>=
-res_fun(results = EYgRC_allpos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.allpos, desc = "All pos discrete W k = 0.1")
-res_fun(results = EYgRC_allpos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.allpos, desc = "All pos discrete W k = 0.9")
-res_fun(results = EYgRC_somepos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.1")
-res_fun(results = EYgRC_somepos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.9")
-res_fun(results = EYgRC_nopos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.1")
-res_fun(results = EYgRC_nopos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.9")
+<<echo = F, fig.height=4, fig.width=4, eval = F>>=
+res_discreteW = rbind(res_fun(results = EYgRC_allpos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.allpos, desc = "All pos discrete W k = 0.1"),
+                      res_fun(results = EYgRC_allpos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.allpos, desc = "All pos discrete W k = 0.9"),
+                      res_fun(results = EYgRC_somepos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.1"),
+                      res_fun(results = EYgRC_somepos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.somepos, desc = "Some pos discrete W k = 0.9"),
+                      res_fun(results = EYgRC_nopos_discreteW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.1"),
+                      res_fun(results = EYgRC_nopos_discreteW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.discreteW, QAW_fun = QAW.rc.nopos, desc = "No pos discrete W k = 0.9"))
 
-res_fun(results = EYgRC_allpos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.1")
-res_fun(results = EYgRC_allpos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.9")
-res_fun(results = EYgRC_somepos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.1")
-res_fun(results = EYgRC_somepos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.9")
-res_fun(results = EYgRC_nopos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.1")
-res_fun(results = EYgRC_nopos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.9")
+res_contW = rbind(res_fun(results = EYgRC_allpos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.1"),
+                  res_fun(results = EYgRC_allpos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.allpos, desc = "All pos cont W k = 0.9"),
+                  res_fun(results = EYgRC_somepos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.1"),
+                  res_fun(results = EYgRC_somepos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.somepos, desc = "Some pos cont W k = 0.9"),
+                  res_fun(results = EYgRC_nopos_contW_k0.1, kappa = 0.1, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.1"),
+                  res_fun(results = EYgRC_nopos_contW_k0.9, kappa = 0.9, DGP_fun = DGP.rc.contW, QAW_fun = QAW.rc.nopos, desc = "No pos cont W k = 0.9"))
 
-res_fun(results = EYgRC_AL1_k0.1, kappa = 0.1, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.1")
-res_fun(results = EYgRC_AL1_k0.9, kappa = 0.9, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.9")
-res_fun(results = EYgRC_AL2_k0.1, kappa = 0.1, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.1")
-res_fun(results = EYgRC_AL2_k0.9, kappa = 0.9, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.9")
+res_bincomplex = rbind(res_fun(results = EYgRC_AL1_k0.1, kappa = 0.1, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.1"),
+                       res_fun(results = EYgRC_AL1_k0.9, kappa = 0.9, DGP_fun = DGP_bin_complex, QAW_fun = QAW_bin_complex, desc = "AL1 k = 0.9"),
+                       res_fun(results = EYgRC_AL2_k0.1, kappa = 0.1, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.1"),
+                       res_fun(results = EYgRC_AL2_k0.9, kappa = 0.9, DGP_fun = DGP_AL_RC, QAW_fun = QAW_AL_RC, desc = "AL2 k = 0.9"))
+
+save(res_discreteW, res_contW, res_bincomplex, file = "simulations/EYgRC/res_table.RData")
 @
 
-
+<<echo = F>>=
+load(file = "simulations/EYgRC/res_table.RData")
+rbind(res_discreteW,
+      res_contW,
+      res_bincomplex)
+@
 
 
 

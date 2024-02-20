@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  23 FEB 2023 09:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.5)  20 DEC 2023 15:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -730,7 +730,12 @@ Package pdftex.def Info: figure/unnamed-chunk-4-1.pdf  used on input line 89.
 <figure/unnamed-chunk-4-2.pdf, id=5, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-2.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-2.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-2.pdf  used on input line 99.
+Package pdftex.def Info: figure/unnamed-chunk-4-2.pdf  used on input line 91.
+(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
+<figure/unnamed-chunk-4-3.pdf, id=6, 289.08pt x 289.08pt>
+File: figure/unnamed-chunk-4-3.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-3.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-3.pdf  used on input line 93.
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
@@ -754,147 +759,128 @@ Non-PDF special ignored!
 <special> ps:tx@Dict begin  gsave STV CP T /ps@refangle 0.  def grestore  e...
 {/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./figur
 e/unnamed-chunk-4-1.pdf> <./figure/unnamed-chunk-4-2.pdf>]
-<figure/unnamed-chunk-4-3.pdf, id=25, 289.08pt x 289.08pt>
-File: figure/unnamed-chunk-4-3.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-4-3.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-3.pdf  used on input line 109.
-(pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-<figure/unnamed-chunk-4-4.pdf, id=26, 289.08pt x 289.08pt>
+<figure/unnamed-chunk-4-4.pdf, id=25, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-4.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-4.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-4.pdf  used on input line 119.
+Package pdftex.def Info: figure/unnamed-chunk-4-4.pdf  used on input line 95.
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-
-Overfull \vbox (43.36243pt too high) has occurred while \output is active []
-
-
-[2 <./figure/unnamed-chunk-4-3.pdf>]
-<figure/unnamed-chunk-4-5.pdf, id=36, 289.08pt x 289.08pt>
+<figure/unnamed-chunk-4-5.pdf, id=26, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-5.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-5.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-5.pdf  used on input line 129.
+Package pdftex.def Info: figure/unnamed-chunk-4-5.pdf  used on input line 97.
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[3 <./figure/unnamed-chunk-4-4.pdf> <./figure/unnamed-chunk-4-5.pdf>]
-<figure/unnamed-chunk-4-6.pdf, id=52, 289.08pt x 289.08pt>
+[2 <./figure/unnamed-chunk-4-3.pdf> <./figure/unnamed-chunk-4-4.pdf>]
+<figure/unnamed-chunk-4-6.pdf, id=42, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-6.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-6.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-6.pdf  used on input line 139.
+Package pdftex.def Info: figure/unnamed-chunk-4-6.pdf  used on input line 99.
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-<figure/unnamed-chunk-4-7.pdf, id=53, 289.08pt x 289.08pt>
+<figure/unnamed-chunk-4-7.pdf, id=43, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-7.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-7.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-7.pdf  used on input line 149.
+Package pdftex.def Info: figure/unnamed-chunk-4-7.pdf  used on input line 101.
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[4 <./figure/unnamed-chunk-4-6.pdf>]
-<figure/unnamed-chunk-4-8.pdf, id=63, 289.08pt x 289.08pt>
+[3 <./figure/unnamed-chunk-4-5.pdf> <./figure/unnamed-chunk-4-6.pdf>]
+<figure/unnamed-chunk-4-8.pdf, id=59, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-8.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-8.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-8.pdf  used on input line 159.
+Package pdftex.def Info: figure/unnamed-chunk-4-8.pdf  used on input line 103.
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-
-Overfull \vbox (43.36243pt too high) has occurred while \output is active []
-
-
-[5 <./figure/unnamed-chunk-4-7.pdf> <./figure/unnamed-chunk-4-8.pdf>]
-<figure/unnamed-chunk-4-9.pdf, id=79, 289.08pt x 289.08pt>
+<figure/unnamed-chunk-4-9.pdf, id=60, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-9.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-9.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-9.pdf  used on input line 169.
+Package pdftex.def Info: figure/unnamed-chunk-4-9.pdf  used on input line 105.
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-<figure/unnamed-chunk-4-10.pdf, id=80, 289.08pt x 289.08pt>
+
+Overfull \vbox (43.36243pt too high) has occurred while \output is active []
+
+
+[4 <./figure/unnamed-chunk-4-7.pdf> <./figure/unnamed-chunk-4-8.pdf>]
+<figure/unnamed-chunk-4-10.pdf, id=76, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-10.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-10.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-10.pdf  used on input line 179.
+Package pdftex.def Info: figure/unnamed-chunk-4-10.pdf  used on input line 107.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-
-Overfull \vbox (43.36243pt too high) has occurred while \output is active []
-
-
-[6 <./figure/unnamed-chunk-4-9.pdf>]
-<figure/unnamed-chunk-4-11.pdf, id=90, 289.08pt x 289.08pt>
+<figure/unnamed-chunk-4-11.pdf, id=77, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-11.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-11.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-11.pdf  used on input line 189.
+Package pdftex.def Info: figure/unnamed-chunk-4-11.pdf  used on input line 109.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[7 <./figure/unnamed-chunk-4-10.pdf> <./figure/unnamed-chunk-4-11.pdf>]
-<figure/unnamed-chunk-4-12.pdf, id=107, 289.08pt x 289.08pt>
+[5 <./figure/unnamed-chunk-4-9.pdf> <./figure/unnamed-chunk-4-10.pdf>]
+<figure/unnamed-chunk-4-12.pdf, id=93, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-12.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-12.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-12.pdf  used on input line 199.
+Package pdftex.def Info: figure/unnamed-chunk-4-12.pdf  used on input line 111.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-<figure/unnamed-chunk-4-13.pdf, id=108, 289.08pt x 289.08pt>
+<figure/unnamed-chunk-4-13.pdf, id=94, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-13.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-13.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-13.pdf  used on input line 209.
+Package pdftex.def Info: figure/unnamed-chunk-4-13.pdf  used on input line 113.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[8 <./figure/unnamed-chunk-4-12.pdf>]
-<figure/unnamed-chunk-4-14.pdf, id=118, 289.08pt x 289.08pt>
+[6 <./figure/unnamed-chunk-4-11.pdf> <./figure/unnamed-chunk-4-12.pdf>]
+<figure/unnamed-chunk-4-14.pdf, id=110, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-14.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-14.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-14.pdf  used on input line 219.
+Package pdftex.def Info: figure/unnamed-chunk-4-14.pdf  used on input line 115.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-
-Overfull \vbox (43.36243pt too high) has occurred while \output is active []
-
-
-[9 <./figure/unnamed-chunk-4-13.pdf> <./figure/unnamed-chunk-4-14.pdf>]
-<figure/unnamed-chunk-4-15.pdf, id=134, 289.08pt x 289.08pt>
+<figure/unnamed-chunk-4-15.pdf, id=111, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-15.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-15.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-15.pdf  used on input line 229.
+Package pdftex.def Info: figure/unnamed-chunk-4-15.pdf  used on input line 117.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
-<figure/unnamed-chunk-4-16.pdf, id=135, 289.08pt x 289.08pt>
+
+Overfull \vbox (43.36243pt too high) has occurred while \output is active []
+
+
+[7 <./figure/unnamed-chunk-4-13.pdf> <./figure/unnamed-chunk-4-14.pdf>]
+<figure/unnamed-chunk-4-16.pdf, id=128, 289.08pt x 289.08pt>
 File: figure/unnamed-chunk-4-16.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-16.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-16.pdf  used on input line 239.
+Package pdftex.def Info: figure/unnamed-chunk-4-16.pdf  used on input line 119.
 
 (pdftex.def)             Requested size: 289.07928pt x 289.09251pt.
 
 Overfull \vbox (43.36243pt too high) has occurred while \output is active []
 
 
-[10 <./figure/unnamed-chunk-4-15.pdf>]
-Overfull \vbox (43.36243pt too high) has occurred while \output is active []
-
-
-[11 <./figure/unnamed-chunk-4-16.pdf>] (./results.aux) ) 
+[8 <./figure/unnamed-chunk-4-15.pdf> <./figure/unnamed-chunk-4-16.pdf>]
+(./results.aux) ) 
 Here is how much of TeX's memory you used:
- 16781 strings out of 479916
- 317236 string characters out of 5882710
- 601692 words of memory out of 5000000
- 33060 multiletter control sequences out of 15000+600000
- 536174 words of font info for 33 fonts, out of 8000000 for 9000
+ 16778 strings out of 479916
+ 317203 string characters out of 5882710
+ 594690 words of memory out of 5000000
+ 33058 multiletter control sequences out of 15000+600000
+ 536006 words of font info for 32 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 71i,5n,88p,455b,214s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/202
-0/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2020
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on results.pdf (11 pages, 90489 bytes).
+ 71i,6n,88p,455b,202s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmss10.pfb>
+Output written on results.pdf (8 pages, 70471 bytes).
 PDF statistics:
- 164 PDF objects out of 1000 (max. 8388607)
- 115 compressed objects within 2 object streams
+ 151 PDF objects out of 1000 (max. 8388607)
+ 106 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  93 words of extra memory for PDF output out of 10000 (max. 10000000)
 
